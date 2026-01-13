@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ETG Travel – Manager Approval</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f8fb;--card:#ffffff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--accent:#1d4ed8;--accent-2:#0ea5e9;--success:#16a34a;--danger:#dc2626;--shadow:0 10px 25px rgba(2,6,23,.06),0 4px 12px rgba(2,6,23,.05);--radius:16px
+  }
+  @media (prefers-color-scheme: dark){:root{--bg:#0b1220;--card:#0f172a;--text:#e5e7eb;--muted:#94a3b8;--border:#1f2937;--accent:#60a5fa;--accent-2:#22d3ee;--shadow:0 16px 30px rgba(0,0,0,.35)}}
+  *{box-sizing:border-box}
+  body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);margin:0}
+  .header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.7));backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .header-inner{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;gap:12px;align-items:center}
+  .logo{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:800;box-shadow:var(--shadow)}
+  .brand{font-weight:800}
+  .badge{margin-left:auto;color:var(--muted);font-size:13px}
+  main{max-width:1100px;margin:22px auto;padding:0 20px 60px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
+  .title{font-weight:800;margin:0 0 6px}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 8px}
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+  .col-4{grid-column:span 4}.col-6{grid-column:span 6}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
+  @media (max-width:1000px){.col-4,.col-6,.col-8{grid-column:span 12}}
+  .kv{display:flex;gap:8px;align-items:center;margin:6px 0}
+  .kv b{min-width:170px}
+  .stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:8px}
+  .step{padding:10px;border:1px solid var(--border);border-radius:12px;background:var(--card);display:flex;gap:8px;align-items:center}
+  .step .num{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:800;border:1px solid var(--border)}
+  .step.done .num{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border:none}
+  .highlight{display:inline-flex;align-items:center;gap:8px;border:1px dashed var(--border);border-radius:12px;padding:10px 12px;font-weight:700}
+  .btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer}
+  .btn.secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .btn.danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}
+  .btn.success{background:linear-gradient(90deg,#16a34a,#22c55e)}
+  .btn-small{padding:6px 10px;font-size:12px}
+  .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+  textarea,input[type="text"]{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text);font-family:inherit;font-size:13px}
+  textarea:focus,input[type="text"]:focus{outline:none;box-shadow:0 0 0 4px rgba(147,197,253,.35);border-color:#93c5fd}
+  label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px 2px;font-weight:600}
+  .note{font-size:13px;color:var(--muted)}
+  .toast{position:fixed;right:20px;bottom:20px;display:grid;gap:8px;z-index:50}
+  .toast .item{background:var(--card);border:1px solid var(--border);padding:10px 12px;border-radius:12px;box-shadow:var(--shadow);font-weight:600}
+  .divider{height:1px;background:var(--border);margin:12px 0}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--muted)}
+  .table{width:100%;border-collapse:collapse}
+  .table th,.table td{border:1px solid var(--border);padding:8px;border-radius:6px}
+  .table th{font-weight:700;text-align:left;background:#f8fafc}
+
+  /* === Travel desk options / policy violation === */
+  .options-intro{margin-top:2px;margin-bottom:8px;font-size:13px;color:var(--muted);}
+  .option-grid{display:flex;flex-direction:column;gap:12px;margin-top:6px;}
+  .option-card{
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:12px 14px 12px;
+    background:var(--card);
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  .option-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:4px;
+    font-weight:700;
+    font-size:13px;
+  }
+  .option-header-main{display:flex;flex-direction:column;gap:2px;}
+  .option-tag{font-size:11px;color:var(--muted);}
+  .option-type-badge{
+    font-size:11px;
+    padding:3px 8px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    color:var(--muted);
+    background:#f9fafb;
+  }
+  .option-route{font-size:13px;margin-bottom:3px;}
+  .option-meta{font-size:12px;color:var(--muted);margin-bottom:6px;}
+  .option-price-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    font-size:12px;
+    margin-bottom:6px;
+  }
+  .price-label,.limit-label{color:var(--muted);}
+  .price-value,.limit-value{font-weight:700;}
+  .policy-status{
+    font-size:11px;
+    display:flex;
+    align-items:flex-start;
+    gap:6px;
+    border-radius:10px;
+    padding:6px 8px;
+    margin-top:4px;
+  }
+  .option-card.within .policy-status{
+    background:rgba(22,163,74,.06);
+    color:var(--success);
+    border:1px solid rgba(22,163,74,.18);
+  }
+  .option-card.violation{
+    border-color:rgba(220,38,38,.6);
+    box-shadow:0 0 0 1px rgba(220,38,38,.22),var(--shadow);
+  }
+  .option-card.violation .policy-status{
+    background:rgba(248,113,113,.08);
+    color:var(--danger);
+    border:1px solid rgba(220,38,38,.35);
+  }
+  .icon-circle{
+    width:16px;
+    height:16px;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+  }
+  .within .icon-circle{background:rgba(22,163,74,.12);}
+  .violation .icon-circle{background:rgba(248,113,113,.24);}
+
+  /* per-option decision */
+  .option-decision{
+    margin-top:10px;
+    border-top:1px dashed var(--border);
+    padding-top:8px;
+  }
+  .option-decision label{
+    margin-left:0;
+    margin-bottom:4px;
+  }
+  .option-comment{
+    min-height:56px;
+    resize:vertical;
+  }
+  .option-actions{
+    margin-top:6px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+  }
+  .option-status{
+    font-size:12px;
+    font-weight:600;
+    margin-left:auto;
+  }
+  .option-status.approved{color:var(--success);}
+  .option-status.declined{color:var(--danger);}
+  .option-error{
+    margin-top:4px;
+    font-size:11px;
+    color:var(--danger);
+  }
+  .option-card.option-error-highlight{
+    box-shadow:0 0 0 2px rgba(220,38,38,.4),var(--shadow);
+  }
+
+  /* === Employee selected highlight === */
+  .option-card.employee-selected{
+    border-color:rgba(14,165,233,.85);
+    box-shadow:0 0 0 2px rgba(14,165,233,.22),var(--shadow);
+    background:linear-gradient(180deg,rgba(14,165,233,.06),rgba(14,165,233,.02)),var(--card);
+  }
+  .employee-selected .option-type-badge{
+    border-color:rgba(14,165,233,.45);
+    color:rgba(2,132,199,1);
+    background:rgba(14,165,233,.10);
+  }
+  .employee-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 8px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.02em;
+    border:1px solid rgba(14,165,233,.45);
+    color:rgba(2,132,199,1);
+    background:rgba(14,165,233,.12);
+    width:max-content;
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="logo" aria-hidden="true">ET</div>
+      <div class="brand">ETG Travel</div>
+      <div class="badge">Stage 3 · Manager Approval</div>
+    </div>
+  </div>
+
+  <main>
+    <section class="card">
+      <h2 class="title">Approval required</h2>
+      <p class="sub">Please review the request and approve exactly one option per travel mode.</p>
+      <div class="highlight">Request ID: <span id="reqId">TR-XXXXXX</span></div>
+      <div class="stepper" aria-label="Progress">
+        <div class="step done"><span class="num">1</span><span>Submit</span></div>
+        <div class="step done"><span class="num">2</span><span>Acknowledgement</span></div>
+        <div class="step"><span class="num">3</span><span>Manager Approval</span></div>
+        <div class="step"><span class="num">4</span><span>Ticketing</span></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3 class="title">Request summary</h3>
+      <div id="summary"></div>
+      <div class="divider"></div>
+      <h3 class="title">Trip itinerary</h3>
+      <div id="itinerary"></div>
+    </section>
+
+    <!-- Options shared by travel desk (ONE BY ONE) -->
+    <section class="card">
+      <h3 class="title">Options shared by travel desk</h3>
+      <p class="options-intro">
+        You can approve <strong>only one Flight option</strong> and <strong>only one Hotel option</strong>.  
+        For options marked as <strong>policy violation</strong>, comment is mandatory when you approve.
+      </p>
+
+      <!-- Flight options -->
+      <h4 class="title" style="font-size:14px;margin-top:4px;">Flight options</h4>
+      <div class="option-grid">
+        <!-- Option 1 – within limit -->
+        <article class="option-card" data-type="flight" data-cost="14500" data-limit="15000" data-label="Flight option 1">
+          <div class="option-header">
+            <div class="option-header-main">
+              <div>Option 1 · Indigo 6E-234</div>
+              <div class="option-tag">Non-stop · Economy</div>
+            </div>
+            <span class="option-type-badge">Flight</span>
+          </div>
+          <div class="option-route">BLR → DEL · 09:45 – 12:30</div>
+          <div class="option-meta">Refundable · 15 kg check-in · 7 kg cabin</div>
+          <div class="option-price-row">
+            <div>
+              <div class="price-label">Estimated cost</div>
+              <div class="price-value"></div>
+            </div>
+            <div style="text-align:right">
+              <div class="limit-label">User limit</div>
+              <div class="limit-value"></div>
+            </div>
+          </div>
+          <div class="policy-status"></div>
+
+          <div class="option-decision">
+            <label>Manager comment <span style="font-weight:400;color:var(--muted)">(optional for this option)</span></label>
+            <textarea class="option-comment" placeholder="Add context for your decision (optional, recommended)."></textarea>
+            <div class="option-actions">
+              <button type="button" class="btn success btn-small option-approve">Approve</button>
+              <button type="button" class="btn danger btn-small option-decline">Decline</button>
+              <span class="option-status"></span>
+            </div>
+            <div class="option-error" aria-live="polite"></div>
+          </div>
+        </article>
+
+        <!-- Option 2 – policy violation -->
+        <article class="option-card" data-type="flight" data-cost="18200" data-limit="15000" data-label="Flight option 2">
+          <div class="option-header">
+            <div class="option-header-main">
+              <div>Option 2 · Vistara UK-810</div>
+              <div class="option-tag">Non-stop · Economy Flex</div>
+            </div>
+            <span class="option-type-badge">Flight</span>
+          </div>
+          <div class="option-route">BLR → DEL · 07:15 – 09:55</div>
+          <div class="option-meta">Refundable · 20 kg check-in · meal included</div>
+          <div class="option-price-row">
+            <div>
+              <div class="price-label">Estimated cost</div>
+              <div class="price-value"></div>
+            </div>
+            <div style="text-align:right">
+              <div class="limit-label">User limit</div>
+              <div class="limit-value"></div>
+            </div>
+          </div>
+          <div class="policy-status"></div>
+
+          <div class="option-decision">
+            <label>Manager comment <span style="font-weight:400;color:var(--danger)">(mandatory when approving – policy violation)</span></label>
+            <textarea class="option-comment" placeholder="Explain why you are approving / considering this policy deviation."></textarea>
+            <div class="option-actions">
+              <button type="button" class="btn success btn-small option-approve">Approve</button>
+              <button type="button" class="btn danger btn-small option-decline">Decline</button>
+              <span class="option-status"></span>
+            </div>
+            <div class="option-error" aria-live="polite"></div>
+          </div>
+        </article>
+
+        <!-- Option 3 – policy violation -->
+        <article class="option-card" data-type="flight" data-cost="19750" data-limit="15000" data-label="Flight option 3">
+          <div class="option-header">
+            <div class="option-header-main">
+              <div>Option 3 · Air India AI-504</div>
+              <div class="option-tag">1 stop · Premium Economy</div>
+            </div>
+            <span class="option-type-badge">Flight</span>
+          </div>
+          <div class="option-route">BLR → DEL · 10:30 – 14:40</div>
+          <div class="option-meta">Refundable · 25 kg check-in · lounge access</div>
+          <div class="option-price-row">
+            <div>
+              <div class="price-label">Estimated cost</div>
+              <div class="price-value"></div>
+            </div>
+            <div style="text-align:right">
+              <div class="limit-label">User limit</div>
+              <div class="limit-value"></div>
+            </div>
+          </div>
+          <div class="policy-status"></div>
+
+          <div class="option-decision">
+            <label>Manager comment <span style="font-weight:400;color:var(--danger)">(mandatory when approving – policy violation)</span></label>
+            <textarea class="option-comment" placeholder="Explain why you are approving / considering this policy deviation."></textarea>
+            <div class="option-actions">
+              <button type="button" class="btn success btn-small option-approve">Approve</button>
+              <button type="button" class="btn danger btn-small option-decline">Decline</button>
+              <span class="option-status"></span>
+            </div>
+            <div class="option-error" aria-live="polite"></div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Hotel options -->
+      <h4 class="title" style="font-size:14px;margin-top:16px;">Hotel options</h4>
+      <div class="option-grid">
+        <!-- Hotel 1 – within limit -->
+        <article class="option-card" data-type="hotel" data-cost="4800" data-limit="5000" data-label="Hotel option 1">
+          <div class="option-header">
+            <div class="option-header-main">
+              <div>Option 1 · Courtyard by Marriott</div>
+              <div class="option-tag">DLF Phase 3 · Breakfast included</div>
+            </div>
+            <span class="option-type-badge">Hotel</span>
+          </div>
+          <div class="option-route">Single room · 1 night</div>
+          <div class="option-meta">Free Wi-Fi · 24x7 check-in</div>
+          <div class="option-price-row">
+            <div>
+              <div class="price-label">Nightly rate</div>
+              <div class="price-value"></div>
+            </div>
+            <div style="text-align:right">
+              <div class="limit-label">User limit</div>
+              <div class="limit-value"></div>
+            </div>
+          </div>
+          <div class="policy-status"></div>
+
+          <div class="option-decision">
+            <label>Manager comment <span style="font-weight:400;color:var(--muted)">(optional for this option)</span></label>
+            <textarea class="option-comment" placeholder="Add context for your decision (optional, recommended)."></textarea>
+            <div class="option-actions">
+              <button type="button" class="btn success btn-small option-approve">Approve</button>
+              <button type="button" class="btn danger btn-small option-decline">Decline</button>
+              <span class="option-status"></span>
+            </div>
+            <div class="option-error" aria-live="polite"></div>
+          </div>
+        </article>
+
+        <!-- Hotel 2 – policy violation -->
+        <article class="option-card" data-type="hotel" data-cost="7200" data-limit="5000" data-label="Hotel option 2">
+          <div class="option-header">
+            <div class="option-header-main">
+              <div>Option 2 · JW Marriott Aerocity</div>
+              <div class="option-tag">Near Airport · Breakfast & Dinner</div>
+            </div>
+            <span class="option-type-badge">Hotel</span>
+          </div>
+          <div class="option-route">Single room · 1 night</div>
+          <div class="option-meta">Free Wi-Fi · airport transfer</div>
+          <div class="option-price-row">
+            <div>
+              <div class="price-label">Nightly rate</div>
+              <div class="price-value"></div>
+            </div>
+            <div style="text-align:right">
+              <div class="limit-label">User limit</div>
+              <div class="limit-value"></div>
+            </div>
+          </div>
+          <div class="policy-status"></div>
+
+          <div class="option-decision">
+            <label>Manager comment <span style="font-weight:400;color:var(--danger)">(mandatory when approving – policy violation)</span></label>
+            <textarea class="option-comment" placeholder="Explain why you are approving / considering this policy deviation."></textarea>
+            <div class="option-actions">
+              <button type="button" class="btn success btn-small option-approve">Approve</button>
+              <button type="button" class="btn danger btn-small option-decline">Decline</button>
+              <span class="option-status"></span>
+            </div>
+            <div class="option-error" aria-live="polite"></div>
+          </div>
+        </article>
+      </div>
+
+      <p class="note" style="margin-top:10px">
+        Example limits: flight user limit is ₹15,000 per leg · hotel user limit is ₹5,000 per night.  
+        In production, your backend can populate <code>data-cost</code> and <code>data-limit</code> for each option.
+      </p>
+    </section>
+
+    <!-- Decision notes: only internal note kept (global) -->
+    <section class="card">
+      <h3 class="title">Internal note & actions</h3>
+      <div class="grid">
+        <div class="col-12">
+          <label for="internalNote">Internal note (for travel desk only)</label>
+          <textarea id="internalNote" rows="3" placeholder="Example: Charge to CC-784; prefer airline X due to status."></textarea>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btnApprove" class="btn success">Approve request & notify</button>
+        <button id="btnReject" class="btn danger">Reject request & ask changes</button>
+        <button id="btnInfo" class="btn secondary">Request more info</button>
+        <button id="btnPrint" class="btn secondary">Print / Save PDF</button>
+      </div>
+      <p class="note" style="margin-top:8px">Global actions can still be used after you decide on individual options.</p>
+    </section>
+
+    <section class="card">
+      <h3 class="title">Policy hints</h3>
+      <div class="pill" id="policy1">Round-trip preferred · 0 stops, or 1 if price difference ≥ 20%</div>
+      <div class="pill" id="policy2" style="margin-top:8px">Advance purchase recommended ≥ 7 days where possible</div>
+    </section>
+
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const qp = new URLSearchParams(location.search);
+  const toast = (msg)=>{ const t=$('toast'); const el=document.createElement('div'); el.className='item'; el.textContent=msg; t.appendChild(el); setTimeout(()=>{ el.style.opacity=.0; el.style.transform='translateY(6px)'; setTimeout(()=> el.remove(), 260); }, 2200); };
+  function getAutoSave(){ try{ return JSON.parse(localStorage.getItem('etg-autosave')||'{}'); }catch(e){ return {}; } }
+
+  const saved = getAutoSave();
+  let reqId = qp.get('rid') || ('TR-' + Math.random().toString(36).slice(2,8).toUpperCase());
+  let name = qp.get('name') || saved.fullName || '—';
+  let email = qp.get('email') || saved.email || '';
+  let phone = (qp.get('phoneCode')||saved.phoneCode||'') + ' ' + (qp.get('phone')||saved.phone||'');
+  let travelerType = qp.get('type') || saved.travelerType || 'Employee';
+  let costCenter = qp.get('cc') || saved.costCenter || '—';
+  let managerEmail = qp.get('mgr') || saved.managerEmail || 'karthik.n@etgworld.com';
+
+  let svcFlight = (qp.get('svcF') ?? '1') !== '0';
+  let svcHotel  = (qp.get('svcH') ?? '0') === '1' || !!(qp.get('hotelCity')||qp.get('hotelName'));
+  let svcCab    = (qp.get('svcC') ?? '0') === '1' || !!qp.get('cabPickupCity');
+
+  let tripType = qp.get('tt') || 'round';
+  let from = qp.get('from') || '';
+  let to = qp.get('to') || '';
+  let depart = qp.get('depart') || '';
+  let ret = qp.get('ret') || '';
+  let seatClass = qp.get('cls') || 'Economy';
+  let purpose = qp.get('pur') || 'Business';
+  const segsParam = qp.get('segs') || '';
+  let segments = segsParam.split(';').filter(Boolean).map(s=>{ const [a,b,c] = s.split('|'); return {from:a||'', to:b||'', date:c||''}; });
+
+  let hotelName = qp.get('hotelName') || '';
+  let hotelCity = qp.get('hotelCity') || '';
+  let hotelCheckIn = qp.get('hotelCheckIn') || '';
+  let hotelCheckOut = qp.get('hotelCheckOut') || '';
+  let hotelRooms = qp.get('hotelRooms') || '';
+  let hotelGuests = qp.get('hotelGuests') || '';
+  let hotelNights = qp.get('hotelNights') || '';
+
+  let cabPickupCity = qp.get('cabPickupCity') || '';
+  let cabPickupDate = qp.get('cabPickupDate') || '';
+  let cabPickupTime = qp.get('cabPickupTime') || '';
+
+  $('reqId').textContent = reqId;
+
+  function paintSummary(){
+    const lines = [];
+    lines.push(`<div class='kv'><b>Requester</b><span>${name} · ${travelerType}</span></div>`);
+    lines.push(`<div class='kv'><b>Contacts</b><span>${email ? email+' · ' : ''}${phone}</span></div>`);
+    lines.push(`<div class='kv'><b>Cost Center</b><span>${costCenter}</span></div>`);
+    if(managerEmail) lines.push(`<div class='kv'><b>Approver</b><span>${managerEmail}</span></div>`);
+    $('summary').innerHTML = lines.join('');
+  }
+
+  function buildItineraryHtml(){
+    const parts = [];
+    if(svcFlight){
+      if(tripType==='multi' && segments.length){
+        const rows = segments.map((s,i)=>`<tr><td>${i+1}</td><td>${s.from||'—'}</td><td>${s.to||'—'}</td><td>${s.date||'—'}</td></tr>`).join('');
+        parts.push(`<h4 class='title' style='font-size:16px'>Flight – Multi-city (${seatClass} · ${purpose})</h4>`);
+        parts.push(`<table class='table'><thead><tr><th>#</th><th>From</th><th>To</th><th>Date</th></tr></thead><tbody>${rows}</tbody></table>`);
+      } else if (from || to) {
+        parts.push(`<h4 class='title' style='font-size:16px'>Flight (${seatClass} · ${purpose})</h4>`);
+        parts.push(`<div class='kv'><b>Route</b><span>${from||'—'} → ${to||'—'}</span></div>`);
+        parts.push(`<div class='kv'><b>Dates</b><span>${depart||'—'}${tripType==='round' && ret ? ' → '+ret : ''}</span></div>`);
+      }
+    }
+    if(svcHotel && (hotelCity||hotelName||hotelCheckIn||hotelCheckOut)){
+      parts.push(`<h4 class='title' style='font-size:16px;margin-top:10px'>Hotel</h4>`);
+      parts.push(`<div class='kv'><b>Hotel</b><span>${hotelName||'—'}</span></div>`);
+      parts.push(`<div class='kv'><b>City/Area</b><span>${hotelCity||'—'}</span></div>`);
+      parts.push(`<div class='kv'><b>Stay</b><span>${hotelCheckIn||'—'} → ${hotelCheckOut||'—'}${hotelNights? ' · '+hotelNights+' night(s)' : ''}</span></div>`);
+      if(hotelRooms||hotelGuests) parts.push(`<div class='kv'><b>Rooms/Guests</b><span>${hotelRooms||'—'} / ${hotelGuests||'—'}</span></div>`);
+    }
+    if(svcCab && (cabPickupCity||cabPickupDate||cabPickupTime)){
+      parts.push(`<h4 class='title' style='font-size:16px;margin-top:10px'>Cab</h4>`);
+      parts.push(`<div class='kv'><b>Pickup</b><span>${cabPickupCity||'—'}</span></div>`);
+      parts.push(`<div class='kv'><b>When</b><span>${cabPickupDate||'—'} ${cabPickupTime||''}</span></div>`);
+    }
+    return parts.join('') || '<p class="note">No itinerary details provided.</p>';
+  }
+
+  function buildItineraryText(){
+    let t = '';
+    if(svcFlight){
+      if(tripType==='multi' && segments.length){
+        t += `Flight – Multi-city (${seatClass} · ${purpose})\n`;
+        segments.forEach((s,i)=>{ t += `  ${i+1}. ${s.from||'-'} → ${s.to||'-'} (${s.date||'-'})\n`; });
+      } else if(from || to){
+        t += `Flight (${seatClass} · ${purpose})\n  Route: ${from||'-'} → ${to||'-'}\n  Dates: ${depart||'-'}${tripType==='round'&&ret? ' → '+ret : ''}\n`;
+      }
+      t += `\n`;
+    }
+    if(svcHotel && (hotelCity||hotelName||hotelCheckIn||hotelCheckOut)){
+      t += `Hotel\n  Hotel: ${hotelName||'-'}\n  City/Area: ${hotelCity||'-'}\n  Stay: ${hotelCheckIn||'-'} → ${hotelCheckOut||'-'}${hotelNights? ' · '+hotelNights+' night(s)' : ''}\n  Rooms/Guests: ${hotelRooms||'-'} / ${hotelGuests||'-'}\n\n`;
+    }
+    if(svcCab && (cabPickupCity||cabPickupDate||cabPickupTime)){
+      t += `Cab\n  Pickup: ${cabPickupCity||'-'}\n  When: ${cabPickupDate||'-'} ${cabPickupTime||''}\n\n`;
+    }
+    return t;
+  }
+
+  // (hydration moved below)
+
+  // === Trip store helpers (shared with other stages) ===
+function loadTripStoreForUser(){
+  try{
+    const raw = localStorage.getItem('etg-trips');
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){
+    return {};
+  }
+}
+
+function findTripByIdForUser(id){
+  const wanted = String(id || '').trim();
+  if(!wanted) return null;
+
+  const store = loadTripStoreForUser();
+  let best = null;
+  let bestScore = -1;
+
+  const isMatch = (t)=>{
+    if(!t) return false;
+    const cand = [
+      t.id, t.reqId, t.requestId, t.rid,
+      t.request && (t.request.id || t.request.reqId || t.request.requestId),
+      t.requestDetails && (t.requestDetails.id || t.requestDetails.reqId || t.requestDetails.requestId),
+      t.meta && (t.meta.id || t.meta.reqId || t.meta.requestId),
+    ].filter(Boolean).map(x=>String(x).trim());
+    return cand.some(x => x === wanted);
+  };
+
+  const scoreTrip = (t)=>{
+    let s = 0;
+    if(!t) return s;
+    if(t.userConfirmation && (Array.isArray(t.userConfirmation.selections) ? t.userConfirmation.selections.length : true)) s += 5;
+    if(t.confirmation && (t.confirmation.selectedFlight || t.confirmation.selectedHotel)) s += 4;
+    if(t.quotationOptions || t.quotation || t.optionsShared) s += 3;
+    if(t.itinerary || t.requestItinerary) s += 2;
+    if(t.requester || (t.requestDetails && t.requestDetails.requester)) s += 1;
+    return s;
+  };
+
+  const scanList = (list)=>{
+    if(!Array.isArray(list)) return;
+    list.forEach(t=>{
+      if(!isMatch(t)) return;
+      const sc = scoreTrip(t);
+      if(sc > bestScore){
+        best = t;
+        bestScore = sc;
+      }
+    });
+  };
+
+  if(Array.isArray(store)){
+    scanList(store);
+  }else if(store && typeof store === 'object'){
+    Object.keys(store).forEach(k=> scanList(store[k]));
+  }
+
+  return best;
+}
+
+
+  // === Hydrate this page from the shared trip store (so RM sees exactly what user confirmed) ===
+  
+function hydrateFromTripStore(){
+    // Try to hydrate this page from the shared trip store first (most reliable)
+    let tripId = (qp.get('rid') || qp.get('tripId') || '').trim();
+    if(!tripId){
+      try{
+        tripId = (localStorage.getItem('etg-last-quotation-trip-id') || localStorage.getItem('etg-selected-trip-id') || '').trim();
+      }catch(e){}
+    }
+    if(!tripId) return null;
+
+    const trip = findTripByIdForUser(tripId);
+    if(!trip) return null;
+
+    // --- helpers ---
+    const isFilled = (v)=> v!==null && v!==undefined && String(v).trim()!=='' && String(v).trim()!=='—';
+    const pick = (...vals)=>{ for(const v of vals){ if(isFilled(v)) return v; } return ''; };
+
+    const deepPickByKeys = (obj, keys, maxDepth=6)=>{
+      const wanted = (keys||[]).map(k=>String(k).toLowerCase());
+      const seen = new Set();
+      const walk = (node, depth)=>{
+        if(!node || depth>maxDepth) return '';
+        if(typeof node!=='object') return '';
+        if(seen.has(node)) return '';
+        seen.add(node);
+
+        // direct keys
+        for(const k of Object.keys(node)){
+          const lk = k.toLowerCase();
+          if(wanted.includes(lk)){
+            const v = node[k];
+            if(typeof v==='string' || typeof v==='number') return v;
+          }
+        }
+        // recurse
+        for(const k of Object.keys(node)){
+          const v = node[k];
+          if(v && typeof v==='object'){
+            const out = walk(v, depth+1);
+            if(isFilled(out)) return out;
+          }
+        }
+        return '';
+      };
+      return walk(obj, 0);
+    };
+
+    const deepPickAnyMatch = (obj, regex, maxDepth=6)=>{
+      const re = regex instanceof RegExp ? regex : new RegExp(String(regex), 'i');
+      const seen = new Set();
+      const walk = (node, depth)=>{
+        if(!node || depth>maxDepth) return '';
+        if(typeof node!=='object') return '';
+        if(seen.has(node)) return '';
+        seen.add(node);
+
+        for(const k of Object.keys(node)){
+          if(re.test(k)){
+            const v = node[k];
+            if(typeof v==='string' || typeof v==='number') return v;
+          }
+        }
+        for(const k of Object.keys(node)){
+          const v = node[k];
+          if(v && typeof v==='object'){
+            const out = walk(v, depth+1);
+            if(isFilled(out)) return out;
+          }
+        }
+        return '';
+      };
+      return walk(obj, 0);
+    };
+
+    // --- Request id ---
+    reqId = pick(trip.id, trip.reqId, trip.requestId, trip.rid, tripId) || tripId;
+    $('reqId').textContent = reqId;
+
+    // --- Requester block (robust across stages) ---
+    const r =
+      trip.requester ||
+      trip.employee ||
+      trip.user ||
+      (trip.requestDetails && (trip.requestDetails.requester || trip.requestDetails.employee || trip.requestDetails.traveller)) ||
+      (trip.request && (trip.request.requester || trip.request.employee || trip.request.traveller)) ||
+      (trip.profile && (trip.profile.requester || trip.profile.employee || trip.profile)) ||
+      {};
+
+    name = pick(
+      r.name, r.fullName, r.travellerName, r.employeeName, r.requesterName,
+      trip.travellerName, trip.employeeName, trip.requesterName, trip.fullName,
+      deepPickByKeys(trip, ['travellerName','travelerName','employeeName','requesterName','fullName','name']),
+      name
+    ) || name;
+
+    email = pick(
+      r.email, r.workEmail, r.officeEmail, r.userEmail,
+      trip.email, trip.requesterEmail, trip.employeeEmail,
+      deepPickAnyMatch(trip, /(email)$/i),
+      email
+    );
+    email = (email || '').toLowerCase();
+
+    travelerType = pick(r.travelerType, r.travellerType, r.type, trip.travelerType, trip.travellerType, travelerType) || travelerType;
+
+    costCenter = pick(
+      r.costCenter, r.costCentre, r.cc, r.cost_center,
+      trip.costCenter, trip.costCentre,
+      deepPickByKeys(trip, ['costcenter','costcentre','cost_center','cc']),
+      costCenter
+    ) || costCenter;
+
+    managerEmail = pick(
+      r.managerEmail, r.approverEmail,
+      (trip.approver && trip.approver.email),
+      trip.managerEmail, trip.approverEmail,
+      deepPickAnyMatch(trip, /(managerEmail|approverEmail)/i),
+      managerEmail
+    ) || managerEmail;
+
+    // Phone may be stored as a single string or split
+    let p = pick(r.phone, trip.phone, deepPickAnyMatch(trip, /(phone|mobile)/i), '').toString();
+    if(!isFilled(p)){
+      const pc = pick(r.phoneCode, saved.phoneCode, '');
+      const pn = pick(r.phoneNumber, r.phoneNo, saved.phone, '');
+      p = (pc + ' ' + pn).trim();
+    }
+    if(isFilled(p)) phone = p;
+
+    // --- Itinerary ---
+    const it =
+      trip.itinerary ||
+      trip.requestItinerary ||
+      (trip.requestDetails && (trip.requestDetails.itinerary || trip.requestDetails.travel)) ||
+      (trip.request && (trip.request.itinerary || trip.request.travel)) ||
+      {};
+
+    if(typeof it.svcFlight === 'boolean') svcFlight = it.svcFlight;
+    if(typeof it.svcHotel === 'boolean')  svcHotel  = it.svcHotel;
+    if(typeof it.svcCab === 'boolean')    svcCab    = it.svcCab;
+
+    tripType = pick(it.tripType, trip.tripType, deepPickByKeys(trip, ['tripType']), tripType) || tripType;
+
+    // City / route (many stage variants)
+    from = pick(
+      it.from, it.fromCity, it.origin, it.originCity, it.source,
+      trip.from, trip.fromCity,
+      deepPickByKeys(trip, ['from','fromcity','origin','origincity','source','departure','departurecity']),
+      from
+    );
+
+    to = pick(
+      it.to, it.toCity, it.destination, it.destinationCity, it.target,
+      trip.to, trip.toCity,
+      deepPickByKeys(trip, ['to','tocity','destination','destinationcity','target','arrival','arrivalcity']),
+      to
+    );
+
+    // Dates (many variants)
+    depart = pick(
+      it.depart, it.departDate, it.departureDate, it.startDate, it.travelDate,
+      trip.depart, trip.departDate, trip.startDate,
+      deepPickByKeys(trip, ['depart','departdate','departuredate','startdate','traveldate','datefrom']),
+      depart
+    );
+
+    ret = pick(
+      it.ret, it.returnDate, it.endDate, it.dateTo,
+      trip.ret, trip.returnDate, trip.endDate,
+      deepPickByKeys(trip, ['ret','returndate','enddate','dateto']),
+      ret
+    );
+
+    seatClass = pick(it.seatClass, it.class, trip.seatClass, deepPickByKeys(trip, ['seatClass','class']), seatClass) || seatClass;
+    purpose   = pick(it.purpose, trip.purpose, deepPickByKeys(trip, ['purpose','travelPurpose']), purpose) || purpose;
+
+    // Segments (multi-city)
+    if(Array.isArray(it.segments) && it.segments.length) {
+      segments = it.segments;
+    } else {
+      const segAny = deepPickByKeys(trip, ['segments','legs']);
+      // deepPickByKeys won't return arrays, so also attempt direct
+      const segArr = (trip.segments || trip.legs || (it && it.legs));
+      if(Array.isArray(segArr) && segArr.length) segments = segArr;
+    }
+
+    // If we still don't have from/to but have a route string, try to split it
+    const routeStr = pick(it.route, trip.route, deepPickByKeys(trip, ['route']), '');
+    if((!isFilled(from) || !isFilled(to)) && isFilled(routeStr)){
+      const parts = String(routeStr).split(/→|->|—|-/).map(s=>s.trim()).filter(Boolean);
+      if(parts.length >= 2){
+        if(!isFilled(from)) from = parts[0];
+        if(!isFilled(to)) to = parts[parts.length-1];
+      }
+    }
+
+    // Hotel
+    hotelName   = pick(it.hotelName, trip.hotelName, deepPickByKeys(trip, ['hotelName']), hotelName);
+    hotelCity   = pick(it.hotelCity, trip.hotelCity, deepPickByKeys(trip, ['hotelCity','city']), hotelCity);
+    hotelCheckIn  = pick(it.hotelCheckIn, trip.hotelCheckIn, deepPickByKeys(trip, ['hotelCheckIn','checkIn']), hotelCheckIn);
+    hotelCheckOut = pick(it.hotelCheckOut, trip.hotelCheckOut, deepPickByKeys(trip, ['hotelCheckOut','checkOut']), hotelCheckOut);
+    hotelRooms  = pick(it.hotelRooms, trip.hotelRooms, deepPickByKeys(trip, ['hotelRooms','rooms']), hotelRooms);
+    hotelGuests = pick(it.hotelGuests, trip.hotelGuests, deepPickByKeys(trip, ['hotelGuests','guests']), hotelGuests);
+    hotelNights = pick(it.hotelNights, trip.hotelNights, deepPickByKeys(trip, ['hotelNights','nights']), hotelNights);
+
+    // Cab
+    cabPickupCity = pick(it.cabPickupCity, trip.cabPickupCity, deepPickByKeys(trip, ['cabPickupCity','pickupCity']), cabPickupCity);
+    cabPickupDate = pick(it.cabPickupDate, trip.cabPickupDate, deepPickByKeys(trip, ['cabPickupDate','pickupDate']), cabPickupDate);
+    cabPickupTime = pick(it.cabPickupTime, trip.cabPickupTime, deepPickByKeys(trip, ['cabPickupTime','pickupTime']), cabPickupTime);
+
+    // Final fallback: if name still missing but email exists, show email prefix as name
+    if(!isFilled(name) && isFilled(email)){
+      name = email.split('@')[0].replace(/[._]/g,' ').trim();
+    }
+
+    return trip;
+  }
+
+
+  // Hydrate, then render summary/itinerary
+  const __trip = hydrateFromTripStore();
+  paintSummary();
+  $('itinerary').innerHTML = buildItineraryHtml();
+
+  
+  function parseAmount(str){
+    if(str === null || str === undefined) return 0;
+    const n = Number(String(str).replace(/[^0-9.]/g,''));
+    return isNaN(n) ? 0 : n;
+  }
+
+
+  // Robust amount picker (TravelDesk may store amount under different keys)
+  function getOptionAmount(opt){
+    if(opt === null || opt === undefined) return 0;
+    if(typeof opt !== 'object') return parseAmount(opt);
+
+    const candidates = [
+      opt.estimatedAmount, opt.amount, opt.cost, opt.fare, opt.total,
+      opt.price, opt.nightlyRate, opt.rate, opt.finalAmount, opt.finalCost,
+      opt.totalAmount, opt.totalCost, opt.baseFare
+    ];
+    for(const c of candidates){
+      const n = parseAmount(c);
+      if(n) return n;
+    }
+    return 0;
+  }
+
+  function normalizeQuotationOptions(quotationOptions){
+    const q = quotationOptions || {};
+    let flights = q.flights || q.flightOptions || q.flight || q.airOptions || q.air || q.flightQuotes;
+    let hotels  = q.hotels  || q.hotelOptions  || q.hotel || q.stayOptions || q.stay || q.hotelQuotes;
+
+    if(!flights && !hotels && Array.isArray(q)){
+      flights = q.filter(x => String(x && (x.type||x.category||'')).toLowerCase().includes('flight') || String(x && (x.mode||'')).toLowerCase()==='flight');
+      hotels  = q.filter(x => String(x && (x.type||x.category||'')).toLowerCase().includes('hotel')  || String(x && (x.mode||'')).toLowerCase()==='hotel');
+    }
+
+    return {
+      flights: Array.isArray(flights) ? flights : [],
+      hotels:  Array.isArray(hotels)  ? hotels  : []
+    };
+  }
+
+  function formatINR(n){
+    return '₹ ' + (Number(n)||0).toLocaleString('en-IN');
+  }
+
+  // Build dynamic option card for Manager page (so it always matches TravelDesk quotation + user confirmation)
+  function buildManagerOptionCard(type, option, index, userSelected){
+    const card = document.createElement('article');
+    card.className = 'option-card' + (userSelected ? ' employee-selected' : '');
+    card.dataset.type = type;
+
+    const label = (type === 'flight' ? 'Flight option ' : 'Hotel option ') + index;
+    card.dataset.label = label;
+
+    // Keep a stable id for matching traveller selection
+
+    // Keep a stable id for matching traveller selection
+    card.dataset.optionId = String(option && (option.optionId || option.id || option.uid || option.key) || (type + '-' + index));
+
+    const cost = getOptionAmount(option);
+    card.dataset.cost = String(cost || 0);
+
+    // Manager page can also support "limit" if TravelDesk provides it; otherwise omit.
+    if(option && (option.limit !== undefined && option.limit !== null)){
+      const lim = parseAmount(option.limit);
+      card.dataset.limit = String(lim || 0);
+    }
+
+    const title = (option && (option.title || option.name)) || label;
+    const details = (option && (option.details || option.notes || option.meta)) || '';
+    const currency = (option && (option.currency || option.curr || option.ccy)) || 'INR';
+    const rawPrice = option ? (option.price ?? option.amount ?? option.cost ?? option.estimatedAmount ?? option.fare ?? option.nightlyRate ?? option.rate ?? '') : '';
+    const priceDisplay = rawPrice ? (currency + ' ' + rawPrice).trim() : (cost ? formatINR(cost) : '-');
+    const mgrCurrency = (option.mgrCurrency ?? option.managerReviewCurrency ?? option.manager_review_currency ?? option.mgr_currency ?? option.reviewCurrency ?? option.review_currency ?? '') + '';
+    const mgrAmount   = (option.mgrAmount   ?? option.managerReviewAmount   ?? option.manager_review_amount   ?? option.mgr_amount   ?? option.reviewAmount   ?? option.review_amount   ?? '') + '';
+    const mgrDisplay  = (mgrAmount && String(mgrAmount).trim() !== '') ? ((mgrCurrency || currency || '') + ' ' + mgrAmount).trim() : '';
+    const mgrDisplayEsc = mgrDisplay ? escapeHtml(mgrDisplay) : '';
+
+
+    card.innerHTML = `
+      <div class="option-header">
+        <div class="option-header-main">
+          <div>Option ${index} · ${escapeHtml(title)}</div>
+          <div class="option-tag">${userSelected ? '<span class="employee-pill">Employee Selected option</span>' : (type === 'flight' ? 'Flight option' : 'Hotel option')}</div>
+        </div>
+        <span class="option-type-badge">${type === 'flight' ? 'Flight' : 'Hotel'}</span>
+      </div>
+      <div class="option-route">${escapeHtml(title)}</div>
+      <div class="option-meta">${details ? escapeHtml(details) : '—'}</div>
+      <div class="option-price-row">
+        <div>
+          <div class="price-label">${type === 'hotel' ? 'Nightly rate' : 'Estimated cost'}</div>
+          <div class="price-value">${escapeHtml(priceDisplay || '-')}</div>
+          ${mgrDisplay ? ('<div class="limit-label" style="margin-top:6px">Manager review cost</div><div class="limit-value">' + mgrDisplayEsc + '</div>') : ''}
+        </div>
+        <div style="text-align:right">
+          <div class="limit-label">Comparative view</div>
+          <div class="limit-value">Will highlight higher fares</div>
+        </div>
+      </div>
+      <div class="policy-status"></div>
+
+      <div class="option-decision">
+        <label>Manager comment <span style="font-weight:400;color:var(--muted)">(mandatory when approving policy deviation)</span></label>
+        <textarea class="option-comment" placeholder="Add context for your decision (required for deviations)."></textarea>
+        <div class="option-actions">
+          <button type="button" class="btn success btn-small option-approve">Approve</button>
+          <button type="button" class="btn danger btn-small option-decline">Decline</button>
+          <span class="option-status ${userSelected ? 'approved' : ''}">${userSelected ? 'Employee Selected option' : ''}</span>
+        </div>
+        <div class="option-error" aria-live="polite"></div>
+      </div>
+    `;
+    return card;
+  }
+
+  // tiny HTML escaper for dynamic strings (avoid breaking layout)
+  function escapeHtml(str){
+    return String(str||'')
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#039;');
+  }
+
+  // Highlight policy deviations: cheapest option is "within", higher ones are "violation"
+  function applyPolicyHighlightForType(cards){
+    if(!cards || !cards.length) return;
+    const costs = cards.map(c => parseAmount(c.dataset.cost));
+    const minCost = Math.min(...costs);
+
+    cards.forEach(card=>{
+      const cost = parseAmount(card.dataset.cost);
+      const statusEl = card.querySelector('.policy-status');
+      if(!statusEl) return;
+
+      card.classList.remove('within','violation');
+
+      if(cost === minCost){
+        card.classList.add('within');
+        statusEl.innerHTML =
+          '<span class="icon-circle" aria-hidden="true">&#10003;</span>' +
+          '<span>Within policy – this is the lowest cost option for this category.</span>';
+      }else{
+        card.classList.add('violation');
+        statusEl.innerHTML =
+          '<span class="icon-circle" aria-hidden="true">!</span>' +
+          '<span>Policy deviation – higher than the lowest available option.</span>';
+      }
+    });
+  }
+
+  // One approval per travel mode + mandatory comment if approving deviation
+  function installApprovalHandlers(){
+    const cards = document.querySelectorAll('.option-card');
+
+    function clearApprovalsForType(type, exceptCard){
+      cards.forEach(other=>{
+        if(other.dataset.type === type && other !== exceptCard){
+          other.dataset.decision = '';
+          const st = other.querySelector('.option-status');
+          const err = other.querySelector('.option-error');
+          other.classList.remove('option-error-highlight');
+          if(st){
+            // preserve the "User confirmed option" badge if applicable
+            const isEmployeeSelected = (st.textContent || '').toLowerCase().includes('employee selected');
+            st.textContent = isEmployeeSelected ? 'Employee Selected option' : '';
+            st.className = 'option-status' + (isEmployeeSelected ? ' approved' : '');
+          }
+          if(err){ err.textContent = ''; }
+        }
+      });
+    }
+
+    cards.forEach(card=>{
+      const approveBtn = card.querySelector('.option-approve');
+      const declineBtn = card.querySelector('.option-decline');
+      const comment = card.querySelector('.option-comment');
+      const errorEl = card.querySelector('.option-error');
+      const statusEl = card.querySelector('.option-status');
+      const label = card.dataset.label || 'option';
+      const type = card.dataset.type || '';
+
+      function setStatus(state){
+        card.dataset.decision = state || '';
+        const base = (statusEl && (statusEl.textContent || '').toLowerCase().includes('employee selected')) ? 'Employee Selected option · ' : '';
+        if(statusEl){
+          statusEl.textContent =
+            state === 'approved'
+              ? base + 'Approved · selected ' + type + ' option'
+              : state === 'declined'
+                ? 'Declined'
+                : (base ? base.replace(' · ','') : '');
+          statusEl.className = 'option-status' + (state ? ' ' + state : (base ? ' approved' : ''));
+        }
+      }
+
+      if(approveBtn){
+        approveBtn.addEventListener('click',()=>{
+          if(errorEl) errorEl.textContent = '';
+          card.classList.remove('option-error-highlight');
+
+          const isViolation = card.classList.contains('violation');
+          if(isViolation && !(comment && comment.value.trim())){
+            if(errorEl) errorEl.textContent = 'Comment is mandatory when approving a policy-deviation option.';
+            card.classList.add('option-error-highlight');
+            if(comment) comment.focus();
+            return;
+          }
+
+          clearApprovalsForType(type, card);
+          setStatus('approved');
+          toast('Approved ' + label + ' (' + type + ')');
+        });
+      }
+
+      if(declineBtn){
+        declineBtn.addEventListener('click',()=>{
+          if(errorEl) errorEl.textContent = '';
+          card.classList.remove('option-error-highlight');
+          setStatus('declined');
+          toast('Declined ' + label + ' (' + type + ')');
+        });
+      }
+    });
+  }
+
+  // Render options from the shared trip store (quotation + user confirmation)
+  function renderOptionsFromTripStore(){
+    // Determine trip id from URL or last-selected trip
+    let tripId = qp.get('rid') || qp.get('tripId') || '';
+    if(!tripId){
+      try{
+        tripId = localStorage.getItem('etg-last-quotation-trip-id') ||
+                 localStorage.getItem('etg-selected-trip-id') || '';
+      }catch(e){}
+    }
+    if(!tripId){
+      toast('No request selected. Please open via Reporting Manager dashboard → View quotation.');
+      // Clear placeholder grids
+      document.querySelectorAll('.option-grid').forEach(g=>{
+        g.innerHTML = '<div class="muted" style="padding:12px">No request selected.</div>';
+      });
+      return;
+    }
+
+    const trip = findTripByIdForUser(tripId);
+    if(!trip){
+      toast('This request is not synced yet (no data found from Stage 6). Please confirm options in Stage 6 first.');
+      document.querySelectorAll('.option-grid').forEach(g=>{
+        g.innerHTML = '<div class="muted" style="padding:12px">No synced options found from Stage 6.</div>';
+      });
+      return;
+    }
+
+    const normalized = normalizeQuotationOptions(trip.quotationOptions || trip.quotation || trip.optionsShared);
+    const flights = normalized.flights;
+    const hotels  = normalized.hotels;
+
+    const conf = trip.userConfirmation || {};
+    const selected = Array.isArray(conf.selections) ? conf.selections : [];
+
+    const norm = (v)=>String(v||'').toLowerCase().trim();
+    const normNum = (v)=>{
+      const n = parseFloat(String(v||'').replace(/[^0-9.]/g,''));
+      return isFinite(n) ? n : 0;
+    };
+
+    // Match by optionId first, then by cost, then by route+details (never route-only)
+    const isUserSelected = (type, opt)=>{
+      const oType = norm(type);
+      const oId = norm(opt && (opt.optionId || opt.id || opt.uid || opt.key));
+      const oCost = normNum(getOptionAmount(opt));
+      const oRoute = norm(opt && (opt.route || opt.title || opt.name));
+      const oDetails = norm(opt && (opt.details || opt.meta || opt.notes || opt.airline || opt.vendor || opt.hotelName));
+
+      for(const sel of selected){
+        const sType = norm(sel && sel.type);
+        if(sType !== oType) continue;
+
+        const sId = norm(sel && (sel.optionId || sel.id || sel.uid));
+        if(sId && oId && sId === oId) return true;
+
+        const sCost = normNum(sel && sel.estimatedAmount);
+        if(sCost && oCost && Math.abs(sCost - oCost) < 1) return true;
+
+        const sRoute = norm(sel && sel.route);
+        const sDetails = norm(sel && (sel.details || (sel.optionSnapshot && sel.optionSnapshot.details) || ''));
+        if(sRoute && oRoute && sRoute === oRoute){
+          if(sDetails && oDetails){
+            if(sDetails === oDetails || oDetails.includes(sDetails) || sDetails.includes(oDetails)) return true;
+          }
+        }
+      }
+      return false;
+    };
+
+    // Locate the two grids already present in the page (first = flight, second = hotel)
+    const grids = document.querySelectorAll('.option-grid');
+    const flightGrid = grids && grids.length ? grids[0] : null;
+    const hotelGrid  = grids && grids.length > 1 ? grids[1] : null;
+    if(!flightGrid || !hotelGrid) return;
+
+    // Build flight cards
+    flightGrid.innerHTML = '';
+    const flightCards = [];
+    if(flights.length){
+      flights.forEach((opt, idx)=>{
+        const label = 'Flight option ' + (idx+1);
+        const title = (opt && (opt.title || opt.name)) || label;
+        const card = buildManagerOptionCard('flight', opt, idx+1, isUserSelected('flight', opt));
+        flightGrid.appendChild(card);
+        flightCards.push(card);
+      });
+    }else{
+      flightGrid.innerHTML = '<p class="note">No flight options shared.</p>';
+    }
+
+    // Build hotel cards
+    hotelGrid.innerHTML = '';
+    const hotelCards = [];
+    if(hotels.length){
+      hotels.forEach((opt, idx)=>{
+        const label = 'Hotel option ' + (idx+1);
+        const title = (opt && (opt.title || opt.name)) || label;
+        const card = buildManagerOptionCard('hotel', opt, idx+1, isUserSelected('hotel', opt));
+        hotelGrid.appendChild(card);
+        hotelCards.push(card);
+      });
+    }else{
+      hotelGrid.innerHTML = '<p class="note">No hotel options shared.</p>';
+    }
+
+    applyPolicyHighlightForType(flightCards);
+    applyPolicyHighlightForType(hotelCards);
+
+    installApprovalHandlers();
+  }
+
+  // Render options immediately on load (so RM sees ALL options + what the user confirmed)
+  renderOptionsFromTripStore();
+
+  function mailto(to, cc, subject, body){
+    const url = `mailto:${encodeURIComponent(to)}?cc=${encodeURIComponent(cc)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    location.href = url;
+  }
+  function baseBlock(){
+    let t = `ETG Travel – Request ${reqId}\n\n`;
+    t += `Requester: ${name} (${travelerType})\n`;
+    t += `Email: ${email}\nPhone: ${phone}\nCost Center: ${costCenter}\n\n`;
+    t += buildItineraryText();
+    return t;
+  }
+
+  // global action buttons
+  
+  // === Collect per-option approvals and persist to trip store ===
+  function collectApprovedSelections(){
+    const out = [];
+    document.querySelectorAll('.option-card').forEach(card=>{
+      if((card.dataset.decision||'') !== 'approved') return;
+      const type = (card.dataset.type||'').toLowerCase();
+      const label = card.dataset.label || '';
+      const title = (card.querySelector('.option-route')?.textContent || '').trim();
+      const details = (card.querySelector('.option-meta')?.textContent || '').trim();
+      const cost = Number(card.dataset.cost || '') || null;
+      const limit = Number(card.dataset.limit || '') || null;
+      const isViolation = card.classList.contains('violation');
+      const comment = (card.querySelector('.option-comment')?.value || '').trim();
+
+      out.push({ type, label, title, details, cost, limit, isViolation, comment });
+    });
+    return out;
+  }
+
+  function persistManagerApproval(managerApproval){
+    let tripId = reqId;
+    const trip = findTripByIdForUser(tripId);
+    if(!trip){
+      toast('No synced trip found. Please open this page using the View quotation link from the request.');
+      return;
+    }else{
+      trip.managerApproval = managerApproval;
+      trip.status = 'Pending with TravelDesk';
+      trip.stage = 8;
+      try{
+        // We must write back to the same storage structure
+        const store = loadTripStoreForUser();
+        let updated = false;
+      }catch(e){}
+    }
+
+    // Write back robustly: scan store and replace matching trip
+    try{
+      const store = loadTripStoreForUser();
+      const writeBack = (list)=>{
+        if(!Array.isArray(list)) return false;
+        for(let i=0;i<list.length;i++){
+          if(list[i] && String(list[i].id)===String(tripId)){
+            list[i].managerApproval = managerApproval;
+            list[i].status = 'Pending with TravelDesk';
+            list[i].stage = 8;
+            return true;
+          }
+        }
+        return false;
+      };
+
+      if(Array.isArray(store)){
+        writeBack(store);
+        localStorage.setItem('etg-trips', JSON.stringify(store));
+      }else if(store && typeof store === 'object'){
+        let changed = false;
+        Object.keys(store).forEach(k=>{
+          if(writeBack(store[k])) changed = true;
+        });
+        if(changed) localStorage.setItem('etg-trips', JSON.stringify(store));
+      }
+    }catch(e){}
+    try{ localStorage.setItem('etg-last-approved-trip-id', tripId); }catch(e){}
+    toast('Saved manager approval · notified TravelDesk');
+  }
+$('btnApprove').addEventListener('click',()=>{
+    // Validate per-option approvals (one per enabled travel mode)
+    const approved = collectApprovedSelections();
+    const needsFlight = document.querySelectorAll('.option-card[data-type="flight"]').length > 0;
+    const needsHotel  = document.querySelectorAll('.option-card[data-type="hotel"]').length > 0;
+
+    if(needsFlight && !approved.some(a=>a.type==='flight')){
+      toast('Please approve exactly one Flight option before submitting.');
+      return;
+    }
+    if(needsHotel && !approved.some(a=>a.type==='hotel')){
+      toast('Please approve exactly one Hotel option before submitting.');
+      return;
+    }
+
+    const i = ($('internalNote').value||'').trim();
+
+    // Persist manager approval into trip store (so TravelDesk Stage 8 can load it)
+    persistManagerApproval({
+      status: 'APPROVED',
+      approverEmail: managerEmail || 'karthik.n@etgworld.com',
+      internalNote: i,
+      approvedSelections: approved,
+      approvedAt: new Date().toISOString()
+    });
+
+    // Open Stage 8 for ticketing / voucher upload (in a new tab)
+    try{
+      const nextUrl = encodeURI('Stage8 (Final confirmation).html?rid=' + encodeURIComponent(reqId));
+      window.open(nextUrl, '_blank', 'noopener');
+    }catch(e){}
+
+    // Email notification to TravelDesk (default: karthik.n@etgworld.com)
+    const subject = `[APPROVED] ${reqId} – ${name}`;
+    let body = baseBlock();
+    body += `Manager Decision: APPROVED\n\n`;
+
+    // Include user-confirmed and manager-approved selections in the email body
+    const trip = findTripByIdForUser(reqId) || {};
+    const userConf = trip.userConfirmation || {};
+    const userSel = Array.isArray(userConf.selections) ? userConf.selections : [];
+    if(userSel.length){
+      body += `Employee Selected option(s):\n`;
+      userSel.forEach(s=>{
+        if(!s) return;
+        body += `  - ${(s.type||'').toUpperCase()}: ${s.label||s.title||'-'}\n`;
+      });
+      body += `\n`;
+    }
+
+    if(approved.length){
+      body += `Manager approved option(s):\n`;
+      approved.forEach(s=>{
+        body += `  - ${(s.type||'').toUpperCase()}: ${s.label||s.title||'-'}\n`;
+        if(s.isViolation && s.comment){
+          body += `    Comment: ${s.comment}\n`;
+        }
+      });
+      body += `\n`;
+    }
+
+    if(i) body += `Internal note (for TravelDesk): ${i}\n`;
+
+    // Email notification: to User + TravelDesk, CC Manager
+    const defaultDesk = 'traveldesk@etgworld.com';
+    const tripForMail = findTripByIdForUser(reqId) || {};
+    const tdEmail = (tripForMail.travelDeskEmail || tripForMail.traveldeskEmail || (tripForMail.travelDesk && tripForMail.travelDesk.email) || defaultDesk || '').trim();
+
+    const toList = [email, tdEmail].filter(Boolean).join(',');
+    const ccList = [managerEmail].filter(Boolean).join(',');
+    mailto(toList, ccList, subject, body);
+  });$('btnReject').addEventListener('click',()=>{
+    const i = ($('internalNote').value||'').trim();
+    const subject = `[CHANGES REQUESTED] ${reqId} – ${name}`;
+    let body = baseBlock();
+    body += `Manager Decision: CHANGES REQUESTED\n`;
+    if(i) body += `Internal note: ${i}\n`;
+    const toReq = email || managerEmail || 'karthik.n@etgworld.com';
+    const ccList = ['karthik.n@etgworld.com', managerEmail].filter(Boolean).join(',');
+    mailto(toReq, ccList, subject, body);
+  });
+
+  $('btnInfo').addEventListener('click',()=>{
+    const i = ($('internalNote').value||'Please share missing details (passport expiry, alternate dates, cost center).').trim();
+    const subject = `[INFO NEEDED] ${reqId} – ${name}`;
+    let body = baseBlock();
+    body += `Manager Decision: INFO REQUEST\n`;
+    body += `Details required: ${i}\n`;
+    const toReq = email || managerEmail || 'karthik.n@etgworld.com';
+    const ccList = ['karthik.n@etgworld.com', managerEmail].filter(Boolean).join(',');
+    mailto(toReq, ccList, subject, body);
+  });
+
+  $('btnPrint').addEventListener('click',()=>{ window.print(); });
+
+  toast('Loaded request ' + reqId);
+
+  /* (removed: handled by renderOptionsFromTripStore) */
+/* (removed: handled by installApprovalHandlers) */
+</script>
+<!-- ETG Realtime (Socket.IO) -->
+
+<script>window.ETG_API_BASE = window.ETG_API_BASE || '';</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/etg-realtime.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ETG Travel — Enterprise Analytics Report (MNC)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Charts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<style>
+  :root{
+    --bg:#020617;
+    --bg2:#0b1220;
+    --card:#0f172a;
+    --card2:#0b1327;
+    --text:#e5e7eb;
+    --muted:#94a3b8;
+    --border:#1f2937;
+    --ring:rgba(56,189,248,.35);
+    --accent:#38bdf8;
+    --accent2:#1d4ed8;
+    --success:#22c55e;
+    --warn:#f59e0b;
+    --danger:#ef4444;
+    --shadow:0 18px 45px rgba(0,0,0,.45);
+    --radius:18px;
+    --radius2:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    background:radial-gradient(circle at 0 0, rgba(56,189,248,.18), transparent 55%),
+               radial-gradient(circle at 100% 0, rgba(29,78,216,.22), transparent 55%),
+               linear-gradient(135deg,var(--bg),var(--bg2));
+    color:var(--text);
+  }
+  a{color:inherit}
+  .page{max-width:1280px;margin:26px auto 70px;padding:0 16px;}
+  .shell{
+    border-radius:22px;
+    border:1px solid rgba(59,130,246,.45);
+    background:rgba(2,6,23,.55);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+
+  /* Header */
+  .header{
+    background:radial-gradient(circle at 0 0, var(--accent) 0, var(--accent2) 38%, rgba(2,6,23,.92) 100%);
+    padding:18px 22px;
+    display:flex;gap:14px;align-items:center;
+    border-bottom:1px solid rgba(148,163,184,.35);
+  }
+  .logo{
+    width:44px;height:44px;border-radius:999px;
+    background:rgba(2,6,23,.35);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:900;letter-spacing:.02em;
+    border:1px solid rgba(191,219,254,.55);
+  }
+  .head-text{display:flex;flex-direction:column;gap:2px}
+  .head-title{font-weight:900;letter-spacing:.14em;text-transform:uppercase;font-size:15px}
+  .head-sub{font-size:12px;opacity:.9}
+  .head-right{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+
+/* Profile menu */
+.profile{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.avatar{
+  width:34px;height:34px;border-radius:999px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:12px;
+  background:rgba(2,6,23,.35);
+  border:1px solid rgba(191,219,254,.55);
+  color:#e5f0ff;
+}
+.profile-btn{
+  display:flex;align-items:center;gap:10px;
+  border:1px solid rgba(191,219,254,.45);
+  background:rgba(2,6,23,.25);
+  color:#e5f0ff;
+  border-radius:999px;
+  padding:6px 10px 6px 6px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:800;
+}
+.profile-btn .meta{display:flex;flex-direction:column;line-height:1.1}
+.profile-btn .meta .name{font-size:12px;font-weight:900}
+.profile-btn .meta .role{font-size:10px;color:rgba(226,232,240,.85);font-weight:700}
+.caret{opacity:.9;font-size:12px}
+.menu{
+  position:absolute;
+  right:0;top:44px;
+  min-width:220px;
+  background:rgba(2,6,23,.98);
+  border:1px solid rgba(51,65,85,.85);
+  border-radius:16px;
+  box-shadow:0 24px 70px rgba(0,0,0,.55);
+  padding:8px;
+  display:none;
+  z-index:80;
+}
+.menu.open{display:block}
+.menu button{
+  width:100%;
+  text-align:left;
+  border:none;
+  border-radius:12px;
+  background:transparent;
+  color:#e5e7eb;
+  padding:10px 10px;
+  font-weight:800;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.menu button:hover{background:rgba(56,189,248,.10)}
+.menu .danger{color:#fecaca}
+.menu .divider{
+  height:1px;background:rgba(51,65,85,.75);
+  margin:6px 6px;
+}
+  .pill{
+    border:1px solid rgba(191,219,254,.45);
+    background:rgba(2,6,23,.25);
+    border-radius:999px;
+    padding:6px 10px;
+    font-size:12px;
+    color:#e5f0ff;
+    display:flex;align-items:center;gap:8px;
+  }
+  .btn{
+    border:none;
+    border-radius:999px;
+    padding:9px 12px;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    color:#0b1220;
+    background:#e5e7eb;
+  }
+  .btn.primary{
+    color:#f9fafb;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    box-shadow:0 12px 28px rgba(37,99,235,.35);
+  }
+  .btn.ghost{
+    background:transparent;color:#e5e7eb;
+    border:1px solid rgba(148,163,184,.45);
+  }
+  .btn:hover{filter:brightness(1.03)}
+  .btn:active{transform:scale(.98)}
+  .btn:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
+
+  /* Layout */
+  .content{padding:16px 16px 18px;background:rgba(2,6,23,.55)}
+  .grid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:14px;}
+  @media (max-width:1020px){ .grid{grid-template-columns:1fr;} }
+
+  /* Sidebar */
+  .side{
+    background:rgba(15,23,42,.92);
+    border:1px solid rgba(51,65,85,.75);
+    border-radius:var(--radius);
+    padding:14px;
+    box-shadow:0 14px 30px rgba(0,0,0,.35);
+  }
+  .side h3{
+    margin:0 0 10px;
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:#cbd5e1;
+  }
+  .nav{
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .nav button{
+    width:100%;
+    text-align:left;
+    border-radius:12px;
+    border:1px solid rgba(51,65,85,.75);
+    background:rgba(2,6,23,.55);
+    color:var(--text);
+    padding:10px 10px;
+    font-weight:700;
+    cursor:pointer;
+    display:flex;justify-content:space-between;gap:10px;align-items:center;
+  }
+  .nav button .k{font-size:12px}
+  .nav button .s{font-size:11px;color:var(--muted);font-weight:600}
+  .nav button.active{
+    background:linear-gradient(135deg,rgba(56,189,248,.22),rgba(29,78,216,.18));
+    border-color:rgba(56,189,248,.55);
+  }
+
+  /* Filters card */
+  .filters{
+    margin-top:12px;
+    border-top:1px dashed rgba(51,65,85,.85);
+    padding-top:12px;
+  }
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+  label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  input,select{
+    border-radius:12px;
+    border:1px solid rgba(51,65,85,.85);
+    background:#020617;
+    color:var(--text);
+    padding:10px 10px;
+    font-size:13px;
+  }
+  input:focus,select:focus{outline:none;box-shadow:0 0 0 3px var(--ring);border-color:rgba(56,189,248,.65)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media (max-width:520px){ .row2{grid-template-columns:1fr;} }
+
+  /* Main */
+  .main{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .card{
+    background:rgba(15,23,42,.92);
+    border:1px solid rgba(51,65,85,.75);
+    border-radius:var(--radius);
+    padding:14px 14px 16px;
+    box-shadow:0 14px 30px rgba(0,0,0,.35);
+  }
+  .card h2{
+    margin:0 0 10px;
+    font-size:13px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:#e5e7eb;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  .subtle{font-size:12px;color:var(--muted);line-height:1.45}
+  .kpis{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:10px;
+  }
+  @media (max-width:1180px){ .kpis{grid-template-columns:repeat(3,1fr)} }
+  @media (max-width:680px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+  .kpi{
+    background:linear-gradient(180deg,rgba(2,6,23,.72),rgba(2,6,23,.35));
+    border:1px solid rgba(51,65,85,.75);
+    border-radius:16px;
+    padding:12px 12px;
+  }
+  .kpi .k{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-weight:800}
+  .kpi .v{font-size:22px;font-weight:900;margin-top:6px}
+  .kpi .d{font-size:11px;color:var(--muted);margin-top:3px}
+  .delta{font-weight:900}
+  .delta.up{color:#86efac}
+  .delta.down{color:#fca5a5}
+
+  .split{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:12px;
+  }
+  @media (max-width:980px){ .split{grid-template-columns:1fr;} }
+
+  .chart-wrap{
+    background:rgba(2,6,23,.55);
+    border:1px solid rgba(51,65,85,.75);
+    border-radius:16px;
+    padding:10px 10px 6px;
+  }
+  canvas{width:100%;height:320px}
+  .small canvas{height:240px}
+
+  /* Table */
+  .table-wrap{
+    border:1px solid rgba(51,65,85,.75);
+    border-radius:16px;
+    overflow:auto;
+    background:rgba(2,6,23,.55);
+  }
+  table{border-collapse:collapse;width:100%;min-width:980px}
+  th,td{padding:10px 10px;border-bottom:1px solid rgba(51,65,85,.75);font-size:12px;white-space:nowrap}
+  th{
+    position:sticky;top:0;
+    background:rgba(15,23,42,.98);
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    font-size:11px;
+    color:var(--muted);
+    z-index:1;
+  }
+  tr:hover td{background:rgba(56,189,248,.08)}
+  .tag{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:2px 8px;border-radius:999px;font-size:11px;font-weight:800;
+    border:1px solid rgba(148,163,184,.55);
+  }
+  .tag.ok{border-color:rgba(34,197,94,.65);color:#bbf7d0}
+  .tag.warn{border-color:rgba(245,158,11,.7);color:#fde68a}
+  .tag.bad{border-color:rgba(239,68,68,.7);color:#fecaca}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-weight:800}
+  .right{ text-align:right; }
+  .linkish{
+    border:none;background:transparent;color:#93c5fd;
+    cursor:pointer;font-weight:800;text-decoration:underline;
+    padding:0;font-size:12px;
+  }
+  .linkish:hover{color:#bfdbfe}
+
+  /* Modal */
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:60}
+  .modal.open{display:flex}
+  .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+  .panel{
+    position:relative;
+    max-width:980px;width:92%;
+    max-height:88vh;overflow:auto;
+    background:rgba(2,6,23,.96);
+    border:1px solid rgba(51,65,85,.85);
+    border-radius:20px;
+    box-shadow:0 24px 70px rgba(0,0,0,.55);
+    padding:14px 14px 16px;
+  }
+  .panel h3{margin:0 0 10px;font-size:14px;letter-spacing:.12em;text-transform:uppercase}
+  .close{
+    position:absolute;top:10px;right:10px;
+    border:none;background:transparent;color:var(--muted);
+    font-size:18px;cursor:pointer;padding:6px 8px;border-radius:10px;
+  }
+  .close:hover{background:rgba(148,163,184,.10);color:#e5e7eb}
+
+  /* Footer */
+  .foot{margin-top:10px;font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+</style>
+</head>
+
+<body>
+<div class="page">
+  <div class="shell">
+
+    <div class="header">
+      <div class="logo">ET</div>
+      <div class="head-text">
+        <div class="head-title">ETG Travel — Enterprise Analytics</div>
+        <div class="head-sub">Board-ready analytics • Compliance • Savings • SLA • Vendor performance</div>
+      </div>
+      <div class="head-right">
+        <div class="pill"><span style="font-weight:900;">Report Period</span> <span id="pillPeriod">Last 30 Days</span></div>
+        <button class="btn ghost" id="btnLoadDemo" type="button">Load Demo Data</button>
+        <button class="btn ghost" id="btnImport" type="button">Import JSON</button>
+        <input id="fileInput" type="file" accept="application/json" style="display:none"/>
+        <button class="btn primary" id="btnExport" type="button">Export CSV</button>
+        <button class="btn ghost" id="btnPrint" type="button">Print / Save PDF</button>
+      
+
+<div class="profile" id="profile">
+  <button class="profile-btn" id="profileBtn" type="button" aria-haspopup="true" aria-expanded="false">
+    <span class="avatar" id="avatar">AD</span>
+    <span class="meta">
+      <span class="name" id="profileName">Analytics Desk</span>
+      <span class="role" id="profileRole">Enterprise Viewer</span>
+    </span>
+    <span class="caret">▾</span>
+  </button>
+
+  <div class="menu" id="profileMenu" role="menu" aria-label="Profile menu">
+    <button type="button" id="btnAnalyticalProfile">Analytical Profile <span>↗</span></button>
+    <div class="divider"></div>
+    <button type="button" id="btnSignOut" class="danger">Sign out <span>⎋</span></button>
+  </div>
+</div></div>
+    </div>
+
+    <div class="content">
+      <div class="grid">
+
+        <!-- Sidebar -->
+        <aside class="side">
+          <h3>Sections</h3>
+          <div class="nav" id="nav">
+            <button class="active" data-tab="overview"><span class="k">Overview</span><span class="s">KPI + funnel</span></button>
+            <button data-tab="spend"><span class="k">Spend & Savings</span><span class="s">Budget control</span></button>
+            <button data-tab="policy"><span class="k">Policy & Compliance</span><span class="s">Deviations</span></button>
+            <button data-tab="sla"><span class="k">SLA & Cycle Time</span><span class="s">Stage delays</span></button>
+            <button data-tab="vendor"><span class="k">Vendor Performance</span><span class="s">Airlines / Hotels</span></button>
+            <button data-tab="people"><span class="k">Managers & Teams</span><span class="s">Approvals</span></button>
+            <button data-tab="ops"><span class="k">Operational List</span><span class="s">Drill-down</span></button>
+          </div>
+
+          <div class="filters">
+            <h3>Filters</h3>
+            <div class="row2">
+              <div class="field">
+                <label for="fromDate">From</label>
+                <input id="fromDate" type="date"/>
+              </div>
+              <div class="field">
+                <label for="toDate">To</label>
+                <input id="toDate" type="date"/>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="mode">Travel Mode</label>
+              <select id="mode">
+                <option value="ALL">All</option>
+                <option value="FLIGHT">Flight</option>
+                <option value="HOTEL">Hotel</option>
+                <option value="CAB">Cab</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="department">Department</label>
+              <select id="department">
+                <option value="ALL">All</option>
+                <option>Sales</option>
+                <option>Engineering</option>
+                <option>Operations</option>
+                <option>Finance</option>
+                <option>HR</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="onlyPolicy">Policy Deviation Only</label>
+              <select id="onlyPolicy">
+                <option value="NO">No</option>
+                <option value="YES">Yes</option>
+              </select>
+            </div>
+
+            <button class="btn primary" id="btnApply" type="button" style="width:100%;margin-top:4px;">Apply Filters</button>
+            <button class="btn ghost" id="btnReset" type="button" style="width:100%;margin-top:8px;">Reset</button>
+
+            <div class="foot">
+              <div>Data model aligns to Stages 1–8 flow</div>
+              <div><span class="mono" id="rowCount">0</span> records</div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+
+          <!-- Overview -->
+          <section class="card tab" data-tab="overview">
+            <h2>
+              <span>Executive Overview</span>
+              <span class="subtle" id="asOfLine">As of —</span>
+            </h2>
+
+            <div class="kpis" id="kpis"></div>
+
+            <div class="split" style="margin-top:12px;">
+              <div class="chart-wrap">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">Request Funnel (Stages 2 → 8)</div>
+                <canvas id="funnelChart"></canvas>
+              </div>
+              <div class="chart-wrap small">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">Requests by Status</div>
+                <canvas id="statusChart"></canvas>
+              </div>
+            </div>
+          </section>
+
+          <!-- Spend -->
+          <section class="card tab" data-tab="spend" style="display:none;">
+            <h2><span>Spend & Savings</span><span class="subtle">Cost distribution • savings vs lowest option</span></h2>
+            <div class="split">
+              <div class="chart-wrap">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">Spend Trend (Daily)</div>
+                <canvas id="spendTrendChart"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">Spend by Mode</div>
+                <canvas id="spendModeChart"></canvas>
+              </div>
+            </div>
+
+            <div class="split" style="margin-top:12px;">
+              <div class="chart-wrap small">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">Savings Impact</div>
+                <canvas id="savingsChart"></canvas>
+              </div>
+              <div class="chart-wrap small">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">Top Routes by Spend</div>
+                <canvas id="routeSpendChart"></canvas>
+              </div>
+            </div>
+          </section>
+
+          <!-- Policy -->
+          <section class="card tab" data-tab="policy" style="display:none;">
+            <h2><span>Policy & Compliance</span><span class="subtle">Deviation frequency • justification quality</span></h2>
+            <div class="split">
+              <div class="chart-wrap">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">Deviation Trend</div>
+                <canvas id="policyTrendChart"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">Deviation by Department</div>
+                <canvas id="policyDeptChart"></canvas>
+              </div>
+            </div>
+
+            <div class="subtle" style="margin-top:10px;">
+              Rule used: If selected cost &gt; lowest option cost → marked as deviation (aligned with Stage 6 mandatory comment behaviour).
+            </div>
+          </section>
+
+          <!-- SLA -->
+          <section class="card tab" data-tab="sla" style="display:none;">
+            <h2><span>SLA & Cycle Time</span><span class="subtle">Where requests get stuck across stages</span></h2>
+            <div class="split">
+              <div class="chart-wrap">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">Stage Cycle Time (Avg hours)</div>
+                <canvas id="stageTimeChart"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">SLA Breaches by Stage</div>
+                <canvas id="slaBreachChart"></canvas>
+              </div>
+            </div>
+          </section>
+
+          <!-- Vendor -->
+          <section class="card tab" data-tab="vendor" style="display:none;">
+            <h2><span>Vendor Performance</span><span class="subtle">Share • average cost • cancellation risk</span></h2>
+            <div class="split">
+              <div class="chart-wrap">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">Top Airlines / Hotels by Spend</div>
+                <canvas id="vendorChart"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">Average Fare / Night by Vendor</div>
+                <canvas id="vendorAvgChart"></canvas>
+              </div>
+            </div>
+          </section>
+
+          <!-- People -->
+          <section class="card tab" data-tab="people" style="display:none;">
+            <h2><span>Managers & Teams</span><span class="subtle">Approval discipline • pending load</span></h2>
+            <div class="split">
+              <div class="chart-wrap">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">Approvals by Manager</div>
+                <canvas id="managerChart"></canvas>
+              </div>
+              <div class="chart-wrap">
+                <div class="subtle" style="margin-bottom:8px;font-weight:800;">Avg Approval Time by Manager (hours)</div>
+                <canvas id="managerTimeChart"></canvas>
+              </div>
+            </div>
+          </section>
+
+          <!-- Ops -->
+          <section class="card tab" data-tab="ops" style="display:none;">
+            <h2><span>Operational Drill-down</span><span class="subtle">Search • open details • export</span></h2>
+            <div class="row2" style="margin-bottom:10px;">
+              <div class="field" style="margin:0;">
+                <label for="search">Search</label>
+                <input id="search" placeholder="Req ID / employee / route / vendor / manager..." />
+              </div>
+              <div class="field" style="margin:0;">
+                <label for="sortBy">Sort</label>
+                <select id="sortBy">
+                  <option value="DATE_DESC">Date (newest)</option>
+                  <option value="COST_DESC">Cost (high to low)</option>
+                  <option value="APPROVAL_DESC">Approval time (slowest)</option>
+                  <option value="POLICY_DESC">Policy deviations first</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Req ID</th>
+                    <th>Employee</th>
+                    <th>Dept</th>
+                    <th>Mode</th>
+                    <th>Route</th>
+                    <th>Manager</th>
+                    <th class="right">Lowest</th>
+                    <th class="right">Selected</th>
+                    <th>Policy</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+              </table>
+            </div>
+
+            <div class="subtle" style="margin-top:10px;">
+              Tip: Use this section to cross-check individual requests from Stage 2–8, and export the filtered list to CSV.
+            </div>
+          </section>
+
+        </main>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Details modal -->
+<div class="modal" id="modal">
+  <div class="backdrop" id="modalBackdrop"></div>
+  <div class="panel">
+    <button class="close" id="modalClose" aria-label="Close">✕</button>
+    <h3>Request Details</h3>
+    <div class="subtle" style="margin-bottom:10px;">This is a presentation-ready rollup across stages. Wire to backend later.</div>
+
+    <div class="table-wrap" style="min-width:0;">
+      <table style="min-width:0;width:100%;">
+        <tbody id="detailBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+<!-- Profile modal -->
+<div class="modal" id="profileModal">
+  <div class="backdrop" id="profileBackdrop"></div>
+  <div class="panel">
+    <button class="close" id="profileClose" aria-label="Close">✕</button>
+    <h3>Analytical Profile</h3>
+    <div class="subtle" style="margin-bottom:10px;">
+      This is a local profile card for the analytics view. You can wire it to SSO / HRIS later.
+    </div>
+
+    <div class="table-wrap" style="min-width:0;">
+      <table style="min-width:0;width:100%;">
+        <tbody id="profileBody"></tbody>
+      </table>
+    </div>
+
+    <div class="foot" style="margin-top:12px;">
+      <div>Session: <span class="mono" id="sessionId">—</span></div>
+      <div>Last login: <span class="mono" id="lastLogin">—</span></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+/* -----------------------------
+   Demo dataset (replace later)
+   Fields map to stage outcomes:
+   - stage2: createdAt, employee, dept, mode, route
+   - stage3/7: manager, approvalTimeHrs, approvals
+   - stage4/6: lowestCost, selectedCost, justification
+   - stage8: status, booked flag
+-------------------------------- */
+
+const DEMO = (() => {
+  const depts = ["Sales","Engineering","Operations","Finance","HR"];
+  const modes = ["FLIGHT","HOTEL","CAB"];
+  const managers = ["S. Iyer","R. Nair","A. Singh","M. Khan","P. Das"];
+  const routes = ["BLR→DEL","DEL→BOM","MAA→BLR","HYD→DEL","BLR→DXB","DEL→LON","BLR→SIN","BOM→NYC"];
+  const vendorsF = ["IndiGo","Vistara","Air India","Emirates","Singapore Airlines"];
+  const vendorsH = ["Marriott","Hilton","Hyatt","Taj","Accor"];
+  const vendorsC = ["Ola Corporate","Uber for Business","Local Vendor"];
+  const statuses = ["Submitted","Manager Pending","Desk Quoting","User Confirm Pending","Manager Final Pending","Booked","Cancelled"];
+  const today = new Date();
+  const rand = (a,b)=> Math.floor(Math.random()*(b-a+1))+a;
+  const pick = (arr)=> arr[rand(0,arr.length-1)];
+  const pad = (n)=> String(n).padStart(2,"0");
+  const fmtDate = (d)=> `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+
+  const rows = [];
+  for(let i=0;i<420;i++){
+    const d = new Date(today);
+    d.setDate(today.getDate() - rand(0,44));
+    const mode = pick(modes);
+    const dept = pick(depts);
+    const manager = pick(managers);
+    const route = pick(routes);
+
+    const base = mode==="CAB" ? rand(900,4800) : mode==="HOTEL" ? rand(4500,14000) : rand(5500,32000);
+    const lowest = base;
+    const deviation = Math.random() < 0.18; // policy deviation frequency
+    const selected = deviation ? Math.round(lowest * (1 + (rand(6,22)/100))) : lowest;
+
+    const status = (()=>{
+      // realistic-ish funnel
+      const r = Math.random();
+      if(r<0.10) return "Manager Pending";
+      if(r<0.18) return "Desk Quoting";
+      if(r<0.24) return "User Confirm Pending";
+      if(r<0.30) return "Manager Final Pending";
+      if(r<0.92) return "Booked";
+      return "Cancelled";
+    })();
+
+    const approvalHrs = rand(2,96);
+    const deskHrs = rand(3,72);
+    const userHrs = rand(1,48);
+    const finalHrs = rand(2,60);
+    const cycle = approvalHrs + deskHrs + userHrs + finalHrs;
+
+    const vendor = mode==="FLIGHT" ? pick(vendorsF) : mode==="HOTEL" ? pick(vendorsH) : pick(vendorsC);
+
+    rows.push({
+      id: "TR-" + String(90000 + i),
+      date: fmtDate(d),
+      employee: ["Amit","Neha","Rohit","Priya","Karthik","Suresh","Divya","Ananya","Varun","Meera"][rand(0,9)] + " " +
+                ["Sharma","Rao","Verma","Iyer","N","Patil","Gupta","Das","Menon","Khan"][rand(0,9)],
+      dept,
+      mode,
+      route,
+      manager,
+      vendor,
+      lowestCost: lowest,
+      selectedCost: selected,
+      policyDeviation: selected>lowest,
+      justification: selected>lowest ? pick([
+        "Client schedule constraints",
+        "Closest hotel to site",
+        "Late booking; lowest unavailable",
+        "Safety / night travel avoided",
+        "Meeting rescheduled; earlier flight",
+        "Critical onsite support"
+      ]) : "",
+      status,
+      times: { managerApprovalHrs: approvalHrs, deskQuotingHrs: deskHrs, userConfirmHrs: userHrs, managerFinalHrs: finalHrs, totalHrs: cycle },
+      sla: { manager: 24, desk: 24, user: 24, final: 24 } // hours
+    });
+  }
+  return rows;
+})();
+
+let data = [];
+let filtered = [];
+let charts = {};
+
+const $ = (id)=>document.getElementById(id);
+const money = (n)=> "₹ " + n.toLocaleString("en-IN");
+const sum = (arr,fn)=> arr.reduce((a,x)=>a+fn(x),0);
+const avg = (arr,fn)=> arr.length ? (sum(arr,fn)/arr.length) : 0;
+
+function setDefaultDates(){
+  const t = new Date();
+  const from = new Date(t);
+  from.setDate(t.getDate()-30);
+  $('toDate').valueAsDate = t;
+  $('fromDate').valueAsDate = from;
+}
+
+function applyFilters(){
+  const fd = $('fromDate').value;
+  const td = $('toDate').value;
+  const mode = $('mode').value;
+  const dept = $('department').value;
+  const onlyPol = $('onlyPolicy').value;
+
+  filtered = data.filter(r=>{
+    if(fd && r.date < fd) return false;
+    if(td && r.date > td) return false;
+    if(mode!=="ALL" && r.mode!==mode) return false;
+    if(dept!=="ALL" && r.dept!==dept) return false;
+    if(onlyPol==="YES" && !r.policyDeviation) return false;
+    return true;
+  });
+
+  $('rowCount').textContent = filtered.length.toLocaleString("en-IN");
+  $('pillPeriod').textContent = fd && td ? `${fd} → ${td}` : "Custom";
+  $('asOfLine').textContent = `As of ${new Date().toLocaleString()}`;
+
+  renderAll();
+}
+
+function resetFilters(){
+  setDefaultDates();
+  $('mode').value = "ALL";
+  $('department').value = "ALL";
+  $('onlyPolicy').value = "NO";
+  $('search').value = "";
+  $('sortBy').value = "DATE_DESC";
+  applyFilters();
+}
+
+/* ---------- KPIs ---------- */
+function renderKPIs(){
+  const total = filtered.length;
+  const booked = filtered.filter(r=>r.status==="Booked").length;
+  const pending = filtered.filter(r=>["Manager Pending","Desk Quoting","User Confirm Pending","Manager Final Pending"].includes(r.status)).length;
+  const deviations = filtered.filter(r=>r.policyDeviation).length;
+
+  const spend = sum(filtered.filter(r=>r.status==="Booked"), r=>r.selectedCost);
+  const lowestSpend = sum(filtered.filter(r=>r.status==="Booked"), r=>r.lowestCost);
+  const savings = Math.max(0, lowestSpend - spend); // if selected <= lowest overall
+  const overspend = Math.max(0, spend - lowestSpend);
+
+  const avgApproval = avg(filtered, r=>r.times.managerApprovalHrs);
+  const avgCycle = avg(filtered, r=>r.times.totalHrs);
+
+  const kpis = [
+    {k:"Total Requests", v: total.toLocaleString("en-IN"), d:"All modes"},
+    {k:"Booked", v: booked.toLocaleString("en-IN"), d:`Pending: ${pending.toLocaleString("en-IN")}`},
+    {k:"Total Spend (Booked)", v: money(spend), d:`Avg / trip: ${money(booked? Math.round(spend/booked):0)}`},
+    {k:"Policy Deviations", v: deviations.toLocaleString("en-IN"), d:`Rate: ${total? Math.round((deviations/total)*100):0}%`},
+    {k:"Avg Cycle Time", v: `${avgCycle.toFixed(1)} hrs`, d:`Mgr approval: ${avgApproval.toFixed(1)} hrs`},
+  ];
+
+  $('kpis').innerHTML = kpis.map(x=>`
+    <div class="kpi">
+      <div class="k">${x.k}</div>
+      <div class="v">${x.v}</div>
+      <div class="d">${x.d}</div>
+    </div>
+  `).join("");
+}
+
+/* ---------- Charts ---------- */
+function destroyChart(id){
+  if(charts[id]){ charts[id].destroy(); delete charts[id]; }
+}
+function makeChart(id, cfg){
+  destroyChart(id);
+  charts[id] = new Chart($(id), cfg);
+}
+function renderCharts(){
+  // Funnel by stage proxy from status buckets
+  const submitted = filtered.length;
+  const mgrApproved = filtered.filter(r=>r.status!=="Manager Pending").length;
+  const deskQuoted = filtered.filter(r=>!["Manager Pending","Submitted"].includes(r.status)).length;
+  const userConfirmed = filtered.filter(r=>!["Manager Pending","Submitted","Desk Quoting"].includes(r.status)).length;
+  const finalApproved = filtered.filter(r=>!["Manager Pending","Submitted","Desk Quoting","User Confirm Pending"].includes(r.status)).length;
+  const booked = filtered.filter(r=>r.status==="Booked").length;
+
+  makeChart("funnelChart",{
+    type:"bar",
+    data:{
+      labels:["Submitted","Mgr Approved","Desk Quoted","User Confirmed","Final Approved","Booked"],
+      datasets:[{
+        label:"Requests",
+        data:[submitted,mgrApproved,deskQuoted,userConfirmed,finalApproved,booked]
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:"#cbd5e1"}},y:{ticks:{color:"#cbd5e1"}}}
+    }
+  });
+
+  // Status donut
+  const buckets = ["Manager Pending","Desk Quoting","User Confirm Pending","Manager Final Pending","Booked","Cancelled"];
+  const vals = buckets.map(b=> filtered.filter(r=>r.status===b).length);
+  makeChart("statusChart",{
+    type:"doughnut",
+    data:{labels:buckets, datasets:[{data:vals}]},
+    options:{
+      plugins:{legend:{labels:{color:"#cbd5e1"}}}
+    }
+  });
+
+  // Spend trend daily
+  const byDay = {};
+  filtered.filter(r=>r.status==="Booked").forEach(r=>{
+    byDay[r.date] = (byDay[r.date]||0) + r.selectedCost;
+  });
+  const days = Object.keys(byDay).sort();
+  makeChart("spendTrendChart",{
+    type:"line",
+    data:{labels:days, datasets:[{label:"Spend", data:days.map(d=>byDay[d]||0), tension:.25}]},
+    options:{
+      plugins:{legend:{labels:{color:"#cbd5e1"}}},
+      scales:{x:{ticks:{color:"#cbd5e1"}},y:{ticks:{color:"#cbd5e1"}}}
+    }
+  });
+
+  // Spend by mode
+  const modes = ["FLIGHT","HOTEL","CAB"];
+  const spendByMode = modes.map(m=> sum(filtered.filter(r=>r.status==="Booked" && r.mode===m), r=>r.selectedCost));
+  makeChart("spendModeChart",{
+    type:"bar",
+    data:{labels:modes, datasets:[{label:"Spend", data:spendByMode}]},
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:"#cbd5e1"}},y:{ticks:{color:"#cbd5e1"}}}
+    }
+  });
+
+  // Savings impact (overspend vs within policy)
+  const bookedRows = filtered.filter(r=>r.status==="Booked");
+  const overspend = sum(bookedRows, r=> Math.max(0, r.selectedCost - r.lowestCost));
+  const within = sum(bookedRows, r=> Math.max(0, r.lowestCost - r.selectedCost));
+  makeChart("savingsChart",{
+    type:"doughnut",
+    data:{labels:["Overspend vs lowest","Savings vs lowest"], datasets:[{data:[overspend,within]}]},
+    options:{plugins:{legend:{labels:{color:"#cbd5e1"}}}}
+  });
+
+  // Top routes by spend
+  const rs = {};
+  bookedRows.forEach(r=>{ rs[r.route]=(rs[r.route]||0)+r.selectedCost; });
+  const topRoutes = Object.entries(rs).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  makeChart("routeSpendChart",{
+    type:"bar",
+    data:{labels:topRoutes.map(x=>x[0]), datasets:[{label:"Spend", data:topRoutes.map(x=>x[1])}]},
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:"#cbd5e1"}},y:{ticks:{color:"#cbd5e1"}}}
+    }
+  });
+
+  // Policy trend
+  const polByDay = {};
+  filtered.forEach(r=>{
+    polByDay[r.date] = polByDay[r.date] || {dev:0,total:0};
+    polByDay[r.date].total++;
+    if(r.policyDeviation) polByDay[r.date].dev++;
+  });
+  const pDays = Object.keys(polByDay).sort();
+  makeChart("policyTrendChart",{
+    type:"line",
+    data:{
+      labels:pDays,
+      datasets:[
+        {label:"Deviations", data:pDays.map(d=>polByDay[d].dev), tension:.25},
+        {label:"Total", data:pDays.map(d=>polByDay[d].total), tension:.25}
+      ]
+    },
+    options:{
+      plugins:{legend:{labels:{color:"#cbd5e1"}}},
+      scales:{x:{ticks:{color:"#cbd5e1"}},y:{ticks:{color:"#cbd5e1"}}}
+    }
+  });
+
+  // Policy by dept
+  const depts = ["Sales","Engineering","Operations","Finance","HR"];
+  const polDept = depts.map(dep=>{
+    const rows = filtered.filter(r=>r.dept===dep);
+    const dev = rows.filter(r=>r.policyDeviation).length;
+    return rows.length ? Math.round((dev/rows.length)*100) : 0;
+  });
+  makeChart("policyDeptChart",{
+    type:"bar",
+    data:{labels:depts, datasets:[{label:"Deviation rate %", data:polDept}]},
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:"#cbd5e1"}},y:{ticks:{color:"#cbd5e1"}}}
+    }
+  });
+
+  // Stage cycle time (avg hours)
+  const stageAvg = (key)=> avg(filtered, r=>r.times[key]);
+  makeChart("stageTimeChart",{
+    type:"bar",
+    data:{
+      labels:["Mgr Approval","Desk Quoting","User Confirm","Mgr Final","Total"],
+      datasets:[{label:"Avg hours", data:[
+        stageAvg("managerApprovalHrs"),
+        stageAvg("deskQuotingHrs"),
+        stageAvg("userConfirmHrs"),
+        stageAvg("managerFinalHrs"),
+        stageAvg("totalHrs")
+      ]}]
+    },
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:"#cbd5e1"}},y:{ticks:{color:"#cbd5e1"}}}
+    }
+  });
+
+  // SLA breaches by stage (against 24h default)
+  const breach = (k,limit)=> filtered.filter(r=>r.times[k]>limit).length;
+  makeChart("slaBreachChart",{
+    type:"doughnut",
+    data:{
+      labels:["Mgr > 24h","Desk > 24h","User > 24h","Final > 24h"],
+      datasets:[{data:[
+        breach("managerApprovalHrs",24),
+        breach("deskQuotingHrs",24),
+        breach("userConfirmHrs",24),
+        breach("managerFinalHrs",24)
+      ]}]
+    },
+    options:{plugins:{legend:{labels:{color:"#cbd5e1"}}}}
+  });
+
+  // Vendor share
+  const byVendor = {};
+  bookedRows.forEach(r=>{ byVendor[r.vendor]=(byVendor[r.vendor]||0)+r.selectedCost; });
+  const topV = Object.entries(byVendor).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  makeChart("vendorChart",{
+    type:"bar",
+    data:{labels:topV.map(x=>x[0]), datasets:[{label:"Spend", data:topV.map(x=>x[1])}]},
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:"#cbd5e1"}},y:{ticks:{color:"#cbd5e1"}}}
+    }
+  });
+
+  // Vendor avg
+  const avgV = {};
+  const cntV = {};
+  bookedRows.forEach(r=>{
+    avgV[r.vendor]=(avgV[r.vendor]||0)+r.selectedCost;
+    cntV[r.vendor]=(cntV[r.vendor]||0)+1;
+  });
+  const topAvg = Object.keys(avgV).map(v=>[v, Math.round(avgV[v]/cntV[v])]).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  makeChart("vendorAvgChart",{
+    type:"bar",
+    data:{labels:topAvg.map(x=>x[0]), datasets:[{label:"Avg cost", data:topAvg.map(x=>x[1])}]},
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:"#cbd5e1"}},y:{ticks:{color:"#cbd5e1"}}}
+    }
+  });
+
+  // Managers approvals
+  const mgrs = {};
+  filtered.forEach(r=>{ mgrs[r.manager]=mgrs[r.manager]||{count:0,avg:0,total:0}; mgrs[r.manager].count++; mgrs[r.manager].total += r.times.managerApprovalHrs; });
+  const mgrList = Object.entries(mgrs).sort((a,b)=>b[1].count-a[1].count).slice(0,8);
+  makeChart("managerChart",{
+    type:"bar",
+    data:{labels:mgrList.map(x=>x[0]), datasets:[{label:"Requests", data:mgrList.map(x=>x[1].count)}]},
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:"#cbd5e1"}},y:{ticks:{color:"#cbd5e1"}}}
+    }
+  });
+
+  const mgrAvg = mgrList.map(([k,v])=> Math.round(v.total/v.count));
+  makeChart("managerTimeChart",{
+    type:"bar",
+    data:{labels:mgrList.map(x=>x[0]), datasets:[{label:"Avg hours", data:mgrAvg}]},
+    options:{
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:"#cbd5e1"}},y:{ticks:{color:"#cbd5e1"}}}
+    }
+  });
+}
+
+/* ---------- Table / Drill-down ---------- */
+function renderRows(){
+  const q = ($('search').value||"").trim().toLowerCase();
+  const sortBy = $('sortBy').value;
+
+  let rows = filtered.filter(r=>{
+    if(!q) return true;
+    const hay = `${r.date} ${r.id} ${r.employee} ${r.dept} ${r.mode} ${r.route} ${r.manager} ${r.vendor} ${r.status} ${r.justification}`.toLowerCase();
+    return hay.includes(q);
+  });
+
+  rows.sort((a,b)=>{
+    if(sortBy==="DATE_DESC") return b.date.localeCompare(a.date);
+    if(sortBy==="COST_DESC") return b.selectedCost - a.selectedCost;
+    if(sortBy==="APPROVAL_DESC") return b.times.managerApprovalHrs - a.times.managerApprovalHrs;
+    if(sortBy==="POLICY_DESC") return (b.policyDeviation?1:0) - (a.policyDeviation?1:0) || (b.selectedCost-a.selectedCost);
+    return 0;
+  });
+
+  $('rows').innerHTML = rows.slice(0,250).map(r=>`
+    <tr>
+      <td>${r.date}</td>
+      <td class="mono">${r.id}</td>
+      <td>${r.employee}</td>
+      <td>${r.dept}</td>
+      <td>${r.mode}</td>
+      <td class="mono">${r.route}</td>
+      <td>${r.manager}</td>
+      <td class="right">${money(r.lowestCost)}</td>
+      <td class="right">${money(r.selectedCost)}</td>
+      <td>${r.policyDeviation ? '<span class="tag bad">Deviation</span>' : '<span class="tag ok">Within</span>'}</td>
+      <td>${r.status==="Booked" ? '<span class="tag ok">Booked</span>' : r.status==="Cancelled" ? '<span class="tag bad">Cancelled</span>' : '<span class="tag warn">In Progress</span>'}</td>
+      <td><button class="linkish" type="button" data-open="${r.id}">Open</button></td>
+    </tr>
+  `).join("");
+
+  // bind open
+  document.querySelectorAll('[data-open]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.getAttribute('data-open');
+      openModal(id);
+    });
+  });
+}
+
+function openModal(id){
+  const r = filtered.find(x=>x.id===id) || data.find(x=>x.id===id);
+  if(!r) return;
+  const rows = [
+    ["Request ID", r.id],
+    ["Date", r.date],
+    ["Employee", r.employee],
+    ["Department", r.dept],
+    ["Travel Mode", r.mode],
+    ["Route", r.route],
+    ["Manager", r.manager],
+    ["Vendor", r.vendor],
+    ["Status", r.status],
+    ["Lowest Option Cost", money(r.lowestCost)],
+    ["Selected Option Cost", money(r.selectedCost)],
+    ["Policy Deviation", r.policyDeviation ? "Yes" : "No"],
+    ["Justification (Stage 6)", r.justification || "—"],
+    ["Manager Approval Time (Stage 3)", `${r.times.managerApprovalHrs} hrs`],
+    ["Travel Desk Quoting Time (Stage 4)", `${r.times.deskQuotingHrs} hrs`],
+    ["User Confirmation Time (Stage 6)", `${r.times.userConfirmHrs} hrs`],
+    ["Final Approval Time (Stage 7)", `${r.times.managerFinalHrs} hrs`],
+    ["Total Cycle Time", `${r.times.totalHrs} hrs`],
+  ];
+  $('detailBody').innerHTML = rows.map(([k,v])=>`
+    <tr>
+      <th style="width:260px;text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:#94a3b8;background:rgba(15,23,42,.98);border-bottom:1px solid rgba(51,65,85,.75);padding:10px 10px;">${k}</th>
+      <td style="border-bottom:1px solid rgba(51,65,85,.75);padding:10px 10px;">${v}</td>
+    </tr>
+  `).join("");
+  $('modal').classList.add('open');
+}
+
+function closeModal(){ $('modal').classList.remove('open'); }
+
+/* ---------- Export ---------- */
+function exportCSV(){
+  const headers = ["date","id","employee","dept","mode","route","manager","vendor","lowestCost","selectedCost","policyDeviation","status","justification","managerApprovalHrs","deskQuotingHrs","userConfirmHrs","managerFinalHrs","totalHrs"];
+  const lines = [headers.join(",")];
+  filtered.forEach(r=>{
+    const row = [
+      r.date, r.id, r.employee, r.dept, r.mode, r.route, r.manager, r.vendor,
+      r.lowestCost, r.selectedCost, r.policyDeviation, r.status,
+      (r.justification||"").replaceAll('"','""'),
+      r.times.managerApprovalHrs, r.times.deskQuotingHrs, r.times.userConfirmHrs, r.times.managerFinalHrs, r.times.totalHrs
+    ].map(x=>{
+      const s = String(x);
+      return /[",\n]/.test(s) ? `"${s.replaceAll('"','""')}"` : s;
+    });
+    lines.push(row.join(","));
+  });
+  const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = "ETG_Travel_Enterprise_Analytics.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/* ---------- Tabs ---------- */
+function setTab(tab){
+  document.querySelectorAll('.nav button').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
+  document.querySelectorAll('.tab').forEach(s=> s.style.display = (s.dataset.tab===tab) ? "block" : "none");
+  // When switching to ops, render rows
+  if(tab==="ops") renderRows();
+}
+
+/* ---------- Render all ---------- */
+function renderAll(){
+  renderKPIs();
+  renderCharts();
+  if(document.querySelector('.nav button.active')?.dataset.tab==="ops") renderRows();
+}
+
+/* ---------- Import JSON ---------- */
+function importJSON(file){
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const parsed = JSON.parse(reader.result);
+      if(!Array.isArray(parsed)) throw new Error("JSON must be an array of records.");
+      data = parsed;
+      applyFilters();
+      alert("Imported JSON successfully.");
+    }catch(e){
+      alert("Import failed: " + e.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+
+/* ---------- Profile / Sign out ---------- */
+function getInitials(name){
+  const parts = (name||"").trim().split(/\s+/).filter(Boolean);
+  const a = (parts[0]||"A")[0];
+  const b = (parts[1]||parts[0]||"D")[0];
+  return (a+b).toUpperCase();
+}
+function loadProfile(){
+  // You can replace these with real session values later
+  const prof = {
+    name: localStorage.getItem("etg_profile_name") || "Analytics Desk",
+    role: localStorage.getItem("etg_profile_role") || "Enterprise Viewer",
+    email: localStorage.getItem("etg_profile_email") || "analytics@company.com",
+    location: localStorage.getItem("etg_profile_location") || "India",
+    access: localStorage.getItem("etg_profile_access") || "Analytics (Read-only)",
+    businessUnit: localStorage.getItem("etg_profile_bu") || "Corporate Travel",
+  };
+
+  $("profileName").textContent = prof.name;
+  $("profileRole").textContent = prof.role;
+  $("avatar").textContent = getInitials(prof.name);
+
+  const sid = localStorage.getItem("etg_session_id") || ("SID-" + Math.random().toString(16).slice(2,10).toUpperCase());
+  localStorage.setItem("etg_session_id", sid);
+
+  const last = localStorage.getItem("etg_last_login") || new Date().toLocaleString();
+  localStorage.setItem("etg_last_login", last);
+
+  $("sessionId").textContent = sid;
+  $("lastLogin").textContent = last;
+
+  const rows = [
+    ["Name", prof.name],
+    ["Role", prof.role],
+    ["Email", prof.email],
+    ["Business Unit", prof.businessUnit],
+    ["Location", prof.location],
+    ["Access Level", prof.access],
+  ];
+  $("profileBody").innerHTML = rows.map(([k,v])=>`
+    <tr>
+      <th style="width:260px;text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:#94a3b8;background:rgba(15,23,42,.98);border-bottom:1px solid rgba(51,65,85,.75);padding:10px 10px;">${k}</th>
+      <td style="border-bottom:1px solid rgba(51,65,85,.75);padding:10px 10px;">${v}</td>
+    </tr>
+  `).join("");
+}
+
+function openProfile(){ $("profileModal").classList.add("open"); }
+function closeProfile(){ $("profileModal").classList.remove("open"); }
+
+function toggleMenu(force){
+  const menu = $("profileMenu");
+  const isOpen = menu.classList.contains("open");
+  const next = (typeof force==="boolean") ? force : !isOpen;
+  menu.classList.toggle("open", next);
+  $("profileBtn").setAttribute("aria-expanded", String(next));
+}
+function signOut(){
+  // Minimal sign-out for static HTML: clear local session keys and redirect (update URL if needed)
+  ["etg_session_id","etg_last_login"].forEach(k=> localStorage.removeItem(k));
+  alert("Signed out successfully.");
+  // Change this to your login file name if different
+  window.location.href = "Stage1 Login.html";
+}
+
+/* ---------- Init ---------- */
+function init(){
+  setDefaultDates();
+  data = DEMO;
+  applyFilters();
+
+  // nav
+  $('nav').addEventListener('click', (e)=>{
+    const btn = e.target.closest('button[data-tab]');
+    if(!btn) return;
+    setTab(btn.dataset.tab);
+  });
+
+  $('btnApply').addEventListener('click', applyFilters);
+  $('btnReset').addEventListener('click', resetFilters);
+
+  $('btnExport').addEventListener('click', exportCSV);
+  $('btnPrint').addEventListener('click', ()=> window.print());
+
+  $('btnLoadDemo').addEventListener('click', ()=>{
+    data = DEMO;
+    resetFilters();
+    alert("Demo data loaded.");
+  });
+
+  $('btnImport').addEventListener('click', ()=> $('fileInput').click());
+  $('fileInput').addEventListener('change', (e)=>{
+    const f = e.target.files?.[0];
+    if(f) importJSON(f);
+    e.target.value = "";
+  });
+
+  $('modalClose').addEventListener('click', closeModal);
+  $('modalBackdrop').addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e)=>{ if(e.key==="Escape"){ closeModal(); closeProfile(); toggleMenu(false);} });
+
+// profile
+loadProfile();
+$('profileBtn').addEventListener('click', (e)=>{
+  e.stopPropagation();
+  toggleMenu();
+});
+document.addEventListener('click', ()=> toggleMenu(false));
+$('profileMenu').addEventListener('click', (e)=> e.stopPropagation());
+$('btnAnalyticalProfile').addEventListener('click', ()=>{
+  toggleMenu(false);
+  openProfile();
+});
+$('btnSignOut').addEventListener('click', signOut);
+
+$('profileClose').addEventListener('click', closeProfile);
+$('profileBackdrop').addEventListener('click', closeProfile);
+
+  // ops live controls
+  $('search').addEventListener('input', ()=> renderRows());
+  $('sortBy').addEventListener('change', ()=> renderRows());
+}
+init();
+</script>
+<!-- ETG Realtime (Socket.IO) -->
+
+<script>window.ETG_API_BASE = window.ETG_API_BASE || '';</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/etg-realtime.js"></script>
+
+</body>
+</html>

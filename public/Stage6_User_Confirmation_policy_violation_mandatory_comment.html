@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ETG Travel – User Confirmation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f8fb;--card:#ffffff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--accent:#1d4ed8;--accent-2:#0ea5e9;--success:#16a34a;--danger:#dc2626;--shadow:0 10px 25px rgba(2,6,23,.06),0 4px 12px rgba(2,6,23,.05);--radius:16px
+  }
+  @media (prefers-color-scheme: dark){:root{--bg:#0b1220;--card:#0f172a;--text:#e5e7eb;--muted:#94a3b8;--border:#1f2937;--accent:#60a5fa;--accent-2:#22d3ee;--shadow:0 16px 30px rgba(0,0,0,.35)}}
+  *{box-sizing:border-box}
+  body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);margin:0}
+  .header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.7));backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .header-inner{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;gap:12px;align-items:center}
+  .logo{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:800;box-shadow:var(--shadow)}
+  .brand{font-weight:800}
+  .badge{margin-left:auto;color:var(--muted);font-size:13px}
+  main{max-width:1100px;margin:22px auto;padding:0 20px 60px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
+  .title{font-weight:800;margin:0 0 6px}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 8px}
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+  .col-4{grid-column:span 4}.col-6{grid-column:span 6}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
+  @media (max-width:1000px){.col-4,.col-6,.col-8{grid-column:span 12}}
+  .kv{display:flex;gap:8px;align-items:center;margin:6px 0}
+  .kv b{min-width:170px}
+
+  /* === Summary cards === */
+  .summary-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:10px}
+  .info-card{grid-column:span 4;border:1px solid var(--border);border-radius:16px;padding:12px 14px;background:linear-gradient(180deg,rgba(99,102,241,.06),rgba(14,165,233,.02));}
+  .info-card .label{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .info-card .value{font-size:14px;font-weight:700;word-break:break-word}
+  .info-card .subvalue{font-size:12px;color:var(--muted);margin-top:3px;word-break:break-word}
+  .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:inline-block}
+  @media (max-width:1000px){.info-card{grid-column:span 12}}
+
+  .stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:8px}
+  .step{padding:10px;border:1px solid var(--border);border-radius:12px;background:var(--card);display:flex;gap:8px;align-items:center}
+  .step .num{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:800;border:1px solid var(--border)}
+  .step.done .num{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border:none}
+  .highlight{display:inline-flex;align-items:center;gap:8px;border:1px dashed var(--border);border-radius:12px;padding:10px 12px;font-weight:700}
+  .btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;border:none;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer}
+  .btn.secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .btn.danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}
+  .btn.success{background:linear-gradient(90deg,#16a34a,#22c55e)}
+  .btn-small{padding:6px 10px;font-size:12px}
+  .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+  textarea,input[type="text"]{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text);font-family:inherit;font-size:13px}
+  textarea:focus,input[type="text"]:focus{outline:none;box-shadow:0 0 0 4px rgba(147,197,253,.35);border-color:#93c5fd}
+  label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px 2px;font-weight:600}
+  .note{font-size:13px;color:var(--muted)}
+  .toast{position:fixed;right:20px;bottom:20px;display:grid;gap:8px;z-index:50}
+  .toast .item{background:var(--card);border:1px solid var(--border);padding:10px 12px;border-radius:12px;box-shadow:var(--shadow);font-weight:600}
+  .divider{height:1px;background:var(--border);margin:12px 0}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--muted)}
+  .table{width:100%;border-collapse:collapse}
+  .table th,.table td{border:1px solid var(--border);padding:8px;border-radius:6px}
+  .table th{font-weight:700;text-align:left;background:#f8fafc}
+
+  /* === Travel desk options / policy violation === */
+  .options-intro{margin-top:2px;margin-bottom:8px;font-size:13px;color:var(--muted);}
+  .option-grid{display:flex;flex-direction:column;gap:12px;margin-top:6px;}
+  .option-card{
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:12px 14px 12px;
+    background:var(--card);
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+    transition:box-shadow .18s ease, border-color .18s ease, transform .08s ease;
+  }
+  .option-card.selected{
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px rgba(37,99,235,.28),var(--shadow);
+    transform:translateY(-1px);
+  }
+  .option-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:4px;
+    font-weight:700;
+    font-size:13px;
+  }
+  .option-header-main{display:flex;flex-direction:column;gap:2px;}
+  .option-tag{font-size:11px;color:var(--muted);}
+  .option-type-badge{
+    font-size:11px;
+    padding:3px 8px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    color:var(--muted);
+    background:#f9fafb;
+  }
+  .option-route{font-size:13px;margin-bottom:3px;}
+  .option-meta{font-size:12px;color:var(--muted);margin-bottom:6px;}
+  .option-price-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    font-size:12px;
+    margin-bottom:6px;
+  }
+  .price-label,.limit-label{color:var(--muted);}
+  .price-value,.limit-value{font-weight:700;}
+  .policy-status{
+    font-size:11px;
+    display:flex;
+    align-items:flex-start;
+    gap:6px;
+    border-radius:10px;
+    padding:6px 8px;
+    margin-top:4px;
+  }
+  .option-card.within .policy-status{
+    background:rgba(22,163,74,.06);
+    color:var(--success);
+    border:1px solid rgba(22,163,74,.18);
+  }
+  .option-card.violation{
+    border-color:rgba(220,38,38,.6);
+    box-shadow:0 0 0 1px rgba(220,38,38,.22),var(--shadow);
+  }
+  .option-card.violation .policy-status{
+    background:rgba(248,113,113,.08);
+    color:var(--danger);
+    border:1px solid rgba(220,38,38,.35);
+  }
+  .icon-circle{
+    width:16px;
+    height:16px;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+  }
+  .within .icon-circle{background:rgba(22,163,74,.12);}
+  .violation .icon-circle{background:rgba(248,113,113,.24);}
+
+  /* per-option decision */
+  .option-decision{
+    margin-top:10px;
+    border-top:1px dashed var(--border);
+    padding-top:8px;
+  }
+  .option-decision label{
+    margin-left:0;
+    margin-bottom:4px;
+  }
+  .option-comment{
+    min-height:56px;
+    resize:vertical;
+  }
+  .option-actions{
+    margin-top:6px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+  }
+  .option-status{
+    font-size:12px;
+    font-weight:600;
+    margin-left:auto;
+    color:var(--accent);
+  }
+  .option-error{
+    margin-top:4px;
+    font-size:11px;
+    color:var(--danger);
+  }
+  .option-card.option-error-highlight{
+    box-shadow:0 0 0 2px rgba(220,38,38,.4),var(--shadow);
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="logo" aria-hidden="true">ET</div>
+      <div class="brand">ETG Travel</div>
+      <div class="badge">Stage 6 · Traveller Confirmation</div>
+    </div>
+  </div>
+
+  <main>
+    <section class="card">
+      <h2 class="title">Confirm your travel options</h2>
+      <p class="sub">Please review the options shared by the travel desk and select the ones you prefer. You can select only one Flight option and one Hotel option.</p>
+      <div class="highlight">Request ID: <span id="reqId">TR-XXXXXX</span></div>
+      <div class="stepper" aria-label="Progress">
+        <div class="step done"><span class="num">1</span><span>Submit</span></div>
+        <div class="step done"><span class="num">2</span><span>Acknowledgement</span></div>
+        <div class="step done"><span class="num">3</span><span>Manager Approval</span></div>
+        <div class="step done"><span class="num">4</span><span>Ticketing</span></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3 class="title">Traveller & request summary</h3>
+      <div id="summary"></div>
+      <div class="divider"></div>
+      <h3 class="title">Trip itinerary</h3>
+      <div id="itinerary"></div>
+    </section>
+
+    <!-- Options shared by travel desk (AUTO-LOADED) -->
+    <section class="card">
+      <h3 class="title">Options shared by travel desk</h3>
+      <p class="options-intro">
+        These options are loaded automatically from the travel desk quotation.  
+        If you select an option that is marked as <strong>higher than the lowest cost (policy deviation)</strong>,
+        you must provide a justification comment in the text box under that option.
+      </p>
+
+      <!-- Flight options -->
+      <h4 class="title" style="font-size:14px;margin-top:4px;">Flight options</h4>
+      <div id="flightOptionsGrid" class="option-grid">
+        <!-- Cards will be injected from Stage 4 data -->
+      </div>
+
+      <!-- Hotel options -->
+      <h4 class="title" style="font-size:14px;margin-top:16px;">Hotel options</h4>
+      <div id="hotelOptionsGrid" class="option-grid">
+        <!-- Cards will be injected from Stage 4 data -->
+      </div>
+
+      <p class="note" style="margin-top:10px">
+        If you don’t see your options here, please go back and ask the travel desk to resend the quotation.
+      </p>
+    </section>
+
+    <!-- Global confirmation -->
+    <section class="card">
+      <h3 class="title">Final confirmation</h3>
+      <p class="sub">After you select your preferred Flight and Hotel options, click confirm to send your response to the travel desk.</p>
+      <div class="grid">
+        <div class="col-12">
+          <label for="overallNote">Overall note for travel desk (optional)</label>
+          <textarea id="overallNote" rows="3" placeholder="Example: Please proceed with these options. I am ok with minor timing changes if needed."></textarea>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btnConfirm" class="btn success">Confirm selected options &amp; notify</button>
+        <button id="btnRequestChange" class="btn secondary">Ask for different options</button>
+        <button id="btnPrint" class="btn secondary">Print / Save PDF</button>
+      </div>
+      <p class="note" style="margin-top:8px">
+        If you confirm a higher-cost option, a justification comment under that option is mandatory.
+      </p>
+    </section>
+
+    <section class="card">
+      <h3 class="title">Policy hints</h3>
+      <div class="pill" id="policy1">Flight: lowest cost option is considered within policy; higher fares may be treated as deviations.</div>
+      <div class="pill" id="policy2" style="margin-top:8px">Hotel: similarly, options higher than the lowest nightly rate may be treated as deviations.</div>
+    </section>
+
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const qp = new URLSearchParams(location.search);
+  const toast = (msg)=>{
+    const t=$('toast');
+    const el=document.createElement('div');
+    el.className='item';
+    el.textContent=msg;
+    t.appendChild(el);
+    setTimeout(()=>{
+      el.style.opacity=.0;
+      el.style.transform='translateY(6px)';
+      setTimeout(()=> el.remove(), 260);
+    }, 2200);
+  };
+
+  function readAnyJSON(keys){
+    for(const k of keys){
+      try{
+        const raw = localStorage.getItem(k);
+        if(!raw) continue;
+        const v = JSON.parse(raw);
+        if(v && typeof v === 'object') return v;
+      }catch(e){}
+    }
+    return {};
+  }
+
+  function readAnyRaw(keys){
+    for(const k of keys){
+      try{
+        const v = localStorage.getItem(k);
+        if(v !== null && v !== undefined && String(v).trim() !== '') return v;
+      }catch(e){}
+    }
+    return '';
+  }
+  function readAnyString(keys){
+    // Supports either a JSON string {"value": "..."} or a plain string value.
+    for(const k of keys){
+      try{
+        const raw = localStorage.getItem(k);
+        if(!raw) continue;
+        // try parse json first
+        try{
+          const v = JSON.parse(raw);
+          if(typeof v === 'string' && v.trim()!=='') return v.trim();
+          if(v && typeof v === 'object'){
+            const guess = v.value || v.name || v.fullName || v.email || v.phone || v.mobile || v.contact || v.costCenter || v.costCentre;
+            if(guess && String(guess).trim()!=='') return String(guess).trim();
+          }
+        }catch(e){}
+        // fallback plain string
+        if(String(raw).trim()!=='') return String(raw).trim();
+      }catch(e){}
+    }
+    return '';
+  }
+
+  
+  function scanLocalStorageForProfile(){
+    // Heuristic: scan all localStorage keys for a JSON object that looks like a user profile
+    try{
+      let best = null;
+      let bestScore = 0;
+      for(let i=0;i<localStorage.length;i++){
+        const k = localStorage.key(i);
+        if(!k) continue;
+        const raw = localStorage.getItem(k);
+        if(!raw || raw.length<2) continue;
+        if(raw[0] !== '{' && raw[0] !== '[') continue;
+        let v;
+        try{ v = JSON.parse(raw); }catch(e){ continue; }
+        if(!v || typeof v !== 'object') continue;
+
+        // If it's an array, try first object
+        if(Array.isArray(v)){
+          v = v.find(x => x && typeof x === 'object') || null;
+        }
+        if(!v || typeof v !== 'object') continue;
+
+        const hasName = !!(v.fullName || v.name || v.employeeName || v.travelerName || v.travellerName || v.userName);
+        const hasEmail = !!(v.email || v.workEmail || v.officialEmail || v.userEmail);
+        const hasPhone = !!(v.phone || v.mobile || v.contactNumber || v.phoneNumber);
+        const hasCC = !!(v.costCenter || v.costCentre || v.cost_center || v.costcentre);
+
+        // score candidate
+        let score = 0;
+        if(/profile|user|employee|myprofile|traveller/i.test(k)) score += 2;
+        if(hasName) score += 3;
+        if(hasEmail) score += 2;
+        if(hasPhone) score += 1;
+        if(hasCC) score += 2;
+
+        if(score > bestScore){
+          bestScore = score;
+          best = v;
+        }
+      }
+      return best || {};
+    }catch(e){
+      return {};
+    }
+  }
+
+  
+  function scanLocalStorageForProfileByEmail(targetEmail){
+    try{
+      const t = String(targetEmail||'').trim().toLowerCase();
+      if(!t) return {};
+      let best = null;
+      let bestScore = -1;
+      for(let i=0;i<localStorage.length;i++){
+        const k = localStorage.key(i);
+        if(!k) continue;
+        const raw = localStorage.getItem(k);
+        if(!raw) continue;
+        let v = safeJSON(raw, null);
+        if(!v) continue;
+
+        // If it's an array, try to find matching object inside
+        if(Array.isArray(v)){
+          v = v.find(x=>{
+            if(!x || typeof x!=='object') return false;
+            const em = (x.email||x.workEmail||x.officialEmail||x.userEmail||x.employeeEmail||x.requesterEmail||'');
+            return String(em).toLowerCase() === t;
+          }) || null;
+        }
+
+        if(!v || typeof v !== 'object') continue;
+
+        const em = (v.email||v.workEmail||v.officialEmail||v.userEmail||v.employeeEmail||v.requesterEmail||'');
+        if(String(em).toLowerCase() !== t) continue;
+
+        // score candidate (prefer profile-ish keys + richer objects)
+        let score = 0;
+        if(/profile|user|employee|myprofile|traveller|traveler/i.test(k)) score += 3;
+        if(v.fullName || v.name || v.employeeName || v.travelerName || v.travellerName || v.userName) score += 3;
+        if(v.costCenter || v.costCentre || v.cost_center || v.costcentre) score += 2;
+        if(v.phone || v.mobile || v.contactNumber || v.phoneNumber) score += 1;
+
+        if(score > bestScore){
+          bestScore = score;
+          best = v;
+        }
+      }
+      return best || {};
+    }catch(e){
+      return {};
+    }
+  }
+
+function getProfileFallback(){
+    // Support multiple possible profile keys across stages (JSON object or plain strings)
+    let p = readAnyJSON([
+      'etg-profile','etgProfile','myProfile','etg_my_profile','my_profile','my-profile','userProfile','user_profile','user-profile',
+      'profile','profileData','profile_data','employeeProfile','employee_profile','employee-profile','employeeData','employee_data',
+      'travellerProfile','travelerProfile','traveller_profile','traveler_profile',
+      'etg-user-profile','etg_profile','etgUserProfile','etg_userProfile',
+      'USER_PROFILE','MY_PROFILE','PROFILE'
+    ]);
+    // If not found or empty, try heuristic scan across localStorage
+    if(!p || (typeof p === 'object' && !Array.isArray(p) && Object.keys(p).length===0)){
+      p = scanLocalStorageForProfile();
+    }
+
+    // Also support apps that store each field separately as plain localStorage strings
+    const fullNameStr = readAnyString(['travellerName','travelerName','employeeName','fullName','name','etg-traveller-name','etg-traveler-name']);
+    const emailStr    = readAnyString(['travellerEmail','travelerEmail','employeeEmail','workEmail','email','etg-email','etg-work-email']);
+    const phoneCodeStr= readAnyString(['phoneCode','countryCode','dialCode','etg-phone-code']);
+    const phoneStr    = readAnyString(['phone','mobile','contact','phoneNumber','phoneNo','etg-phone','etg-mobile']);
+    const typeStr     = readAnyString(['travellerType','travelerType','userType','roleType','etg-traveller-type']);
+    const ccStr       = readAnyString(['costCenter','costCentre','cc','billingCode','etg-cost-center','etg-costcentre']);
+    const mgrStr      = readAnyString(['managerEmail','reportingManager','approverEmail','approver','etg-manager-email','etg-approver-email']);
+
+    return {
+      fullName: (p.fullName || p.name || p.employeeName || p.travelerName || p.travellerName || fullNameStr || ''),
+      email: (p.email || p.employeeEmail || p.workEmail || emailStr || ''),
+      phoneCode: (p.phoneCode || p.countryCode || p.dialCode || phoneCodeStr || ''),
+      phone: (p.phone || p.mobile || p.contact || p.phoneNumber || p.phoneNo || phoneStr || ''),
+      travelerType: (p.travelerType || p.travellerType || p.userType || p.roleType || typeStr || ''),
+      costCenter: (p.costCenter || p.costCentre || p.cc || ccStr || ''),
+      managerEmail: (p.managerEmail || p.reportingManager || p.approverEmail || mgrStr || '')
+    };
+  }
+
+
+  function getAutoSave(){
+    try{ return JSON.parse(localStorage.getItem('etg-autosave')||'{}'); }catch(e){ return {}; }
+  }
+
+  const saved = getAutoSave();
+  const profile = getProfileFallback();
+  // Merge autosave + profile (autosave wins if both have values)
+  const merged = Object.assign({}, profile, saved);
+
+  let reqId = qp.get('rid') || ('TR-' + Math.random().toString(36).slice(2,8).toUpperCase());
+  let name = qp.get('name') || merged.fullName || '—';
+  let email = qp.get('email') || merged.email || '';
+  let phone = (qp.get('phoneCode')||merged.phoneCode||'') + ' ' + (qp.get('phone')||merged.phone||'');
+  let travelerType = qp.get('type') || merged.travelerType || 'Employee';
+  let costCenter = qp.get('cc') || merged.costCenter || '—';
+  let managerEmail = qp.get('mgr') || merged.managerEmail || 'karthik.n@etgworld.com';
+
+
+  let svcFlight = (qp.get('svcF') ?? '1') !== '0';
+  let svcHotel  = (qp.get('svcH') ?? '0') === '1' || !!(qp.get('hotelCity')||qp.get('hotelName'));
+  let svcCab    = (qp.get('svcC') ?? '0') === '1' || !!qp.get('cabPickupCity');
+
+  let tripType = qp.get('tt') || 'round';
+  let from = qp.get('from') || '';
+  let to = qp.get('to') || '';
+  let depart = qp.get('depart') || '';
+  let ret = qp.get('ret') || '';
+  let seatClass = qp.get('cls') || 'Economy';
+  let purpose = qp.get('pur') || 'Business';
+  const segsParam = qp.get('segs') || '';
+  let segments = segsParam.split(';').filter(Boolean).map(s=>{
+    const [a,b,c] = s.split('|'); return {from:a||'', to:b||'', date:c||''};
+  });
+
+  let hotelName = qp.get('hotelName') || '';
+  let hotelCity = qp.get('hotelCity') || '';
+  let hotelCheckIn = qp.get('hotelCheckIn') || '';
+  let hotelCheckOut = qp.get('hotelCheckOut') || '';
+  let hotelRooms = qp.get('hotelRooms') || '';
+  let hotelGuests = qp.get('hotelGuests') || '';
+  let hotelNights = qp.get('hotelNights') || '';
+
+  let cabPickupCity = qp.get('cabPickupCity') || '';
+  let cabPickupDate = qp.get('cabPickupDate') || '';
+  let cabPickupTime = qp.get('cabPickupTime') || '';
+
+  $('reqId').textContent = reqId;
+
+  function paintSummary(){
+    const safe = (v)=> (v===undefined || v===null || String(v).trim()==='') ? '—' : String(v);
+    const emailLine = email ? String(email) : '';
+    const phoneLine = phone && phone.trim() ? phone.trim() : '';
+    const contactLine = [emailLine, phoneLine].filter(Boolean).join(' · ') || '—';
+
+    $('summary').innerHTML = `
+      <div class="summary-grid">
+        <div class="info-card">
+          <div class="label"><span class="dot"></span>Traveller</div>
+          <div class="value">${safe(name)}</div>
+          <div class="subvalue">${safe(travelerType)}</div>
+        </div>
+        <div class="info-card">
+          <div class="label"><span class="dot"></span>Contacts</div>
+          <div class="value">${safe(contactLine)}</div>
+          <div class="subvalue">For updates & coordination</div>
+        </div>
+        <div class="info-card">
+          <div class="label"><span class="dot"></span>Cost Center</div>
+          <div class="value">${safe(costCenter)}</div>
+          <div class="subvalue">Billing reference</div>
+        </div>
+        <div class="info-card" style="grid-column:span 12">
+          <div class="label"><span class="dot"></span>Approver</div>
+          <div class="value">${safe(managerEmail)}</div>
+        </div>
+      </div>
+    `;
+  }
+
+function buildItineraryHtml(){
+    const parts = [];
+    if(svcFlight){
+      if(tripType==='multi' && segments.length){
+        const rows = segments.map((s,i)=>`<tr><td>${i+1}</td><td>${s.from||'—'}</td><td>${s.to||'—'}</td><td>${s.date||'—'}</td></tr>`).join('');
+        parts.push(`<h4 class='title' style='font-size:16px'>Flight – Multi-city (${seatClass} · ${purpose})</h4>`);
+        parts.push(`<table class='table'><thead><tr><th>#</th><th>From</th><th>To</th><th>Date</th></tr></thead><tbody>${rows}</tbody></table>`);
+      } else if (from || to) {
+        parts.push(`<h4 class='title' style='font-size:16px'>Flight (${seatClass} · ${purpose})</h4>`);
+        parts.push(`<div class='kv'><b>Route</b><span>${from||'—'} → ${to||'—'}</span></div>`);
+        parts.push(`<div class='kv'><b>Dates</b><span>${depart||'—'}${tripType==='round' && ret ? ' → '+ret : ''}</span></div>`);
+      }
+    }
+    if(svcHotel && (hotelCity||hotelName||hotelCheckIn||hotelCheckOut)){
+      parts.push(`<h4 class='title' style='font-size:16px;margin-top:10px'>Hotel</h4>`);
+      parts.push(`<div class='kv'><b>Hotel</b><span>${hotelName||'—'}</span></div>`);
+      parts.push(`<div class='kv'><b>City/Area</b><span>${hotelCity||'—'}</span></div>`);
+      parts.push(`<div class='kv'><b>Stay</b><span>${hotelCheckIn||'—'} → ${hotelCheckOut||'—'}${hotelNights? ' · '+hotelNights+' night(s)' : ''}</span></div>`);
+      if(hotelRooms||hotelGuests) parts.push(`<div class='kv'><b>Rooms/Guests</b><span>${hotelRooms||'—'} / ${hotelGuests||'—'}</span></div>`);
+    }
+    if(svcCab && (cabPickupCity||cabPickupDate||cabPickupTime)){
+      parts.push(`<h4 class='title' style='font-size:16px;margin-top:10px'>Cab</h4>`);
+      parts.push(`<div class='kv'><b>Pickup</b><span>${cabPickupCity||'—'}</span></div>`);
+      parts.push(`<div class='kv'><b>When</b><span>${cabPickupDate||'—'} ${cabPickupTime||''}</span></div>`);
+    }
+    return parts.join('') || '<p class="note">No itinerary details provided.</p>';
+  }
+
+  function buildItineraryText(){
+    let t = '';
+    if(svcFlight){
+      if(tripType==='multi' && segments.length){
+        t += `Flight – Multi-city (${seatClass} · ${purpose})\n`;
+        segments.forEach((s,i)=>{ t += `  ${i+1}. ${s.from||'-'} → ${s.to||'-'} (${s.date||'-'})\n`; });
+      } else if(from || to){
+        t += `Flight (${seatClass} · ${purpose})\n  Route: ${from||'-'} → ${to||'-'}\n  Dates: ${depart||'-'}${tripType==='round'&&ret? ' → '+ret : ''}\n`;
+      }
+      t += `\n`;
+    }
+    if(svcHotel && (hotelCity||hotelName||hotelCheckIn||hotelCheckOut)){
+      t += `Hotel\n  Hotel: ${hotelName||'-'}\n  City/Area: ${hotelCity||'-'}\n  Stay: ${hotelCheckIn||'-'} → ${hotelCheckOut||'-'}${hotelNights? ' · '+hotelNights+' night(s)' : ''}\n  Rooms/Guests: ${hotelRooms||'-'} / ${hotelGuests||'-'}\n\n`;
+    }
+    if(svcCab && (cabPickupCity||cabPickupDate||cabPickupTime)){
+      t += `Cab\n  Pickup: ${cabPickupCity||'-'}\n  When: ${cabPickupDate||'-'} ${cabPickupTime||''}\n\n`;
+    }
+    return t;
+  }
+
+  // Hydrate from trip store first (when opened from My Trips / View Travel Itinerary)
+  hydrateFromTripStoreForUserPage();
+
+  paintSummary();
+  $('itinerary').innerHTML = buildItineraryHtml();
+
+  function mailto(to, cc, subject, body){
+    const url = `mailto:${encodeURIComponent(to)}?cc=${encodeURIComponent(cc)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    // Important: opening mailto in a new window/tab keeps this page alive so we can redirect to Stage 5.
+    try{
+      window.open(url, '_blank');
+    }catch(e){
+      // fallback
+      location.href = url;
+    }
+  }
+  function baseBlock(){
+    let t = `ETG Travel – Request ${reqId}\n\n`;
+    t += `Traveller: ${name} (${travelerType})\n`;
+    t += `Email: ${email}\nPhone: ${phone}\nCost Center: ${costCenter}\n\n`;
+    t += buildItineraryText();
+    return t;
+  }
+
+  // === Load trip + options (GLOBAL, cross-role) ===
+  // We support multiple possible storage keys because different stages saved data differently.
+  // Primary store (new): etg-trips (Array of trips OR object buckets)
+  // Legacy fallbacks: etgTrips, trips, etg_trips, etg_user_trips, etg-trips-by-id, currentTrip
+  function safeJSON(raw, fallback){
+    try{ return JSON.parse(raw); }catch(e){ return fallback; }
+  }
+
+  function normalizeTripId(val){
+    if(val === null || val === undefined) return '';
+    return String(val).trim();
+  }
+
+  function collectTripsFromStoreValue(storeVal){
+    const out = [];
+    if(!storeVal) return out;
+
+    // If it's already an array of trips
+    if(Array.isArray(storeVal)){
+      storeVal.forEach(t=>{ if(t && typeof t === 'object') out.push(t); });
+      return out;
+    }
+
+    // If it is a by-id map {rid: trip}
+    if(storeVal && typeof storeVal === 'object'){
+      // common container keys
+      ['trips','items','data','list','records'].forEach(k=>{
+        if(Array.isArray(storeVal[k])) storeVal[k].forEach(t=>{ if(t && typeof t === 'object') out.push(t); });
+      });
+
+      // buckets or arbitrary keys
+      Object.keys(storeVal).forEach(k=>{
+        const v = storeVal[k];
+        if(Array.isArray(v)) v.forEach(t=>{ if(t && typeof t === 'object') out.push(t); });
+        else if(v && typeof v === 'object'){
+          // if this looks like a trip object, include it
+          const hasTripShape = (v.id || v.requestId || v.rid || v.tripId || v.requester || v.itinerary || v.quotationOptions || v.optionsShared);
+          if(hasTripShape) out.push(v);
+          // also include nested arrays under this object
+          Object.keys(v).forEach(k2=>{
+            const v2 = v[k2];
+            if(Array.isArray(v2)) v2.forEach(t=>{ if(t && typeof t === 'object') out.push(t); });
+          });
+        }
+      });
+    }
+    return out;
+  }
+
+  function loadTripsAll(){
+    const keys = [
+      'etg-trips',
+      'etgTrips',
+      'trips',
+      'etg_trips',
+      'etg_user_trips',
+      'etg-trips-by-id'
+    ];
+    const all = [];
+    keys.forEach(k=>{
+      const raw = localStorage.getItem(k);
+      if(!raw) return;
+      const val = safeJSON(raw, null);
+      collectTripsFromStoreValue(val).forEach(t=> all.push(t));
+    });
+
+    // Also include currentTrip if present
+    const ct = safeJSON(localStorage.getItem('currentTrip')||'null', null);
+    if(ct && typeof ct === 'object') all.push(ct);
+
+    // De-dupe by best-available id
+    const seen = new Set();
+    const deduped = [];
+    all.forEach(t=>{
+      const id = normalizeTripId(t.id || t.requestId || t.rid || t.tripId || t.trip_id);
+      const key = id || JSON.stringify(t).slice(0,60);
+      if(seen.has(key)) return;
+      seen.add(key);
+      deduped.push(t);
+    });
+    return deduped;
+  }
+
+  function findTripByAnyId(id){
+    const wanted = normalizeTripId(id);
+    if(!wanted) return null;
+    const trips = loadTripsAll();
+    return trips.find(t=>{
+      const tid = normalizeTripId(t.id || t.requestId || t.rid || t.tripId || t.trip_id);
+      return tid && tid === wanted;
+    }) || null;
+  }
+
+  // Keep writing back to etg-trips (primary) in the same *shape* we found it (array most common)
+  function saveTripsPrimary(updatedTrips){
+    try{
+      localStorage.setItem('etg-trips', JSON.stringify(updatedTrips));
+    }catch(e){}
+  }
+
+  function updateTripEverywhere(tripId, updater){
+    const wanted = normalizeTripId(tripId);
+    if(!wanted || typeof updater !== 'function') return;
+
+    const primaryRaw = localStorage.getItem('etg-trips');
+    const primaryVal = safeJSON(primaryRaw || 'null', null);
+
+    // Update within primary store if possible
+    let changed = false;
+    if(Array.isArray(primaryVal)){
+      primaryVal.forEach(t=>{
+        const tid = normalizeTripId(t && (t.id || t.requestId || t.rid || t.tripId || t.trip_id));
+        if(t && tid === wanted){
+          updater(t);
+          changed = true;
+        }
+      });
+      if(changed) saveTripsPrimary(primaryVal);
+    }else if(primaryVal && typeof primaryVal === 'object'){
+      // Could be buckets or by-id map
+      Object.keys(primaryVal).forEach(k=>{
+        const v = primaryVal[k];
+        if(Array.isArray(v)){
+          v.forEach(t=>{
+            const tid = normalizeTripId(t && (t.id || t.requestId || t.rid || t.tripId || t.trip_id));
+            if(t && tid === wanted){
+              updater(t);
+              changed = true;
+            }
+          });
+        }else if(v && typeof v === 'object'){
+          const tid = normalizeTripId(v.id || v.requestId || v.rid || v.tripId || v.trip_id);
+          if(tid === wanted){
+            updater(v);
+            changed = true;
+          }
+        }
+      });
+      if(changed){
+        try{ localStorage.setItem('etg-trips', JSON.stringify(primaryVal)); }catch(e){}
+      }
+    }
+
+    // Also keep a by-id snapshot for very simple readers
+    try{
+      const map = safeJSON(localStorage.getItem('etg-trips-by-id')||'{}', {});
+      const trip = findTripByAnyId(wanted);
+      if(trip){
+        map[wanted] = trip;
+        localStorage.setItem('etg-trips-by-id', JSON.stringify(map));
+      }
+    }catch(e){}
+  }
+
+  // Backward-compatible wrappers used by existing code
+  function loadTripStoreForUser(){
+    // return primary store as-is if present, otherwise return an array
+    const raw = localStorage.getItem('etg-trips');
+    if(raw){
+      const v = safeJSON(raw, []);
+      return v;
+    }
+    return [];
+  }
+
+  function saveTripStoreForUser(store){
+    // prefer writing arrays; if store is object, keep it
+    try{ localStorage.setItem('etg-trips', JSON.stringify(store)); }catch(e){}
+  }
+
+  function updateTripInStoreForUser(tripId, updater){
+    updateTripEverywhere(tripId, updater);
+  }
+
+  function findTripByIdForUser(id){
+    return findTripByAnyId(id);
+  }
+
+  // === Hydrate this page from the shared trip store (so traveller sees correct request summary + itinerary) ===
+  function hydrateFromTripStoreForUserPage(){
+  // Try to resolve tripId from URL first, then localStorage, then fallback to the latest relevant trip.
+  let tripId = qp.get('rid') || qp.get('tripId') || qp.get('id') || '';
+  let userEmail = (email || (saved && saved.email) || qp.get('email') || '').toLowerCase();
+
+  function flattenTrips(store){
+    const out = [];
+    const seen = new Set();
+    function add(t){
+      if(!t || typeof t !== 'object') return;
+      const key = t.id ? String(t.id) : null;
+      if(key){
+        if(seen.has(key)) return;
+        seen.add(key);
+      }
+      out.push(t);
+    }
+    function walk(node){
+      if(!node) return;
+      if(Array.isArray(node)){ node.forEach(add); return; }
+      if(typeof node === 'object'){
+        // common container keys
+        ['trips','items','data','list','records'].forEach(k=>{
+          if(Array.isArray(node[k])) node[k].forEach(add);
+        });
+        Object.keys(node).forEach(k=>{
+          const v = node[k];
+          if(Array.isArray(v)) v.forEach(add);
+          else if(v && typeof v === 'object'){
+            Object.keys(v).forEach(k2=>{
+              const v2 = v[k2];
+              if(Array.isArray(v2)) v2.forEach(add);
+            });
+          }
+        });
+      }
+    }
+    walk(loadTripStoreForUser());
+    return out;
+  }
+
+  if(!tripId){
+    try{
+      tripId = localStorage.getItem('etg-last-quotation-trip-id') ||
+               localStorage.getItem('etg-selected-trip-id') || '';
+    }catch(e){}
+  }
+
+  // If still missing, pick most recent trip that has TravelDesk options.
+  if(!tripId){
+    try{
+      const all = flattenTrips(loadTripStoreForUser());
+      const candidates = all.filter(t=>{
+        const hasOptions = (t.quotationOptions || t.quotation || t.optionsShared || t.travelDeskOptions);
+        if(!hasOptions) return false;
+        if(!userEmail) return true;
+        const r = t.requester || t.request || t.traveller || t.traveler || {};
+        const emails = [
+          r.email, r.requesterEmail, r.employeeEmail,
+          t.requesterEmail, t.employeeEmail, t.email
+        ].filter(Boolean).map(x=>String(x).toLowerCase());
+        return emails.includes(userEmail);
+      });
+      candidates.sort((a,b)=>{
+        const ta = new Date(a.lastUpdated||a.updatedAt||a.createdAt||0).getTime();
+        const tb = new Date(b.lastUpdated||b.updatedAt||b.createdAt||0).getTime();
+        return tb - ta;
+      });
+      if(candidates[0] && candidates[0].id){
+        tripId = String(candidates[0].id);
+        try{
+          localStorage.setItem('etg-selected-trip-id', tripId);
+          localStorage.setItem('etg-last-quotation-trip-id', tripId);
+        }catch(e){}
+      }
+    }catch(e){}
+  }
+
+  if(!tripId) return null;
+
+  const trip = findTripByIdForUser(tripId) || (function(){
+    // last-resort lookup from flattened list
+    try{
+      const all = flattenTrips(loadTripStoreForUser());
+      return all.find(t=>t && String(t.id)===String(tripId)) || null;
+    }catch(e){ return null; }
+  })();
+
+  if(!trip) return null;
+
+  // Request id
+  try{
+    const rid = trip.id || tripId;
+    if(rid){ $('reqId').textContent = String(rid); }
+  }catch(e){}
+
+  // Requester / traveller (prefer requester fields from the trip, not the logged-in profile)
+  const r = trip.requester || trip.request || trip.traveller || trip.traveler || {};
+  const itReq = trip.itinerary || trip.tripItinerary || trip.requestDetails || {};
+  const contactObj = (r.contacts || r.contact || r.contactDetails || itReq.contacts || itReq.contact || trip.contacts || trip.contactDetails || {}) || {};
+
+  name = (
+    r.name || r.fullName || r.employeeName || r.travelerName || r.travellerName ||
+    contactObj.name || contactObj.fullName || contactObj.employeeName ||
+    trip.travelerName || trip.travellerName || trip.employeeName || trip.employee ||
+    name
+  ) || name;
+
+  // Email: try requester/contact + top-level + merged profile
+  email = (
+    r.email || r.employeeEmail || r.requesterEmail ||
+    contactObj.email || contactObj.workEmail || contactObj.employeeEmail ||
+    trip.email || trip.requesterEmail || trip.employeeEmail ||
+    email || ''
+  ).toLowerCase();
+
+  // If we have a reliable email from trip/request, override profile-derived name/cost center with matching profile record (prevents wrong traveller name).
+  try{
+    const pMatch = scanLocalStorageForProfileByEmail(email);
+    if(pMatch && typeof pMatch === 'object' && Object.keys(pMatch).length){
+      const pName = (pMatch.fullName || pMatch.name || pMatch.employeeName || pMatch.travelerName || pMatch.travellerName || pMatch.userName || '');
+      const pCC   = (pMatch.costCenter || pMatch.costCentre || pMatch.cost_center || pMatch.costcentre || pMatch.cc || '');
+      if(pName) name = pName;
+      if((!costCenter || costCenter==='—') && pCC) costCenter = pCC;
+
+      // phone fallback (only if we still don't have a real phone)
+      const pCode = (pMatch.phoneCode || pMatch.countryCode || pMatch.dialCode || '');
+      const pPh   = (pMatch.phone || pMatch.mobile || pMatch.contactNumber || pMatch.phoneNumber || '');
+      const hasTripPhone = String(phone||'').replace(/\D/g,'').length >= 6;
+      if(!hasTripPhone && (pCode || pPh)){
+        phone = (pCode ? (pCode + ' ') : '') + pPh;
+      }
+    }
+  }catch(e){}
+
+  travelerType = r.travelerType || r.travellerType || trip.travelerType || trip.travellerType || travelerType;
+
+  costCenter = (
+    r.costCenter || r.costCentre || r.cc ||
+    contactObj.costCenter || contactObj.costCentre || contactObj.cc ||
+    itReq.costCenter || itReq.costCentre || itReq.cc ||
+    trip.costCenter || trip.costCentre ||
+    costCenter
+  );
+
+  const phoneCodeFromTrip = r.phoneCode || r.countryCode || r.dialCode || contactObj.phoneCode || contactObj.countryCode || contactObj.dialCode || '';
+  const phoneFromTrip = r.phone || r.mobile || r.contact || r.phoneNumber || r.phoneNo ||
+                        contactObj.phone || contactObj.mobile || contactObj.contact || contactObj.phoneNumber || contactObj.phoneNo ||
+                        trip.phone || trip.mobile || phone;
+
+  // Keep existing formatting (code + number) when available
+  const phoneCombined = [phoneCodeFromTrip || merged.phoneCode || '', phoneFromTrip || ''].filter(Boolean).join(' ').trim();
+  phone = phoneCombined || phone; 
+
+  // Itinerary / services
+  try{
+    // support both "services" object and top-level flags
+    const sv = trip.services || trip.service || {};
+    svcFlight = (sv.flight !== undefined ? !!sv.flight : (trip.flight !== undefined ? !!trip.flight : svcFlight));
+    svcHotel  = (sv.hotel  !== undefined ? !!sv.hotel  : (trip.hotel  !== undefined ? !!trip.hotel  : svcHotel));
+    svcCab    = (sv.cab    !== undefined ? !!sv.cab    : (trip.cab    !== undefined ? !!trip.cab    : svcCab));
+  }catch(e){}
+
+  try{
+    // flight
+    const it = trip.itinerary || trip.tripItinerary || trip.requestDetails || {};
+    tripType = it.tripType || trip.tripType || tripType;
+    purpose = it.purpose || trip.purpose || purpose;
+    seatClass = it.seatClass || trip.seatClass || seatClass;
+
+    from = it.from || it.fromCity || trip.fromCity || from;
+    to = it.to || it.toCity || trip.toCity || to;
+    depart = it.depart || it.departDate || trip.departDate || depart;
+    ret = it.return || it.returnDate || trip.returnDate || ret;
+
+    // segments
+    segments = Array.isArray(it.segments) ? it.segments : (Array.isArray(trip.segments) ? trip.segments : segments);
+
+    // hotel
+    hotelCity = it.hotelCity || it.city || trip.hotelCity || trip.hotelArea || hotelCity;
+    hotelName = it.hotelName || it.hotel || trip.hotelName || trip.hotel || hotelName;
+    hotelCheckIn = it.checkIn || it.hotelCheckIn || trip.checkInDate || trip.hotelCheckIn || hotelCheckIn;
+    hotelCheckOut = it.checkOut || it.hotelCheckOut || trip.checkOutDate || trip.hotelCheckOut || hotelCheckOut;
+    hotelNights = it.hotelNights || trip.hotelNights || hotelNights;
+    hotelRooms = it.hotelRooms || trip.hotelRooms || hotelRooms;
+    hotelGuests = it.hotelGuests || trip.hotelGuests || hotelGuests;
+
+    // cab
+    cabPickupCity = it.cabPickupCity || trip.cabPickupCity || cabPickupCity;
+    cabPickupDate = it.cabPickupDate || trip.cabPickupDate || cabPickupDate;
+    cabPickupTime = it.cabPickupTime || trip.cabPickupTime || cabPickupTime;
+  }catch(e){}
+
+  // If quotation includes hotels/cabs, enable service flags automatically
+  try{
+    const q = trip.quotationOptions || trip.quotation || trip.optionsShared || trip.travelDeskOptions || {};
+    const normQ = normalizeQuotationOptions(q);
+    if(normQ.hotels && normQ.hotels.length) svcHotel = true;
+    if(normQ.cabs && normQ.cabs.length) svcCab = true;
+    if(normQ.flights && normQ.flights.length) svcFlight = true;
+  }catch(e){}
+
+  return trip;
+}
+
+function parseAmount(str){
+    if(!str) return 0;
+    const n = Number(String(str).replace(/[^0-9.]/g,''));
+    return isNaN(n) ? 0 : n;
+  }
+
+
+
+  // Robust amount picker (TravelDesk may store amount under different keys)
+  function getOptionAmount(opt){
+    if(opt === null || opt === undefined) return 0;
+    if(typeof opt !== 'object') return parseAmount(opt);
+
+    const candidates = [
+      opt.estimatedAmount, opt.amount, opt.cost, opt.fare, opt.total,
+      opt.price, opt.nightlyRate, opt.rate, opt.finalAmount, opt.finalCost,
+      opt.totalAmount, opt.totalCost, opt.baseFare
+    ];
+
+    for(const c of candidates){
+      const n = parseAmount(c);
+      if(n) return n;
+    }
+    return 0;
+  }
+
+  function getOptionId(opt, type, index){
+    const raw = opt && (opt.optionId || opt.id || opt.uid || opt.key);
+    if(raw) return String(raw);
+    // Stable fallback id per type/index for cross-stage matching
+    return String(type || 'opt') + '-' + String(index);
+  }
+
+  function formatINR(n){
+    return '₹ ' + (Number(n)||0).toLocaleString('en-IN');
+  }
+
+  function buildOptionCard(type, option, index){
+    const card = document.createElement('article');
+    card.className = 'option-card';
+    card.dataset.type = type;
+    card.dataset.label = (type === 'flight' ? 'Flight' : 'Hotel') + ' option ' + index;
+
+    const cost = getOptionAmount(option);
+    card.dataset.cost = String(cost || 0);
+
+    // keep a stable id so Stage 7 can highlight exactly what traveller selected
+
+    // keep a stable id so Stage 7 can highlight exactly what traveller selected
+    card.dataset.optionId = getOptionId(option, type, index);
+
+    const title = option.title || (type === 'flight' ? 'Flight option ' + index : 'Hotel option ' + index);
+    const details = option.details || '';
+    const notes = option.notes || '';
+    const currency = option.currency || option.curr || option.ccy || option.estimatedCurrency || 'INR';
+    const rawPrice = (option.price ?? option.amount ?? option.cost ?? option.estimatedAmount ?? option.fare ?? option.nightlyRate ?? option.rate ?? option.totalAmount ?? option.totalCost ?? '');
+    const priceDisplay = rawPrice ? (currency + ' ' + rawPrice).trim() : (cost ? formatINR(cost) : '-');
+
+    // Manager review cost (from Travel Desk / Stage 4)
+    const mgrCurrency = option.mgrCurrency || option.managerReviewCurrency || option.managerReviewCostCurrency || (option.managerReviewCost && option.managerReviewCost.currency) || '';
+    const mgrAmount = option.mgrAmount || option.managerReviewAmount || option.managerReviewCostAmount || (option.managerReviewCost && option.managerReviewCost.amount) || '';
+    const mgrDisplay = (mgrCurrency || mgrAmount) ? ((mgrCurrency ? mgrCurrency + ' ' : '') + (mgrAmount || '')).trim() : '-';
+
+    card.innerHTML = `
+      <div class="option-header">
+        <div class="option-header-main">
+          <div>${'Option ' + index} · ${title}</div>
+          <div class="option-tag">${type === 'flight' ? 'Flight option' : 'Hotel option'}</div>
+        </div>
+        <span class="option-type-badge">${type === 'flight' ? 'Flight' : 'Hotel'}</span>
+      </div>
+      <div class="option-route">${title}</div>
+      <div class="option-meta">${details || '—'}</div>
+      <div class="option-price-row">
+        <div>
+          <div class="price-label">Estimated cost</div>
+          <div class="price-value">${priceDisplay}</div>
+          <div class="price-label" style="margin-top:6px">Manager review cost</div>
+          <div class="price-value">${mgrDisplay}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="limit-label">Comparative view</div>
+          <div class="limit-value">Will highlight higher fares</div>
+        </div>
+      </div>
+      <div class="policy-status"></div>
+      <div class="option-decision">
+        <label>Your note for travel desk <span style="font-weight:400;color:var(--muted)">(required for higher-cost options)</span></label>
+        <textarea class="option-comment" placeholder="${type === 'flight'
+          ? 'Example: Need this timing due to meeting / personal constraints.'
+          : 'Example: Need this hotel due to location / safety / corporate need.'}"></textarea>
+        <div class="option-actions">
+          <button type="button" class="btn success btn-small option-select">Select this option</button>
+          <span class="option-status"></span>
+        </div>
+        <div class="option-error" aria-live="polite"></div>
+      </div>
+    `;
+    return card;
+  }
+
+  function applyPolicyHighlight(cards){
+    if(!cards.length) return;
+    const costs = cards.map(c => parseAmount(c.dataset.cost));
+    const minCost = Math.min(...costs);
+
+    cards.forEach(card=>{
+      const cost = parseAmount(card.dataset.cost);
+      const statusEl = card.querySelector('.policy-status');
+      if(!statusEl) return;
+
+      card.classList.remove('within','violation');
+
+      if(cost === minCost){
+        card.classList.add('within');
+        statusEl.innerHTML =
+          '<span class="icon-circle" aria-hidden="true">&#10003;</span>' +
+          '<span>Within policy – this is the lowest cost option for this category.</span>';
+      }else{
+        card.classList.add('violation');
+        statusEl.innerHTML =
+          '<span class="icon-circle" aria-hidden="true">!</span>' +
+          '<span>Higher than the lowest available option (policy deviation already approved by approver).</span>';
+      }
+    });
+  }
+
+  function installOptionSelectionHandlers(){
+    const cards = document.querySelectorAll('.option-card');
+
+    function clearSelectionsForType(type, exceptCard){
+      cards.forEach(other=>{
+        if(other.dataset.type === type && other !== exceptCard){
+          other.dataset.selected = '';
+          other.classList.remove('selected','option-error-highlight');
+          const st = other.querySelector('.option-status');
+          const err = other.querySelector('.option-error');
+          if(st){ st.textContent = ''; }
+          if(err){ err.textContent = ''; }
+        }
+      });
+    }
+
+    cards.forEach(card=>{
+      const selectBtn = card.querySelector('.option-select');
+      const statusEl = card.querySelector('.option-status');
+      const errorEl = card.querySelector('.option-error');
+      const commentEl = card.querySelector('.option-comment');
+      const label = card.dataset.label || 'option';
+      const type = card.dataset.type || '';
+
+      if(!selectBtn) return;
+
+      selectBtn.addEventListener('click',()=>{
+        if(errorEl) errorEl.textContent = '';
+        card.classList.remove('option-error-highlight');
+
+        const alreadySelected = card.dataset.selected === '1';
+
+        if(alreadySelected){
+          // toggle off
+          card.dataset.selected = '';
+          card.classList.remove('selected');
+          if(statusEl) statusEl.textContent = '';
+          toast('Cleared selection for ' + label);
+          return;
+        }
+
+        const isViolation = card.classList.contains('violation');
+        const commentVal = (commentEl && commentEl.value.trim()) || '';
+
+        // 🔴 MANDATORY COMMENT FOR POLICY VIOLATION OPTIONS
+        if(isViolation && !commentVal){
+          if(errorEl){
+            errorEl.textContent = 'This is a higher-cost (policy deviation) option. Please enter a justification comment before selecting.';
+          }
+          card.classList.add('option-error-highlight');
+          if(commentEl){ commentEl.focus(); }
+          toast('Add a justification comment for the higher-cost option.');
+          return;
+        }
+
+        clearSelectionsForType(type, card);
+        card.dataset.selected = '1';
+        card.classList.add('selected');
+        if(statusEl) statusEl.textContent = 'Selected ' + type + ' option';
+        toast('Selected ' + label + ' (' + type + ')');
+      });
+    });
+  }
+
+  
+
+  function normalizeQuotationOptions(quotationOptions){
+    const q = quotationOptions || {};
+
+    // Common keys
+    let flights = q.flights || q.flightOptions || q.flight || q.airOptions || q.air || q.flightQuotes;
+    let hotels  = q.hotels  || q.hotelOptions  || q.hotel || q.stayOptions || q.stay || q.hotelQuotes;
+
+    // If TravelDesk stored an array of mixed options
+    if(!flights && !hotels && Array.isArray(q)){
+      flights = q.filter(x => String(x && (x.type||x.category||'')).toLowerCase().includes('flight') || String(x && (x.mode||'')).toLowerCase()==='flight');
+      hotels  = q.filter(x => String(x && (x.type||x.category||'')).toLowerCase().includes('hotel')  || String(x && (x.mode||'')).toLowerCase()==='hotel');
+    }
+
+    return {
+      flights: Array.isArray(flights) ? flights : [],
+      hotels:  Array.isArray(hotels)  ? hotels  : []
+    };
+  }
+
+  function hydrateOptionsFromQuotation(){
+    const flightGrid = $('flightOptionsGrid');
+    const hotelGrid = $('hotelOptionsGrid');
+    if(!flightGrid || !hotelGrid) return;
+
+    let id = qp.get('rid') || qp.get('tripId') || '';
+    if(!id){
+      try{
+        id = localStorage.getItem('etg-last-quotation-trip-id') || localStorage.getItem('etg-selected-trip-id') || '';
+      }catch(e){}
+    }
+    if(!id){
+      flightGrid.innerHTML = '<p class="note">No matching trip found. Please open this page from your My Trips dashboard.</p>';
+      hotelGrid.innerHTML = '';
+      return;
+    }
+
+    const trip = findTripByIdForUser(id);
+    if(!trip || !(trip.quotationOptions || trip.quotation || trip.optionsShared)){
+      flightGrid.innerHTML = '<p class="note">No options received from travel desk yet for this request.</p>';
+      hotelGrid.innerHTML = '';
+      return;
+    }
+
+    const normalized = normalizeQuotationOptions(trip.quotationOptions || trip.quotation || trip.optionsShared);
+    const flights = normalized.flights;
+    const hotels  = normalized.hotels;
+
+    // Flight options
+    flightGrid.innerHTML = '';
+    const flightCards = [];
+    if(flights.length){
+      flights.forEach((opt, idx)=>{
+        const card = buildOptionCard('flight', opt, idx+1);
+        flightGrid.appendChild(card);
+        flightCards.push(card);
+      });
+    }else{
+      flightGrid.innerHTML = '<p class="note">No flight options shared.</p>';
+    }
+
+    // Hotel options
+    hotelGrid.innerHTML = '';
+    const hotelCards = [];
+    if(hotels.length){
+      hotels.forEach((opt, idx)=>{
+        const card = buildOptionCard('hotel', opt, idx+1);
+        hotelGrid.appendChild(card);
+        hotelCards.push(card);
+      });
+    }else{
+      hotelGrid.innerHTML = '<p class="note">No hotel options shared.</p>';
+    }
+
+    applyPolicyHighlight(flightCards);
+    applyPolicyHighlight(hotelCards);
+
+    installOptionSelectionHandlers();
+  }
+
+  function getSelectedOptionsSummary(){
+    const parts = [];
+    const allCards = document.querySelectorAll('.option-card');
+    const selectedCards = document.querySelectorAll('.option-card[data-selected="1"]');
+
+    // First block – user confirmed options only
+    parts.push('USER CONFIRMED OPTIONS:\n');
+    if(selectedCards.length === 0){
+      parts.push('  (No options selected by user)\n');
+    }else{
+      selectedCards.forEach(card=>{
+        const label = card.dataset.label || 'Option';
+        const type = card.dataset.type || '';
+        const cost = card.dataset.cost || '';
+        const routeEl = card.querySelector('.option-route');
+        const metaEl = card.querySelector('.option-meta');
+        const commentEl = card.querySelector('.option-comment');
+        const route = routeEl ? routeEl.textContent.trim() : '';
+        const meta = metaEl ? metaEl.textContent.trim() : '';
+        const comment = commentEl ? commentEl.value.trim() : '';
+
+        parts.push(`${label.toUpperCase()} (${type})\n  Route/Details: ${route}\n  Extra: ${meta}\n  Cost (est.): ${formatINR(cost||0)}\n  Note from traveller: ${comment || '-'}\n`);
+      });
+    }
+
+    // Second block – all options shared by travel desk, with flag
+    parts.push('\nALL OPTIONS SHARED BY TRAVEL DESK:\n');
+    if(allCards.length === 0){
+      parts.push('  (No options available)\n');
+    }else{
+      allCards.forEach(card=>{
+        const label = card.dataset.label || 'Option';
+        const type = card.dataset.type || '';
+        const cost = card.dataset.cost || '';
+        const routeEl = card.querySelector('.option-route');
+        const metaEl = card.querySelector('.option-meta');
+        const route = routeEl ? routeEl.textContent.trim() : '';
+        const meta = metaEl ? metaEl.textContent.trim() : '';
+        const isSelected = card.getAttribute('data-selected') === '1';
+
+        parts.push(`${label.toUpperCase()} (${type})\n  Route/Details: ${route}\n  Extra: ${meta}\n  Cost (est.): ${formatINR(cost||0)}\n  Status: ${isSelected ? 'USER CONFIRMED OPTION' : 'Not selected by user'}\n`);
+      });
+    }
+
+    return parts.join('\n');
+  }
+
+  function validateSelections(){
+    const flightSelected = document.querySelector('.option-card[data-type="flight"][data-selected="1"]');
+    const hotelCardsExist = !!document.querySelector('.option-card[data-type="hotel"]');
+    const hotelSelected = document.querySelector('.option-card[data-type="hotel"][data-selected="1"]');
+
+    if(svcFlight && !flightSelected){
+      toast('Please select one Flight option.');
+      return false;
+    }
+    if(svcHotel && hotelCardsExist && !hotelSelected){
+      toast('Please select one Hotel option.');
+      return false;
+    }
+
+    // 🔴 Check mandatory comments for policy-violation selections
+    const selectedCards = document.querySelectorAll('.option-card[data-selected="1"]');
+    for(const card of selectedCards){
+      const isViolation = card.classList.contains('violation');
+      if(!isViolation) continue;
+      const commentEl = card.querySelector('.option-comment');
+      const errorEl = card.querySelector('.option-error');
+      const label = card.dataset.label || 'option';
+      const commentVal = (commentEl && commentEl.value.trim()) || '';
+
+      if(!commentVal){
+        card.classList.add('option-error-highlight');
+        if(errorEl){
+          errorEl.textContent = 'Justification comment is mandatory for this higher-cost (policy deviation) option.';
+        }
+        if(commentEl){ commentEl.focus(); }
+        toast('Please enter a justification for ' + label + ' before confirming.');
+        return false;
+      }else{
+        card.classList.remove('option-error-highlight');
+        if(errorEl){ errorEl.textContent = ''; }
+      }
+    }
+
+    return true;
+  }
+
+  // Global confirmation buttons
+  $('btnConfirm').addEventListener('click',()=>{
+    if(!validateSelections()) return;
+
+    const overallNote = ($('overallNote').value || '').trim();
+
+    // Persist user confirmation + selections back to the trip store
+    (function(){
+      let tripId = qp.get('rid') || qp.get('tripId') || '';
+      if(!tripId){
+        try{
+          tripId = localStorage.getItem('etg-last-quotation-trip-id') ||
+                   localStorage.getItem('etg-selected-trip-id') || '';
+        }catch(e){}
+      }
+      if(!tripId || typeof updateTripInStoreForUser !== 'function') return;
+
+      const selectedCards = document.querySelectorAll('.option-card[data-selected="1"]');
+      const selections = [];
+      selectedCards.forEach(card=>{
+        const type = card.dataset.type || '';
+        const label = card.dataset.label || '';
+        const cost = card.dataset.cost || '';
+        const routeEl = card.querySelector('.option-route');
+        const metaEl = card.querySelector('.option-meta');
+        const commentEl = card.querySelector('.option-comment');
+
+        selections.push({
+          optionId: (card.dataset.optionId || ''),
+          type,
+          label,
+          estimatedAmount: cost,
+          route: routeEl ? routeEl.textContent.trim() : '',
+          details: metaEl ? metaEl.textContent.trim() : '',
+          optionSnapshot: { title: routeEl ? routeEl.textContent.trim() : '', details: metaEl ? metaEl.textContent.trim() : '', cost: cost },
+          travellerNote: commentEl ? commentEl.value.trim() : '',
+          isPolicyDeviation: card.classList.contains('violation')
+        });
+      });
+
+      updateTripInStoreForUser(tripId, function(t){
+        t.userConfirmation = {
+          action: 'CONFIRMED_OPTIONS',
+          overallNote: overallNote,
+          selections: selections,
+          confirmedAt: new Date().toISOString()
+        };
+        t.status = 'Pending with Reporting Manager';
+        t.workflowGate = {
+          awaitingManagerApproval: true,
+          travelDeskLocked: true,
+          lockedAt: new Date().toISOString()
+        };
+                t.travelDeskReplyAllowed = false;
+t.lastUpdated = new Date().toISOString();
+      });
+    })();
+
+    const subject = `[USER CONFIRMATION] ${reqId} – ${name}`;
+    let body = baseBlock();
+    body += `User action: CONFIRMED OPTIONS\n\n`;
+    body += getSelectedOptionsSummary();
+    body += `\nOverall note from traveller: ${overallNote || '-'}\n`;
+
+    const approverEmail = managerEmail || 'karthik.n@etgworld.com';
+    const toDesk = approverEmail; // route always to reporting manager
+    const ccList = ['traveldesk2@etgworld.com'].filter(Boolean).join(',');
+    mailto(toDesk, ccList, subject, body);
+
+    // After notifying, redirect to Reporting Manager dashboard with a file:// safe payload
+    try{
+      let tripId = qp.get('rid') || qp.get('tripId') || '';
+      if(!tripId){
+        try{
+          tripId = localStorage.getItem('etg-last-quotation-trip-id') ||
+                   localStorage.getItem('etg-selected-trip-id') || '';
+        }catch(e){}
+      }
+
+      const selectedCards = document.querySelectorAll('.option-card[data-selected="1"]');
+      const selections = [];
+      selectedCards.forEach(card=>{
+        const type = card.dataset.type || '';
+        const label = card.dataset.label || '';
+        const cost = card.dataset.cost || '';
+        const routeEl = card.querySelector('.option-route');
+        const metaEl = card.querySelector('.option-meta');
+        const commentEl = card.querySelector('.option-comment');
+        selections.push({
+          optionId: (card.dataset.optionId || ''),
+          type,
+          label,
+          estimatedAmount: cost,
+          route: routeEl ? routeEl.textContent.trim() : '',
+          details: metaEl ? metaEl.textContent.trim() : '',
+          travellerNote: commentEl ? commentEl.value.trim() : '',
+          isPolicyDeviation: card.classList.contains('violation')
+        });
+      });
+
+            // Build a safe payload for Stage 5 (avoid undefined vars)
+      const modeParts = [];
+      if(svcFlight) modeParts.push('Flight');
+      if(svcHotel) modeParts.push('Hotel');
+      if(svcCab) modeParts.push('Cab');
+      const modeOfTravel = modeParts.join(' + ');
+
+      // Route + dates
+      let fromCity = from || (segments[0] && segments[0].from) || '';
+      let toCity = to || (segments[segments.length-1] && segments[segments.length-1].to) || '';
+      let departDate = depart || (segments[0] && segments[0].date) || '';
+      let returnDate = ret || (segments[segments.length-1] && segments[segments.length-1].date) || '';
+
+      const routeSummary = (fromCity && toCity) ? (fromCity + ' → ' + toCity) : (from || to ? ((from||'') + ' → ' + (to||'')) : '—');
+
+      const tripPayload = {
+        id: tripId || reqId,
+        reqId: reqId,
+        employeeName: name,
+        email: email,
+        reportingManagerEmail: approverEmail || managerEmail || '',
+        fromCity: fromCity,
+        toCity: toCity,
+        routeSummary: routeSummary,
+        departDate: departDate,
+        returnDate: returnDate,
+        modeOfTravel: modeOfTravel,
+        hasFlight: !!svcFlight,
+        hasHotel: !!svcHotel,
+        hasCab: !!svcCab,
+        status: 'Pending with Reporting Manager',
+        userConfirmation: {
+          action: 'CONFIRMED_OPTIONS',
+          overallNote: overallNote,
+          selections: selections,
+          confirmedAt: new Date().toISOString()
+        },
+        lastUpdated: new Date().toISOString()
+      };
+
+      const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(tripPayload))));
+      const target = 'Stage5_Reporting_Manager_Dashboard.html'
+        + '?fromLogin=1'
+        + '&email=' + encodeURIComponent(approverEmail || '')
+        + '&role=MANAGER'
+        + '&confirmed=' + encodeURIComponent(b64);
+
+      setTimeout(()=>{ window.location.href = target; }, 600);
+    }catch(e){}
+  });
+
+  $('btnRequestChange').addEventListener('click',()=>{
+    const overallNote = ($('overallNote').value || '').trim() ||
+      'These options do not work for me. Please share alternate timings / airlines / hotels.';
+
+    // Persist user request for alternate options back to the trip store
+    (function(){
+      let tripId = qp.get('rid') || qp.get('tripId') || '';
+      if(!tripId){
+        try{
+          tripId = localStorage.getItem('etg-last-quotation-trip-id') ||
+                   localStorage.getItem('etg-selected-trip-id') || '';
+        }catch(e){}
+      }
+      if(!tripId || typeof updateTripInStoreForUser !== 'function') return;
+
+      const selectedCards = document.querySelectorAll('.option-card[data-selected="1"]');
+      const selections = [];
+      selectedCards.forEach(card=>{
+        const type = card.dataset.type || '';
+        const label = card.dataset.label || '';
+        const cost = card.dataset.cost || '';
+        const routeEl = card.querySelector('.option-route');
+        const metaEl = card.querySelector('.option-meta');
+        const commentEl = card.querySelector('.option-comment');
+
+        selections.push({
+          optionId: (card.dataset.optionId || ''),
+          type,
+          label,
+          estimatedAmount: cost,
+          route: routeEl ? routeEl.textContent.trim() : '',
+          details: metaEl ? metaEl.textContent.trim() : '',
+          optionSnapshot: { title: routeEl ? routeEl.textContent.trim() : '', details: metaEl ? metaEl.textContent.trim() : '', cost: cost },
+          travellerNote: commentEl ? commentEl.value.trim() : '',
+          isPolicyDeviation: card.classList.contains('violation')
+        });
+      });
+
+      updateTripInStoreForUser(tripId, function(t){
+        t.userConfirmation = {
+          action: 'REQUESTED_DIFFERENT_OPTIONS',
+          overallNote: overallNote,
+          selections: selections,
+          requestedAt: new Date().toISOString()
+        };
+        t.status = 'Pending with Travel Desk';
+        t.lastUpdated = new Date().toISOString();
+      });
+    })();
+
+    const subject = `[USER FEEDBACK] ${reqId} – ${name}`;
+    let body = baseBlock();
+    body += `User action: REQUESTED DIFFERENT OPTIONS\n\n`;
+    body += getSelectedOptionsSummary();
+    body += `\nFeedback from traveller: ${overallNote}\n`;
+
+    const toDesk = 'traveldesk2@etgworld.com';
+    const ccList = [email, managerEmail].filter(Boolean).join(',');
+    mailto(toDesk, ccList, subject, body);
+
+    // After notifying, redirect to Reporting Manager dashboard with a file:// safe payload
+    try{
+      let tripId = qp.get('rid') || qp.get('tripId') || '';
+      if(!tripId){
+        try{
+          tripId = localStorage.getItem('etg-last-quotation-trip-id') ||
+                   localStorage.getItem('etg-selected-trip-id') || '';
+        }catch(e){}
+      }
+
+      const selectedCards = document.querySelectorAll('.option-card[data-selected="1"]');
+      const selections = [];
+      selectedCards.forEach(card=>{
+        const type = card.dataset.type || '';
+        const label = card.dataset.label || '';
+        const cost = card.dataset.cost || '';
+        const routeEl = card.querySelector('.option-route');
+        const metaEl = card.querySelector('.option-meta');
+        const commentEl = card.querySelector('.option-comment');
+        selections.push({
+          optionId: (card.dataset.optionId || ''),
+          type,
+          label,
+          estimatedAmount: cost,
+          route: routeEl ? routeEl.textContent.trim() : '',
+          details: metaEl ? metaEl.textContent.trim() : '',
+          travellerNote: commentEl ? commentEl.value.trim() : '',
+          isPolicyDeviation: card.classList.contains('violation')
+        });
+      });
+
+            // Build a safe payload for Stage 5 (avoid undefined vars)
+      const modeParts = [];
+      if(svcFlight) modeParts.push('Flight');
+      if(svcHotel) modeParts.push('Hotel');
+      if(svcCab) modeParts.push('Cab');
+      const modeOfTravel = modeParts.join(' + ');
+
+      // Route + dates
+      let fromCity = from || (segments[0] && segments[0].from) || '';
+      let toCity = to || (segments[segments.length-1] && segments[segments.length-1].to) || '';
+      let departDate = depart || (segments[0] && segments[0].date) || '';
+      let returnDate = ret || (segments[segments.length-1] && segments[segments.length-1].date) || '';
+
+      const routeSummary = (fromCity && toCity) ? (fromCity + ' → ' + toCity) : (from || to ? ((from||'') + ' → ' + (to||'')) : '—');
+
+      const approverEmail = managerEmail || '';
+      const tripPayload = {
+        id: tripId || reqId,
+        reqId: reqId,
+        employeeName: name,
+        email: email,
+        reportingManagerEmail: approverEmail,
+        fromCity: fromCity,
+        toCity: toCity,
+        routeSummary: routeSummary,
+        departDate: departDate,
+        returnDate: returnDate,
+        modeOfTravel: modeOfTravel,
+        hasFlight: !!svcFlight,
+        hasHotel: !!svcHotel,
+        hasCab: !!svcCab,
+        status: 'Pending with Travel Desk',
+        userConfirmation: {
+          action: 'REQUESTED_DIFFERENT_OPTIONS',
+          overallNote: overallNote,
+          selections: selections,
+          confirmedAt: new Date().toISOString()
+        },
+        lastUpdated: new Date().toISOString()
+      };
+
+      const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(tripPayload))));
+      const target = 'Stage5_Reporting_Manager_Dashboard.html'
+        + '?fromLogin=1'
+        + '&email=' + encodeURIComponent(approverEmail || '')
+        + '&role=MANAGER'
+        + '&confirmed=' + encodeURIComponent(b64);
+
+      setTimeout(()=>{ window.location.href = target; }, 600);
+    }catch(e){}
+  });
+
+  $('btnPrint').addEventListener('click',()=>{ window.print(); });
+
+  // Run on load
+  hydrateOptionsFromQuotation();
+  toast('Loaded request ' + reqId);
+
+  // === Realtime fix: pull quotation/options from backend if traveller opened Stage 6 in a different browser/device ===
+  // Travel Desk saves options server-side (via etgSendQuotation). This page previously only read localStorage,
+  // so it showed blank when the user's storage didn't have the quotation yet.
+  async function fetchTripFromServerAndHydrate(){
+    try{
+      if(!window.ETG || typeof window.ETG.api !== 'function') return;
+      const t = await window.ETG.api('/api/trips/' + encodeURIComponent(reqId), { method: 'GET' });
+      if(t && (t.id || t.reqId || t.requestId)){
+        // merge into all local stores so existing UI continues to work
+        const id = String(t.id || reqId);
+        updateTripEverywhere(id, (tr)=>{ Object.assign(tr, t); });
+        hydrateOptionsFromQuotation();
+      }
+    }catch(e){ /* ignore */ }
+  }
+
+  // Poll a few times in case initial sync/socket arrives after this page renders
+  (function ensureOptions(){
+    let tries = 0;
+    const timer = setInterval(()=>{
+      tries++;
+      const tripNow = findTripByAnyId(reqId);
+      const has = tripNow && (tripNow.quotationOptions || tripNow.quotation || tripNow.optionsShared || tripNow.travelDeskOptions);
+      if(has){
+        clearInterval(timer);
+        hydrateOptionsFromQuotation();
+        return;
+      }
+      fetchTripFromServerAndHydrate();
+      if(tries >= 10) clearInterval(timer);
+    }, 1000);
+    // do one immediate fetch
+    fetchTripFromServerAndHydrate();
+  })();
+</script>
+<!-- ETG Realtime (Socket.IO) -->
+
+<script>window.ETG_API_BASE = window.ETG_API_BASE || '';</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/etg-realtime.js"></script>
+
+</body>
+</html>

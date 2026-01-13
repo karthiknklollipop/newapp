@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ETG Travel — Booking Confirmation (Corporate)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:#e5e7eb;
+    color:#111827;
+  }
+  .page{
+    max-width:1100px;
+    margin:32px auto 72px;
+    padding:0 16px;
+  }
+  .header-shell{
+    border-radius:20px;
+    box-shadow:0 18px 40px rgba(15,23,42,.18);
+    overflow:hidden;
+    background:#ffffff;
+    border:1px solid #d1d5db;
+    margin-bottom:20px;
+  }
+  .header{
+    background:linear-gradient(135deg,#1d4ed8,#2563eb,#38bdf8);
+    padding:18px 24px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    color:#eff6ff;
+  }
+  .logo-pill{
+    width:42px;
+    height:42px;
+    border-radius:999px;
+    background:rgba(15,23,42,.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:18px;
+    border:1px solid rgba(191,219,254,.6);
+  }
+  .header-text-main{
+    font-size:18px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+  }
+  .header-text-sub{
+    font-size:12px;
+    opacity:.88;
+  }
+  .header-meta{
+    margin-left:auto;
+    text-align:right;
+    font-size:11px;
+    opacity:.9;
+  }
+  .card-stack{
+    background:#f3f4f6;
+    border-top:1px solid #e5e7eb;
+    padding:18px 18px 22px;
+  }
+  .card{
+    background:#ffffff;
+    border-radius:14px;
+    padding:16px 18px 18px;
+    border:1px solid #e5e7eb;
+    margin-top:12px;
+  }
+  .card:first-of-type{margin-top:0;}
+  .card h2{
+    font-size:13px;
+    margin:0 0 10px;
+    text-transform:uppercase;
+    letter-spacing:.16em;
+    color:#374151;
+  }
+  label{
+    display:block;
+    font-size:11px;
+    font-weight:600;
+    margin-bottom:4px;
+    color:#6b7280;
+  }
+  input, textarea, select{
+    width:100%;
+    padding:9px 11px;
+    font-size:13px;
+    border-radius:9px;
+    border:1px solid #d1d5db;
+    background:#f9fafb;
+    color:#111827;
+  }
+  input::placeholder, textarea::placeholder{ color:#9ca3af; }
+  input:focus, textarea:focus, select:focus{
+    outline:none;
+    border-color:#2563eb;
+    box-shadow:0 0 0 1px #2563eb33;
+    background:#ffffff;
+  }
+
+  .row{display:flex;flex-wrap:wrap;gap:12px;}
+  .col-3{flex:0 0 calc(25% - 9px);}
+  .col-4{flex:0 0 calc(33.333% - 8px);}
+  .col-6{flex:0 0 calc(50% - 8px);}
+  .col-8{flex:0 0 calc(66.666% - 8px);}
+  .col-12{flex:0 0 100%;}
+  @media (max-width:900px){
+    .col-3,.col-4,.col-6,.col-8{flex:0 0 100%;}
+  }
+
+  .note{font-size:11px;color:#6b7280;margin-top:6px;}
+
+  .section-tag{
+    display:inline-flex;align-items:center;gap:6px;font-size:11px;
+    text-transform:uppercase;letter-spacing:.14em;padding:3px 10px;
+    border-radius:999px;border:1px solid #d1d5db;
+    background:#eff6ff;color:#1d4ed8;margin-bottom:10px;
+  }
+
+  button{
+    border-radius:999px;
+    padding:8px 16px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    border:1px solid transparent;
+    white-space:nowrap;
+    transition:background .12s,box-shadow .12s,transform .05s;
+  }
+  button:active{transform:scale(.98);}
+  .btn-primary{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:#f9fafb;
+    border:none;
+    box-shadow:0 8px 18px rgba(37,99,235,.35);
+  }
+  .btn-primary:hover{ box-shadow:0 10px 22px rgba(37,99,235,.45); }
+  .btn-secondary{
+    background:#ffffff;
+    border-color:#d1d5db;
+    color:#111827;
+  }
+  .btn-secondary:hover{ background:#f9fafb; }
+  .btn-ghost{
+    background:#ffffff;
+    border-color:#e5e7eb;
+    color:#374151;
+    padding:6px 12px;
+    font-size:11px;
+  }
+  .btn-ghost:hover{
+    background:#eff6ff;
+    border-color:#bfdbfe;
+    color:#1d4ed8;
+  }
+
+  .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+
+  #emailHtml{
+    width:100%;
+    min-height:220px;
+    font-family:Consolas,Monaco,monospace;
+    font-size:12px;
+    padding:10px;
+    border-radius:10px;
+    background:#0b1120;
+    color:#e5e7eb;
+  }
+
+  /* Preview uses iframe (prevents page DOM breaking) */
+  #emailPreviewFrame{
+    width:100%;
+    height:480px;
+    border-radius:10px;
+    border:1px solid #e5e7eb;
+    background:#ffffff;
+  }
+
+  .input-icon{ position:relative; }
+  .input-icon .icon{
+    position:absolute;
+    left:10px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:14px;
+    pointer-events:auto;
+    cursor:pointer;
+    color:#6b7280;
+  }
+  .input-icon input{ padding-left:32px; }
+
+  .segment-block{
+    border:1px dashed #d1d5db;
+    border-radius:10px;
+    padding:10px 10px 12px;
+    margin-top:10px;
+    background:#f9fafb;
+  }
+  .segment-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:4px;
+  }
+  .segment-title{
+    font-size:11px;
+    color:#6b7280;
+    font-weight:600;
+  }
+  .segment-remove-icon{
+    border:none;
+    background:transparent;
+    color:#b91c1c;
+    font-size:16px;
+    cursor:pointer;
+    padding:2px 6px;
+    line-height:1;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:999px;
+  }
+  .segment-remove-icon:hover{ background:#fee2e2; }
+
+  .tab-row{
+    display:flex;
+    gap:10px;
+    margin-top:4px;
+    margin-bottom:4px;
+  }
+  .tab-btn{
+    flex:1;
+    border-radius:999px;
+    padding:10px 14px;
+    border:1px solid #d1d5db;
+    background:#ffffff;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    cursor:pointer;
+    transition:background .12s,box-shadow .12s,border-color .12s,transform .05s,color .12s;
+  }
+  .tab-btn span.icon{font-size:16px;}
+  .tab-btn.active{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:#f9fafb;
+    border-color:#1d4ed8;
+    box-shadow:0 8px 18px rgba(37,99,235,.4);
+  }
+  .tab-btn:active{transform:scale(.97);}
+
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+
+  .is-hidden{display:none !important;}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header-shell">
+    <div class="header">
+      <div class="logo-pill">ET</div>
+      <div>
+        <div class="header-text-main">ETG Travel — Booking Confirmation</div>
+        <div class="header-text-sub">Final confirmed itinerary | Flights · Hotels · Cabs</div>
+      </div>
+      <div class="header-meta">
+        <div>Corporate Template v5</div>
+      </div>
+    </div>
+
+    <div class="card-stack">
+
+      <!-- APPROVAL SUMMARY (Auto loaded from Stage 7) -->
+      <div class="card" id="approvalDashCard">
+        <h2>Approved Options Summary (TravelDesk)</h2>
+        <div class="note">
+          This section is auto-loaded from the manager approval (Stage 7). It shows: options shared by TravelDesk, what user confirmed, and what manager approved.
+        </div>
+        <div id="approvalDashboard" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- TRIP OVERVIEW -->
+      <div class="card">
+        <h2>Trip Overview</h2>
+        <div class="row">
+          <div class="col-4">
+            <label for="travelerName">Traveler name</label>
+            <input id="travelerName" placeholder="e.g., Ramesh Kumar"/>
+          </div>
+          <div class="col-4">
+            <label for="employeeCode">Employee ID</label>
+            <input id="employeeCode" placeholder="e.g., EMP10234"/>
+          </div>
+          <div class="col-4">
+            <label for="tripPurpose">Purpose</label>
+            <input id="tripPurpose" placeholder="e.g., Client meeting / Training"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODE TABS -->
+      <div class="card" id="modeTabsCard">
+        <div class="tab-row">
+          <button class="tab-btn active" data-target="flightCard" type="button">
+            <span class="icon">✈️</span><span>Flight Confirmation</span>
+          </button>
+          <button class="tab-btn" data-target="hotelCard" type="button">
+            <span class="icon">🏨</span><span>Hotel Confirmation</span>
+          </button>
+          <button class="tab-btn" data-target="cabCard" type="button">
+            <span class="icon">🚖</span><span>Cab Confirmation</span>
+          </button>
+        </div>
+        <div class="note">Select the relevant mode to fill / view confirmation details. Only one section is visible at a time.</div>
+      </div>
+
+      <!-- FLIGHT CONFIRMATION -->
+      <div class="card tab-panel active" id="flightCard">
+        <h2>Flight – Confirmation</h2>
+        <div class="section-tag">✈️ Flights</div>
+
+        <div class="row">
+          <div class="col-4">
+            <label for="flightAirline">Airline &amp; Flight no.</label>
+            <input id="flightAirline" placeholder="e.g., Indigo 6E 5123"/>
+          </div>
+
+          <div class="col-4">
+            <label for="flightFrom">Travel From</label>
+            <input id="flightFrom" placeholder="e.g., Bengaluru (BLR)"/>
+          </div>
+          <div class="col-4">
+            <label for="flightTo">Travel To</label>
+            <input id="flightTo" placeholder="e.g., Delhi (DEL)"/>
+          </div>
+
+          <div class="col-4">
+            <label for="flightDepTime">🛫 Departure Date</label>
+            <div class="input-icon">
+              <span class="icon" data-target="flightDepTime">📅</span>
+              <input id="flightDepTime" type="date" />
+            </div>
+          </div>
+
+          <div class="col-4">
+            <label for="flightSector">Sector (optional)</label>
+            <input id="flightSector" placeholder="e.g., BLR – DEL"/>
+          </div>
+
+          <div class="col-3">
+            <label for="flightClass">Cabin / Class</label>
+            <select id="flightClass">
+              <option value="">Select</option>
+              <option>Economy</option>
+              <option>Premium Economy</option>
+              <option>Business</option>
+              <option>First</option>
+            </select>
+          </div>
+
+          <div class="col-3">
+            <label for="flightPNR">Airline PNR</label>
+            <input id="flightPNR" placeholder="e.g., ABC123"/>
+          </div>
+          <div class="col-3">
+            <label for="flightTicketNo">Ticket no.</label>
+            <input id="flightTicketNo" placeholder="e.g., 098-1234567890"/>
+          </div>
+
+          <div class="col-3">
+            <label for="currencyCode">Currency code</label>
+            <select id="currencyCode">
+              <option value="">Select</option>
+              <option>INR - Indian Rupee</option>
+              <option>USD - US Dollar</option>
+              <option>EUR - Euro</option>
+              <option>GBP - British Pound</option>
+              <option>AED - UAE Dirham</option>
+              <option>SGD - Singapore Dollar</option>
+              <option>AUD - Australian Dollar</option>
+              <option>CAD - Canadian Dollar</option>
+              <option>CHF - Swiss Franc</option>
+              <option>JPY - Japanese Yen</option>
+              <option>CNY - Chinese Yuan</option>
+              <option>HKD - Hong Kong Dollar</option>
+              <option>NZD - New Zealand Dollar</option>
+              <option>THB - Thai Baht</option>
+              <option>SAR - Saudi Riyal</option>
+              <option>ZAR - South African Rand</option>
+              <option>MYR - Malaysian Ringgit</option>
+              <option>IDR - Indonesian Rupiah</option>
+              <option>QAR - Qatari Riyal</option>
+              <option>KRW - South Korean Won</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <label for="flightFare">Total fare</label>
+            <input id="flightFare" placeholder="Amount in selected currency"/>
+          </div>
+
+          <div class="col-12">
+            <label for="flightVoucher">Flight confirmation voucher (PDF attachment)</label>
+            <input id="flightVoucher" type="file" accept="application/pdf"/>
+            <div class="note">Attach the PDF voucher; the file name will be shown in the email as reference.</div>
+          </div>
+
+          <div class="col-12">
+            <label for="flightNotes">Important notes</label>
+            <textarea id="flightNotes" rows="2" placeholder="Web check-in, meal inclusion, fare rules, etc."></textarea>
+          </div>
+
+          <div class="col-12">
+            <button type="button" class="btn-ghost" id="btnAddFlightSegment">
+              + Add segment (multi-leg / additional sectors)
+            </button>
+          </div>
+
+          <div class="col-12" id="segmentsContainer"></div>
+        </div>
+
+        <div class="note">Use “Add segment” for multi-city / additional legs (Segment 2, Segment 3, etc.).</div>
+      </div>
+
+      <!-- HOTEL CONFIRMATION -->
+      <div class="card tab-panel" id="hotelCard">
+        <h2>Hotel – Confirmation</h2>
+        <div class="section-tag">🏨 Hotels</div>
+
+        <div class="row">
+          <div class="col-6">
+            <label for="hotelName">Hotel name</label>
+            <input id="hotelName" placeholder="e.g., Courtyard by Marriott, Mumbai"/>
+          </div>
+          <div class="col-6">
+            <label for="hotelCity">City / Location</label>
+            <input id="hotelCity" placeholder="e.g., Andheri East, Mumbai"/>
+          </div>
+          <div class="col-3">
+            <label for="hotelCheckIn">Check-in date</label>
+            <div class="input-icon">
+              <span class="icon" data-target="hotelCheckIn">📅</span>
+              <input id="hotelCheckIn" type="date"/>
+            </div>
+          </div>
+          <div class="col-3">
+            <label for="hotelCheckOut">Check-out date</label>
+            <div class="input-icon">
+              <span class="icon" data-target="hotelCheckOut">📅</span>
+              <input id="hotelCheckOut" type="date"/>
+            </div>
+          </div>
+          <div class="col-3">
+            <label for="hotelRoomType">Room type</label>
+            <input id="hotelRoomType" placeholder="e.g., Deluxe, Single occupancy"/>
+          </div>
+          <div class="col-3">
+            <label for="hotelConfirmationNo">Confirmation no.</label>
+            <input id="hotelConfirmationNo" placeholder="e.g., HTL123456"/>
+          </div>
+          <div class="col-3">
+            <label for="hotelNights">Number of nights</label>
+            <input id="hotelNights" placeholder="Auto-calculated" readonly/>
+          </div>
+          <div class="col-3">
+            <label for="hotelRateNight">Rate per night</label>
+            <input id="hotelRateNight" placeholder="₹ … per night (pre-tax)"/>
+          </div>
+          <div class="col-3">
+            <label for="hotelTotal">Total stay amount</label>
+            <input id="hotelTotal" placeholder="₹ … (incl. taxes, if known)"/>
+          </div>
+          <div class="col-3">
+            <label for="hotelInclusions">Inclusions</label>
+            <input id="hotelInclusions" placeholder="e.g., Breakfast, Wi-Fi"/>
+          </div>
+          <div class="col-12">
+            <label for="hotelVoucher">Hotel confirmation voucher (PDF attachment)</label>
+            <input id="hotelVoucher" type="file" accept="application/pdf"/>
+            <div class="note">Attach the hotel confirmation PDF; the file name will be shown in the email as reference.</div>
+          </div>
+          <div class="col-12">
+            <label for="hotelNotes">Important notes</label>
+            <textarea id="hotelNotes" rows="2" placeholder="Check-in time, ID requirement, payment mode, etc."></textarea>
+          </div>
+          <div class="col-12">
+            <button type="button" class="btn-ghost" id="btnAddHotelSegment">
+              + Add segment (additional hotel)
+            </button>
+          </div>
+          <div class="col-12" id="hotelSegmentsContainer"></div>
+        </div>
+      </div>
+
+      <!-- CAB CONFIRMATION (FIXED CLOSING TAGS) -->
+      <div class="card tab-panel" id="cabCard">
+        <h2>Cab – Confirmation</h2>
+        <div class="section-tag">🚖 Cabs</div>
+
+        <div class="row">
+          <div class="col-4">
+            <label for="cabType">Service type</label>
+            <input id="cabType" placeholder="e.g., Airport transfer / Local 8 hrs 80 kms"/>
+          </div>
+          <div class="col-4">
+            <label for="cabCity">City</label>
+            <input id="cabCity" placeholder="e.g., Bengaluru"/>
+          </div>
+          <div class="col-4">
+            <label for="cabPickup">Pickup location</label>
+            <input id="cabPickup" placeholder="e.g., Home address / Office / Airport T1"/>
+          </div>
+          <div class="col-4">
+            <label for="cabDrop">Drop location</label>
+            <input id="cabDrop" placeholder="e.g., Airport T1 / Hotel"/>
+          </div>
+          <div class="col-3">
+            <label for="cabDate">Date</label>
+            <div class="input-icon">
+              <span class="icon" data-target="cabDate">📅</span>
+              <input id="cabDate" type="date"/>
+            </div>
+          </div>
+          <div class="col-3">
+            <label for="cabTime">Pickup time</label>
+            <input id="cabTime" placeholder="e.g., 05:30 hrs"/>
+          </div>
+          <div class="col-6">
+            <label for="cabPickupLink">Pickup location link</label>
+            <input id="cabPickupLink" placeholder="e.g., Google Maps / location link"/>
+          </div>
+          <div class="col-6">
+            <label for="cabDropLink">Drop location link</label>
+            <input id="cabDropLink" placeholder="e.g., Google Maps / location link"/>
+          </div>
+          <div class="col-4">
+            <label for="cabConfirmationNo">Confirmation / Booking ID</label>
+            <input id="cabConfirmationNo" placeholder="e.g., CAB123456"/>
+          </div>
+          <div class="col-4">
+            <label for="cabRate">Estimated / Fixed cost</label>
+            <input id="cabRate" placeholder="₹ …"/>
+          </div>
+          <div class="col-4">
+            <label for="cabPaymentMode">Payment mode</label>
+            <select id="cabPaymentMode">
+              <option value="">Select</option>
+              <option>Direct</option>
+              <option>Company</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label for="cabVoucher">Cab confirmation voucher (PDF attachment)</label>
+            <input id="cabVoucher" type="file" accept="application/pdf"/>
+            <div class="note">Attach the cab confirmation PDF; the file name will be shown in the email as reference.</div>
+          </div>
+          <div class="col-12">
+            <label for="cabNotes">Important notes</label>
+            <textarea id="cabNotes" rows="2" placeholder="Driver details, waiting charges, etc."></textarea>
+          </div>
+          <div class="col-12">
+            <button type="button" class="btn-ghost" id="btnAddCabSegment">
+              + Add segment (additional cab)
+            </button>
+          </div>
+          <div class="col-12" id="cabSegmentsContainer"></div>
+        </div>
+      </div>
+
+      <!-- NOTES -->
+      <div class="card">
+        <h2>Notes to Traveler</h2>
+        <textarea id="notes" rows="3" placeholder="Visa / passport validity, health requirements, local guidelines, etc."></textarea>
+      </div>
+
+
+      <!-- REQUEST ID -->
+      <div class="card" id="ridCard">
+        <h2>Request ID</h2>
+        <div class="row">
+          <div class="col-6">
+            <label for="ridInput">Trip / Request ID</label>
+            <input id="ridInput" placeholder="e.g., TR-0001"/>
+            <div class="note">This must match the Trip ID created in Stage 2. It is usually auto-filled when opened from the workflow.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="toast" style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 14px;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,.25);font-size:13px;display:none;z-index:9999;"></div>
+
+      <!-- ACTIONS -->
+      <div class="actions">
+        <button class="btn-secondary" type="button" id="btnClear">Clear Preview</button>
+        <button class="btn-primary" type="button" id="btnGenerate">Generate Email</button>
+        <button class="btn-primary" type="button" id="btnSendConfirm" disabled>Send confirmation</button>
+      </div>
+
+      
+      <!-- USER CONFIRMATION VIEW -->
+      <div class="card" id="userConfirmationCard" style="display:none;">
+        <h2>Travel Confirmation</h2>
+        <div id="userConfirmationSummary" class="muted" style="white-space:pre-wrap; line-height:1.4;"></div>
+        <div style="margin-top:12px;">
+          <label for="userAckComment"><strong>Acknowledgement</strong> (optional comments)</label>
+          <textarea id="userAckComment" placeholder="Add any notes or confirmation remarks..."></textarea>
+          <div class="actions" style="margin-top:10px;">
+            <button class="btn-primary" type="button" id="btnAcknowledge">Acknowledge</button>
+          </div>
+          <div id="userAckStatus" class="muted" style="margin-top:8px;"></div>
+        </div>
+      </div>
+
+      <!-- SEND STATUS -->
+      <div class="card" id="sendStatusCard">
+        <h2>Confirmation status</h2>
+        <div id="sendStatusText" class="muted">Not sent yet.</div>
+      </div>
+
+<!-- OUTPUT -->
+      <div class="card">
+        <h2>Email HTML (Booking Confirmation)</h2>
+        <textarea id="emailHtml" readonly></textarea>
+      </div>
+
+      <div class="card">
+        <h2>Email Preview (rendered)</h2>
+        <iframe id="emailPreviewFrame" title="Email Preview"></iframe>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  "use strict";
+
+  const TRIPS_KEY = 'etg-trips';
+  const GLOBAL_TRIPS_KEY = window.GLOBAL_TRIPS_KEY || 'etg-trips';
+  window.GLOBAL_TRIPS_KEY = GLOBAL_TRIPS_KEY;
+
+  const $ = (id) => document.getElementById(id);
+
+  let flightSegmentCount = 0;
+  let hotelSegmentCount = 0;
+  let cabSegmentCount   = 0;
+
+  function clearPreview(){
+    $('emailHtml').value = '';
+    $('emailPreviewFrame').srcdoc = `<div style="padding:12px;font-family:Arial;">Generated booking confirmation preview will appear here.</div>`;
+  }
+
+  function esc(s){
+    return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  function hasAnyValue(obj){
+    return Object.values(obj).some(v => {
+      if (Array.isArray(v)) return v.length > 0;
+      return (v !== null && v !== undefined && String(v).trim().length > 0);
+    });
+  }
+
+  function currencyOptionsHtml(id){
+    return `
+      <label for="${id}">Currency code</label>
+      <select id="${id}">
+        <option value="">Select</option>
+        <option>INR - Indian Rupee</option>
+        <option>USD - US Dollar</option>
+        <option>EUR - Euro</option>
+        <option>GBP - British Pound</option>
+        <option>AED - UAE Dirham</option>
+        <option>SGD - Singapore Dollar</option>
+        <option>AUD - Australian Dollar</option>
+        <option>CAD - Canadian Dollar</option>
+        <option>CHF - Swiss Franc</option>
+        <option>JPY - Japanese Yen</option>
+        <option>CNY - Chinese Yuan</option>
+        <option>HKD - Hong Kong Dollar</option>
+        <option>NZD - New Zealand Dollar</option>
+        <option>THB - Thai Baht</option>
+        <option>SAR - Saudi Riyal</option>
+        <option>ZAR - South African Rand</option>
+        <option>MYR - Malaysian Ringgit</option>
+        <option>IDR - Indonesian Rupiah</option>
+        <option>QAR - Qatari Riyal</option>
+        <option>KRW - South Korean Won</option>
+      </select>`;
+  }
+
+  function attachCalendarIconHandlers(){
+    document.querySelectorAll('.input-icon .icon').forEach(icon => {
+      icon.onclick = () => {
+        const targetId = icon.getAttribute('data-target');
+        const input = targetId ? $(targetId) : null;
+        if(!input) return;
+        if (input.showPicker) input.showPicker();
+        else input.focus();
+      };
+    });
+  }
+
+  function initTabs(){
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const panels = {
+      flightCard: $('flightCard'),
+      hotelCard: $('hotelCard'),
+      cabCard: $('cabCard')
+    };
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        if(!targetId || !panels[targetId]) return;
+
+        tabButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        Object.keys(panels).forEach(id => {
+          panels[id].classList.toggle('active', id === targetId);
+          // Extra safety for environments where CSS may be overridden
+          panels[id].style.display = (id === targetId) ? 'block' : 'none';
+        });
+      });
+    });
+  }
+
+  // ===== Flight Segments (FIX: only select flight segments) =====
+  function addFlightSegment(){
+    flightSegmentCount += 1;
+    const idx = flightSegmentCount;
+    const container = $('segmentsContainer');
+    if(!container) return;
+
+    const html = `
+      <div class="segment-block flight-segment" data-flight-index="${idx}">
+        <div class="segment-header">
+          <div class="segment-title">Segment ${idx}</div>
+          <button type="button" class="segment-remove-icon" onclick="removeSegment(this)" title="Remove segment">❌</button>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <label for="seg${idx}Airline">Airline &amp; Flight no.</label>
+            <input id="seg${idx}Airline" placeholder="e.g., Indigo 6E 5123"/>
+          </div>
+          <div class="col-4">
+            <label for="seg${idx}From">Travel From</label>
+            <input id="seg${idx}From" placeholder="e.g., City / Airport"/>
+          </div>
+          <div class="col-4">
+            <label for="seg${idx}To">Travel To</label>
+            <input id="seg${idx}To" placeholder="e.g., City / Airport"/>
+          </div>
+
+          <div class="col-4">
+            <label for="seg${idx}Dep">🛫 Departure Date</label>
+            <div class="input-icon">
+              <span class="icon" data-target="seg${idx}Dep">📅</span>
+              <input id="seg${idx}Dep" type="date" />
+            </div>
+          </div>
+
+          <div class="col-4">
+            <label for="seg${idx}Sector">Sector (optional)</label>
+            <input id="seg${idx}Sector" placeholder="e.g., DEL – BOM"/>
+          </div>
+
+          <div class="col-3">
+            <label for="seg${idx}Class">Cabin / Class</label>
+            <select id="seg${idx}Class">
+              <option value="">Select</option>
+              <option>Economy</option>
+              <option>Premium Economy</option>
+              <option>Business</option>
+              <option>First</option>
+            </select>
+          </div>
+
+          <div class="col-3">
+            <label for="seg${idx}PNR">Airline PNR</label>
+            <input id="seg${idx}PNR" placeholder="e.g., XYZ789"/>
+          </div>
+
+          <div class="col-3">
+            <label for="seg${idx}TicketNo">Ticket no.</label>
+            <input id="seg${idx}TicketNo" placeholder="e.g., 098-9876543210"/>
+          </div>
+
+          <div class="col-3">
+            ${currencyOptionsHtml(`seg${idx}Currency`)}
+          </div>
+
+          <div class="col-3">
+            <label for="seg${idx}Fare">Total fare</label>
+            <input id="seg${idx}Fare" placeholder="Amount in selected currency"/>
+          </div>
+
+          <div class="col-12">
+            <label for="seg${idx}Voucher">Flight confirmation voucher (PDF attachment)</label>
+            <input id="seg${idx}Voucher" type="file" accept="application/pdf"/>
+            <div class="note">Attach the PDF voucher for this segment; the file name will be shown in the email as reference.</div>
+          </div>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML('beforeend', html);
+    attachCalendarIconHandlers();
+  }
+
+  function getFlightSegments(){
+    const blocks = document.querySelectorAll('.flight-segment');
+    const segments = [];
+    blocks.forEach(block => {
+      const idx = block.getAttribute('data-flight-index');
+      const airline = $(`seg${idx}Airline`)?.value.trim() || '';
+      const from = $(`seg${idx}From`)?.value.trim() || '';
+      const to = $(`seg${idx}To`)?.value.trim() || '';
+      const dep = $(`seg${idx}Dep`)?.value.trim() || '';
+      const sector = $(`seg${idx}Sector`)?.value.trim() || '';
+      const cabin = $(`seg${idx}Class`)?.value.trim() || '';
+      const pnr = $(`seg${idx}PNR`)?.value.trim() || '';
+      const ticketNo = $(`seg${idx}TicketNo`)?.value.trim() || '';
+      const currency = $(`seg${idx}Currency`)?.value.trim() || '';
+      const fare = $(`seg${idx}Fare`)?.value.trim() || '';
+
+      let voucherName = '';
+      const voucherInput = $(`seg${idx}Voucher`);
+      if (voucherInput?.files?.length) voucherName = voucherInput.files[0].name;
+
+      if(airline || from || to || dep || sector || cabin || pnr || ticketNo || currency || fare || voucherName){
+        segments.push({airline,from,to,dep,sector,cabin,pnr,ticketNo,currency,fare,voucher:voucherName});
+      }
+    });
+    return segments;
+  }
+
+  function removeSegment(button){
+    const block = button.closest('.segment-block');
+    if(block) block.remove();
+  }
+
+  // ===== Hotel Segments =====
+  function addHotelSegment(){
+    hotelSegmentCount += 1;
+    const idx = hotelSegmentCount;
+    const container = $('hotelSegmentsContainer');
+    if(!container) return;
+
+    const html = `
+      <div class="segment-block hotel-segment" data-hotel-index="${idx}">
+        <div class="segment-header">
+          <div class="segment-title">Hotel Segment ${idx}</div>
+          <button type="button" class="segment-remove-icon" onclick="removeSegment(this)" title="Remove segment">❌</button>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <label for="hs${idx}Name">Hotel name</label>
+            <input id="hs${idx}Name" placeholder="e.g., Hotel name"/>
+          </div>
+          <div class="col-6">
+            <label for="hs${idx}City">City / Location</label>
+            <input id="hs${idx}City" placeholder="e.g., City / Area"/>
+          </div>
+          <div class="col-3">
+            <label for="hs${idx}CheckIn">Check-in date</label>
+            <div class="input-icon">
+              <span class="icon" data-target="hs${idx}CheckIn">📅</span>
+              <input id="hs${idx}CheckIn" type="date"/>
+            </div>
+          </div>
+          <div class="col-3">
+            <label for="hs${idx}CheckOut">Check-out date</label>
+            <div class="input-icon">
+              <span class="icon" data-target="hs${idx}CheckOut">📅</span>
+              <input id="hs${idx}CheckOut" type="date"/>
+            </div>
+          </div>
+          <div class="col-3">
+            <label for="hs${idx}RoomType">Room type</label>
+            <input id="hs${idx}RoomType" placeholder="e.g., Deluxe, Single occupancy"/>
+          </div>
+          <div class="col-3">
+            <label for="hs${idx}ConfNo">Confirmation no.</label>
+            <input id="hs${idx}ConfNo" placeholder="e.g., HTL123456"/>
+          </div>
+          <div class="col-4">
+            <label for="hs${idx}RateNight">Rate per night</label>
+            <input id="hs${idx}RateNight" placeholder="₹ … per night (pre-tax)"/>
+          </div>
+          <div class="col-4">
+            <label for="hs${idx}Total">Total stay amount</label>
+            <input id="hs${idx}Total" placeholder="₹ … (incl. taxes, if known)"/>
+          </div>
+          <div class="col-4">
+            <label for="hs${idx}Inclusions">Inclusions</label>
+            <input id="hs${idx}Inclusions" placeholder="e.g., Breakfast, Wi-Fi"/>
+          </div>
+          <div class="col-12">
+            <label for="hs${idx}Voucher">Hotel confirmation voucher (PDF attachment)</label>
+            <input id="hs${idx}Voucher" type="file" accept="application/pdf"/>
+            <div class="note">Attach the hotel confirmation PDF; the file name will be shown in the email as reference.</div>
+          </div>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML('beforeend', html);
+    attachCalendarIconHandlers();
+  }
+
+  function getHotelSegments(){
+    const blocks = document.querySelectorAll('.hotel-segment');
+    const segments = [];
+    blocks.forEach(block => {
+      const idx = block.getAttribute('data-hotel-index');
+      const name = $(`hs${idx}Name`)?.value.trim() || '';
+      const city = $(`hs${idx}City`)?.value.trim() || '';
+      const checkIn = $(`hs${idx}CheckIn`)?.value.trim() || '';
+      const checkOut = $(`hs${idx}CheckOut`)?.value.trim() || '';
+      const roomType = $(`hs${idx}RoomType`)?.value.trim() || '';
+      const confNo = $(`hs${idx}ConfNo`)?.value.trim() || '';
+      const rateNight = $(`hs${idx}RateNight`)?.value.trim() || '';
+      const total = $(`hs${idx}Total`)?.value.trim() || '';
+      const inclusions = $(`hs${idx}Inclusions`)?.value.trim() || '';
+
+      let voucherName = '';
+      const voucherInput = $(`hs${idx}Voucher`);
+      if (voucherInput?.files?.length) voucherName = voucherInput.files[0].name;
+
+      if(name || city || checkIn || checkOut || roomType || confNo || rateNight || total || inclusions || voucherName){
+        segments.push({name,city,checkIn,checkOut,roomType,confNo,rateNight,total,inclusions,voucher:voucherName});
+      }
+    });
+    return segments;
+  }
+
+  // ===== Cab Segments =====
+  function addCabSegment(){
+    cabSegmentCount += 1;
+    const idx = cabSegmentCount;
+    const container = $('cabSegmentsContainer');
+    if(!container) return;
+
+    const html = `
+      <div class="segment-block cab-segment" data-cab-index="${idx}">
+        <div class="segment-header">
+          <div class="segment-title">Cab Segment ${idx}</div>
+          <button type="button" class="segment-remove-icon" onclick="removeSegment(this)" title="Remove segment">❌</button>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <label for="cs${idx}Type">Service type</label>
+            <input id="cs${idx}Type" placeholder="e.g., Airport transfer / Local 8 hrs 80 kms"/>
+          </div>
+          <div class="col-4">
+            <label for="cs${idx}City">City</label>
+            <input id="cs${idx}City" placeholder="e.g., Bengaluru"/>
+          </div>
+          <div class="col-4">
+            <label for="cs${idx}Pickup">Pickup location</label>
+            <input id="cs${idx}Pickup" placeholder="e.g., Home address / Office / Airport T1"/>
+          </div>
+          <div class="col-4">
+            <label for="cs${idx}Drop">Drop location</label>
+            <input id="cs${idx}Drop" placeholder="e.g., Airport T1 / Hotel"/>
+          </div>
+          <div class="col-3">
+            <label for="cs${idx}Date">Date</label>
+            <div class="input-icon">
+              <span class="icon" data-target="cs${idx}Date">📅</span>
+              <input id="cs${idx}Date" type="date"/>
+            </div>
+          </div>
+          <div class="col-3">
+            <label for="cs${idx}Time">Pickup time</label>
+            <input id="cs${idx}Time" placeholder="e.g., 05:30 hrs"/>
+          </div>
+          <div class="col-6">
+            <label for="cs${idx}PickupLink">Pickup location link</label>
+            <input id="cs${idx}PickupLink" placeholder="e.g., Google Maps / location link"/>
+          </div>
+          <div class="col-6">
+            <label for="cs${idx}DropLink">Drop location link</label>
+            <input id="cs${idx}DropLink" placeholder="e.g., Google Maps / location link"/>
+          </div>
+          <div class="col-4">
+            <label for="cs${idx}ConfNo">Confirmation / Booking ID</label>
+            <input id="cs${idx}ConfNo" placeholder="e.g., CAB123456"/>
+          </div>
+          <div class="col-4">
+            <label for="cs${idx}Rate">Estimated / Fixed cost</label>
+            <input id="cs${idx}Rate" placeholder="₹ …"/>
+          </div>
+          <div class="col-4">
+            <label for="cs${idx}Payment">Payment mode</label>
+            <select id="cs${idx}Payment">
+              <option value="">Select</option>
+              <option>Direct</option>
+              <option>Company</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label for="cs${idx}Voucher">Cab confirmation voucher (PDF attachment)</label>
+            <input id="cs${idx}Voucher" type="file" accept="application/pdf"/>
+            <div class="note">Attach the cab confirmation PDF; the file name will be shown in the email as reference.</div>
+          </div>
+          <div class="col-12">
+            <label for="cs${idx}Notes">Important notes</label>
+            <textarea id="cs${idx}Notes" rows="2" placeholder="Driver details, waiting charges, etc."></textarea>
+          </div>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML('beforeend', html);
+    attachCalendarIconHandlers();
+  }
+
+  function getCabSegments(){
+    const blocks = document.querySelectorAll('.cab-segment');
+    const segments = [];
+    blocks.forEach(block => {
+      const idx = block.getAttribute('data-cab-index');
+      const type = $(`cs${idx}Type`)?.value.trim() || '';
+      const city = $(`cs${idx}City`)?.value.trim() || '';
+      const pickup = $(`cs${idx}Pickup`)?.value.trim() || '';
+      const drop = $(`cs${idx}Drop`)?.value.trim() || '';
+      const date = $(`cs${idx}Date`)?.value.trim() || '';
+      const time = $(`cs${idx}Time`)?.value.trim() || '';
+      const pickupLink = $(`cs${idx}PickupLink`)?.value.trim() || '';
+      const dropLink = $(`cs${idx}DropLink`)?.value.trim() || '';
+      const confNo = $(`cs${idx}ConfNo`)?.value.trim() || '';
+      const rate = $(`cs${idx}Rate`)?.value.trim() || '';
+      const payment = $(`cs${idx}Payment`)?.value.trim() || '';
+      const notes = $(`cs${idx}Notes`)?.value.trim() || '';
+
+      let voucherName = '';
+      const voucherInput = $(`cs${idx}Voucher`);
+      if (voucherInput?.files?.length) voucherName = voucherInput.files[0].name;
+
+      if(type || city || pickup || drop || date || time || pickupLink || dropLink || confNo || rate || payment || voucherName || notes){
+        segments.push({type,city,pickup,drop,date,time,pickupLink,dropLink,confNo,rate,payment,voucher:voucherName,notes});
+      }
+    });
+    return segments;
+  }
+
+  // ===== Hotel auto calc =====
+  function calculateHotelStay(){
+    const checkInVal = $('hotelCheckIn').value;
+    const checkOutVal = $('hotelCheckOut').value;
+
+    let nightsText = '';
+    if(checkInVal && checkOutVal){
+      const inDate = new Date(checkInVal);
+      const outDate = new Date(checkOutVal);
+      const diffMs = outDate - inDate;
+      if(diffMs > 0){
+        const nights = diffMs / (1000 * 60 * 60 * 24);
+        if(Number.isFinite(nights) && nights > 0) nightsText = String(nights);
+      }
+    }
+    $('hotelNights').value = nightsText;
+
+    const rateRaw = $('hotelRateNight').value || '';
+    const rateNum = parseFloat(rateRaw.replace(/[^0-9.]/g, ''));
+    if(nightsText && !isNaN(rateNum)){
+      const totalNum = parseFloat(nightsText) * rateNum;
+      if(Number.isFinite(totalNum)) $('hotelTotal').value = totalNum.toFixed(2);
+    }
+  }
+
+  // ===== Data getters =====
+  function getAgent(){
+    return { name: 'ETG Travel Desk', email: '', ref: '' };
+  }
+
+  function getTripOverview(){
+    return {
+      travelerName: $('travelerName').value.trim(),
+      employeeCode: $('employeeCode').value.trim(),
+      purpose: $('tripPurpose').value.trim()
+    };
+  }
+
+  function getFlight(){
+    let voucherName = '';
+    const voucherInput = $('flightVoucher');
+    if (voucherInput?.files?.length) voucherName = voucherInput.files[0].name;
+
+    return {
+      airline: $('flightAirline').value.trim(),
+      from: $('flightFrom').value.trim(),
+      to: $('flightTo').value.trim(),
+      depTime: $('flightDepTime').value.trim(),
+      sector: $('flightSector').value.trim(),
+      cabin: $('flightClass').value.trim(),
+      pnr: $('flightPNR').value.trim(),
+      ticketNo: $('flightTicketNo').value.trim(),
+      currency: $('currencyCode').value.trim(),
+      fare: $('flightFare').value.trim(),
+      voucher: voucherName,
+      notes: $('flightNotes').value.trim(),
+      segments: getFlightSegments()
+    };
+  }
+
+  function getHotel(){
+    let voucherName = '';
+    const voucherInput = $('hotelVoucher');
+    if (voucherInput?.files?.length) voucherName = voucherInput.files[0].name;
+
+    return {
+      name: $('hotelName').value.trim(),
+      city: $('hotelCity').value.trim(),
+      checkIn: $('hotelCheckIn').value.trim(),
+      checkOut: $('hotelCheckOut').value.trim(),
+      roomType: $('hotelRoomType').value.trim(),
+      confNo: $('hotelConfirmationNo').value.trim(),
+      nights: $('hotelNights').value.trim(),
+      rateNight: $('hotelRateNight').value.trim(),
+      total: $('hotelTotal').value.trim(),
+      inclusions: $('hotelInclusions').value.trim(),
+      voucher: voucherName,
+      notes: $('hotelNotes').value.trim()
+    };
+  }
+
+  function getCab(){
+    let voucherName = '';
+    const voucherInput = $('cabVoucher');
+    if (voucherInput?.files?.length) voucherName = voucherInput.files[0].name;
+
+    return {
+      type: $('cabType').value.trim(),
+      city: $('cabCity').value.trim(),
+      pickup: $('cabPickup').value.trim(),
+      drop: $('cabDrop').value.trim(),
+      pickupLink: $('cabPickupLink').value.trim(),
+      dropLink: $('cabDropLink').value.trim(),
+      date: $('cabDate').value.trim(),
+      time: $('cabTime').value.trim(),
+      confNo: $('cabConfirmationNo').value.trim(),
+      rate: $('cabRate').value.trim(),
+      payment: $('cabPaymentMode').value.trim(),
+      voucher: voucherName,
+      notes: $('cabNotes').value.trim()
+    };
+  }
+
+  function buildKeyValueTable(title, rows){
+    const filtered = rows.filter(r => r[1] && String(r[1]).trim().length);
+    if(!filtered.length) return '';
+    let tr = '';
+    filtered.forEach(([label, value]) => {
+      tr += `
+        <tr>
+          <td style="border:1px solid #d8dde6;padding:6px 8px;width:32%;vertical-align:top;"><strong>${esc(label)}</strong></td>
+          <td style="border:1px solid #d8dde6;padding:6px 8px;vertical-align:top;">${value}</td>
+        </tr>`;
+    });
+    return `
+      <h3 style="font-size:13px;color:#172b4d;margin:16px 0 4px;">${esc(title)}</h3>
+      <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:12px;margin-bottom:4px;">
+        <tbody>${tr}</tbody>
+      </table>`;
+  }
+
+  // ===== Stage 7 store loader (kept as-is logic) =====
+  function loadTripStoreForUser(){
+    try{ return JSON.parse(localStorage.getItem(TRIPS_KEY) || '{}'); }catch(e){ return {}; }
+  }
+  function findTripByIdForUser(id){
+    if(!id) return null;
+    const store = loadTripStoreForUser();
+    let found = null;
+    const scanList = (list) => {
+      if(!Array.isArray(list) || found) return;
+      list.forEach(t=>{ if(!found && t && String(t.id) === String(id)) found = t; });
+    };
+    if(Array.isArray(store)) scanList(store);
+    else if(store && typeof store === 'object') Object.keys(store).forEach(k => scanList(store[k]));
+    return found;
+  }
+
+  function renderApprovalDashboard(trip){
+    const host = $('approvalDashboard');
+    if(!host) return;
+
+    if(!trip){
+      host.innerHTML = `<div class="note">No trip data found in local storage for this Request ID. Please open Stage 8 from Stage 7 approval screen (Approve → it opens Stage 8 automatically).</div>`;
+      return;
+    }
+
+    const q = trip.quotationOptions || {};
+    const flights = Array.isArray(q.flights) ? q.flights : [];
+    const hotels  = Array.isArray(q.hotels)  ? q.hotels  : [];
+
+    const userSel = Array.isArray((trip.userConfirmation||{}).selections) ? trip.userConfirmation.selections : [];
+    const mgrSel  = Array.isArray((trip.managerApproval||{}).approvedSelections) ? trip.managerApproval.approvedSelections : [];
+
+    const isUserConfirmed = (label) => userSel.some(s => s && (s.label===label));
+    const isMgrApproved = (label) => mgrSel.some(s => s && (s.label===label));
+
+    function optionRow(type, idx, opt){
+      const label = opt?.label || (type === 'flight' ? `Flight option ${idx+1}` : `Hotel option ${idx+1}`);
+      const title = opt?.title || opt?.name || label;
+      const price = opt?.price ? `${esc(opt.currency||'')} ${esc(opt.price)}`.trim() : '';
+      const tags = [];
+      if(isUserConfirmed(label)) tags.push('User confirmed');
+      if(isMgrApproved(label)) tags.push('Manager approved');
+      const tagHtml = tags.length ? ` <span class="section-tag" style="margin-left:8px;background:#ecfeff;color:#0369a1;border-color:#bae6fd;">${esc(tags.join(' · '))}</span>` : '';
+      return `
+        <div style="border:1px solid #e5e7eb;border-radius:12px;padding:10px 12px;margin-top:10px;background:#ffffff;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+            <div>
+              <div style="font-weight:700;font-size:13px;">${esc(title)}${tagHtml}</div>
+              <div class="note" style="margin-top:4px;">${esc(opt?.details||opt?.notes||'')}</div>
+            </div>
+            <div style="text-align:right;min-width:120px;">
+              <div style="font-size:11px;color:#6b7280;">${esc(type.toUpperCase())}</div>
+              <div style="font-weight:700;">${price || '-'}</div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    let html = '';
+    html += `<div class="row"><div class="col-6"><strong>Request ID:</strong> ${esc(trip.id||'-')}</div><div class="col-6"><strong>Status:</strong> ${esc(trip.status||'-')}</div></div>`;
+    if(trip.managerApproval && trip.managerApproval.approvedAt){
+      html += `<div class="note" style="margin-top:6px;">Manager approved at: ${esc(trip.managerApproval.approvedAt)}</div>`;
+    }
+
+    if(flights.length){
+      html += `<div style="margin-top:10px;"><span class="section-tag">✈️ Flight Options</span></div>`;
+      flights.forEach((o,i)=>{ html += optionRow('flight', i, o); });
+    }
+    if(hotels.length){
+      html += `<div style="margin-top:14px;"><span class="section-tag">🏨 Hotel Options</span></div>`;
+      hotels.forEach((o,i)=>{ html += optionRow('hotel', i, o); });
+    }
+
+    if(mgrSel.length){
+      html += `<div style="margin-top:14px;"><span class="section-tag">✅ Manager Approved</span></div>`;
+      mgrSel.forEach((s)=>{
+        html += `
+          <div class="note" style="margin-top:6px;">
+            • ${(s.type||'').toUpperCase()} – ${esc(s.label||s.title||'-')}${s.isViolation ? ' (Policy deviation)' : ''}
+            ${s.comment ? `<br/><span style="color:#6b7280;">Comment: ${esc(s.comment)}</span>` : ''}
+          </div>`;
+      });
+    }else{
+      html += `<div class="note" style="margin-top:12px;">No manager-approved option found yet.</div>`;
+    }
+
+    host.innerHTML = html;
+  }
+
+  function prefillFromTrip(trip){
+    if(!trip) return;
+    const r = trip.requester || {};
+    const it = trip.itinerary || {};
+
+    if(r.name || r.fullName) $('travelerName').value = (r.name || r.fullName || '').trim();
+    if(r.employeeId || r.empId || trip.employeeCode) $('employeeCode').value = (r.employeeId || r.empId || trip.employeeCode || '').trim();
+    if(it.purpose || trip.purpose) $('tripPurpose').value = (it.purpose || trip.purpose || '').trim();
+
+    const mgrSel = Array.isArray((trip.managerApproval||{}).approvedSelections) ? trip.managerApproval.approvedSelections : [];
+    if(mgrSel.length){
+      const lines = mgrSel.map(s => `Approved: ${(s.type||'').toUpperCase()} – ${s.label||s.title||''}`).filter(Boolean);
+      const existing = $('notes').value.trim();
+      $('notes').value = (existing ? (existing + '\n') : '') + lines.join('\n');
+    }
+  }
+
+  function loadStage8Context(){
+    const qp = new URLSearchParams(location.search);
+    const rid = qp.get('rid') || qp.get('tripId') || localStorage.getItem('etg-last-approved-trip-id') || '';
+    if(!rid) return;
+    const trip = findTripByIdForUser(rid);
+    renderApprovalDashboard(trip);
+    prefillFromTrip(trip);
+  
+    // Auto-open the tab of the first manager-approved mode (so TravelDesk immediately sees what to book)
+    try{
+      const mgrSel = Array.isArray((trip.managerApproval||{}).approvedSelections) ? trip.managerApproval.approvedSelections : [];
+      if(mgrSel.length){
+        const firstType = String(mgrSel[0].type||'').toLowerCase();
+        const target = firstType === 'hotel' ? 'hotelCard' : (firstType === 'cab' ? 'cabCard' : 'flightCard');
+        const btn = document.querySelector('.tab-btn[data-target="'+target+'"]');
+        if(btn) btn.click();
+      }
+    }catch(e){}
+  }
+
+  // ===== Email Generate =====
+  function generateEmail(){
+    const agent = getAgent();
+    const overview = getTripOverview();
+    const flight = getFlight();
+    const hotel = getHotel();
+    const hotelSegments = getHotelSegments();
+    const cab = getCab();
+    const cabSegments = getCabSegments();
+    const notes = $('notes').value.trim();
+
+    const hasFlight = hasAnyValue({
+      airline: flight.airline, from: flight.from, to: flight.to, depTime: flight.depTime, sector: flight.sector,
+      cabin: flight.cabin, pnr: flight.pnr, ticketNo: flight.ticketNo, fare: flight.fare, voucher: flight.voucher,
+      notes: flight.notes, segments: flight.segments
+    });
+
+    const hasHotelMain = hasAnyValue(hotel);
+    const hasCabMain   = hasAnyValue(cab);
+    const hasHotel = hasHotelMain || (hotelSegments && hotelSegments.length > 0);
+    const hasCab   = hasCabMain || (cabSegments && cabSegments.length > 0);
+
+    if(!hasFlight && !hasHotel && !hasCab){
+      alert("Please fill at least one of Flight / Hotel / Cab confirmation sections.");
+      return;
+    }
+
+    const today = new Date();
+    const dtStr = today.toLocaleDateString(undefined, { day:'2-digit', month:'short', year:'numeric' });
+
+    const headerBlock = `
+      <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:12px;margin-bottom:12px;">
+        <tr><td style="padding:4px 0;"><strong>Reference</strong></td><td style="padding:4px 0;">: ${esc(agent.ref || '-')}</td></tr>
+        <tr><td style="padding:4px 0;"><strong>Prepared By</strong></td><td style="padding:4px 0;">: ${esc(agent.name)}</td></tr>
+        <tr><td style="padding:4px 0;"><strong>Date</strong></td><td style="padding:4px 0;">: ${esc(dtStr)}</td></tr>
+      </table>`;
+
+    let overviewBlock = '';
+    if(hasAnyValue(overview)){
+      overviewBlock = buildKeyValueTable('Trip Overview', [
+        ['Traveler Name', esc(overview.travelerName)],
+        ['Employee ID', esc(overview.employeeCode)],
+        ['Purpose', esc(overview.purpose)]
+      ]);
+    }
+
+    let flightBlock = '';
+    if(hasFlight){
+      flightBlock = buildKeyValueTable('Flight – Booking Confirmation (Primary)', [
+        ['Airline & Flight No.', esc(flight.airline)],
+        ['Travel From', esc(flight.from)],
+        ['Travel To', esc(flight.to)],
+        ['Departure Date', esc(flight.depTime)],
+        ['Sector', esc(flight.sector)],
+        ['Cabin / Class', esc(flight.cabin)],
+        ['Airline PNR', esc(flight.pnr)],
+        ['Ticket No.', esc(flight.ticketNo)],
+        ['Currency Code', esc(flight.currency)],
+        ['Total Fare', esc(flight.fare)],
+        ['Flight Confirmation Voucher', esc(flight.voucher)],
+        ['Important Notes', flight.notes ? esc(flight.notes).replace(/\n/g,'<br/>') : '']
+      ]);
+    }
+
+    let segmentsBlock = '';
+    if (flight.segments && flight.segments.length){
+      segmentsBlock = flight.segments.map((s, index) => buildKeyValueTable(`Flight Segment ${index + 2}`, [
+        ['Airline & Flight No.', esc(s.airline)],
+        ['Travel From', esc(s.from)],
+        ['Travel To', esc(s.to)],
+        ['Departure Date', esc(s.dep)],
+        ['Sector', esc(s.sector)],
+        ['Cabin / Class', esc(s.cabin)],
+        ['Airline PNR', esc(s.pnr)],
+        ['Ticket No.', esc(s.ticketNo)],
+        ['Currency Code', esc(s.currency)],
+        ['Total Fare', esc(s.fare)],
+        ['Flight Confirmation Voucher', esc(s.voucher)]
+      ])).join('');
+    }
+
+    let hotelBlock = '';
+    if(hasHotelMain){
+      hotelBlock = buildKeyValueTable('Hotel – Booking Confirmation', [
+        ['Hotel Name', esc(hotel.name)],
+        ['City / Location', esc(hotel.city)],
+        ['Check-in Date', esc(hotel.checkIn)],
+        ['Check-out Date', esc(hotel.checkOut)],
+        ['Room Type', esc(hotel.roomType)],
+        ['Confirmation No.', esc(hotel.confNo)],
+        ['Number of Nights', esc(hotel.nights)],
+        ['Rate per Night', esc(hotel.rateNight)],
+        ['Total Stay Amount', esc(hotel.total)],
+        ['Inclusions', esc(hotel.inclusions)],
+        ['Hotel Confirmation Voucher', esc(hotel.voucher)],
+        ['Important Notes', hotel.notes ? esc(hotel.notes).replace(/\n/g,'<br/>') : '']
+      ]);
+    }
+
+    let hotelSegmentsBlock = '';
+    if(hotelSegments && hotelSegments.length){
+      hotelSegmentsBlock = hotelSegments.map((s, index) => buildKeyValueTable(`Hotel Segment ${index + 2}`, [
+        ['Hotel Name', esc(s.name)],
+        ['City / Location', esc(s.city)],
+        ['Check-in Date', esc(s.checkIn)],
+        ['Check-out Date', esc(s.checkOut)],
+        ['Room Type', esc(s.roomType)],
+        ['Confirmation No.', esc(s.confNo)],
+        ['Rate per Night', esc(s.rateNight)],
+        ['Total Stay Amount', esc(s.total)],
+        ['Inclusions', esc(s.inclusions)],
+        ['Hotel Confirmation Voucher', esc(s.voucher)]
+      ])).join('');
+    }
+
+    let cabBlock = '';
+    if(hasCabMain){
+      cabBlock = buildKeyValueTable('Cab – Booking Confirmation', [
+        ['Service Type', esc(cab.type)],
+        ['City', esc(cab.city)],
+        ['Pickup Location', esc(cab.pickup)],
+        ['Drop Location', esc(cab.drop)],
+        ['Pickup Location Link', esc(cab.pickupLink)],
+        ['Drop Location Link', esc(cab.dropLink)],
+        ['Date', esc(cab.date)],
+        ['Pickup Time', esc(cab.time)],
+        ['Confirmation / Booking ID', esc(cab.confNo)],
+        ['Estimated / Fixed Cost', esc(cab.rate)],
+        ['Payment Mode', esc(cab.payment)],
+        ['Cab Confirmation Voucher', esc(cab.voucher)],
+        ['Important Notes', cab.notes ? esc(cab.notes).replace(/\n/g,'<br/>') : '']
+      ]);
+    }
+
+    let cabSegmentsBlock = '';
+    if(cabSegments && cabSegments.length){
+      cabSegmentsBlock = cabSegments.map((s, index) => buildKeyValueTable(`Cab Segment ${index + 2}`, [
+        ['Service Type', esc(s.type)],
+        ['City', esc(s.city)],
+        ['Pickup Location', esc(s.pickup)],
+        ['Drop Location', esc(s.drop)],
+        ['Pickup Location Link', esc(s.pickupLink)],
+        ['Drop Location Link', esc(s.dropLink)],
+        ['Date', esc(s.date)],
+        ['Pickup Time', esc(s.time)],
+        ['Confirmation / Booking ID', esc(s.confNo)],
+        ['Estimated / Fixed Cost', esc(s.rate)],
+        ['Payment Mode', esc(s.payment)],
+        ['Cab Confirmation Voucher', esc(s.voucher)],
+        ['Important Notes', s.notes ? esc(s.notes).replace(/\n/g,'<br/>') : '']
+      ])).join('');
+    }
+
+    let notesBlock = '';
+    if(notes){
+      notesBlock = `
+        <h3 style="font-size:13px;color:#172b4d;margin:16px 0 4px;">Additional Notes</h3>
+        <p style="margin:0 0 12px 0;">${esc(notes).replace(/\n/g,'<br/>')}</p>`;
+    }
+
+    const htmlDoc = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8" /><title>ETG Travel – Booking Confirmation</title></head>
+<body style="margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#172b4d;background:#f4f5f7;">
+  <table cellpadding="0" cellspacing="0" width="100%" style="background:#f4f5f7;padding:16px 0;">
+    <tr>
+      <td align="center">
+        <table cellpadding="0" cellspacing="0" width="720" style="background:#ffffff;border:1px solid #d8dde6;">
+          <tr>
+            <td style="padding:12px 18px;border-bottom:3px solid #2563eb;background:linear-gradient(135deg,#1d4ed8,#2563eb,#38bdf8);color:#eff6ff;">
+              <div style="font-size:16px;font-weight:bold;letter-spacing:.12em;text-transform:uppercase;">
+                ETG TRAVEL – BOOKING CONFIRMATION
+              </div>
+              <div style="font-size:11px;margin-top:2px;">Confirmed itinerary – Flights / Hotels / Cabs</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 18px 8px 18px;">
+              ${headerBlock}
+              <p style="margin:0 0 12px 0;">
+                We are pleased to share the confirmation details for your upcoming travel. Please review the itinerary below and reach out in case any corrections are required.
+              </p>
+
+              ${overviewBlock}
+              ${flightBlock}
+              ${segmentsBlock}
+              ${hotelBlock}
+              ${hotelSegmentsBlock}
+              ${cabBlock}
+              ${cabSegmentsBlock}
+              ${notesBlock}
+
+              <p style="margin:16px 0 8px 0;">
+                Please carry a valid government photo ID and reach the reporting points as per the timings mentioned above. For any changes or cancellations, kindly contact the travel desk before initiating changes directly with the service provider.
+              </p>
+
+              <p style="margin:0 0 12px 0;font-size:11px;color:#6b778c;">
+                This confirmation is based on the details shared by you and approved as per internal policy. All bookings are subject to the respective airline, hotel and cab provider terms &amp; conditions.
+              </p>
+
+              <p style="margin:16px 0 4px 0;">Regards,</p>
+              <p style="margin:0 0 2px 0;">${esc(agent.name)}</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+<!-- ETG Realtime (Socket.IO) -->
+</body>
+</html>`.trim();
+
+    $('emailHtml').value = htmlDoc;
+    $('emailPreviewFrame').srcdoc = htmlDoc;   // ✅ safe preview (no DOM wipe)
+
+    // Save generated confirmation (draft) against Trip ID so User can view under My Trip later
+    const rid = getRequestId();
+    if(rid){
+      upsertTripById(rid, {
+        status: 'DRAFT_CONFIRMATION',
+        confirmation: {
+          agent, overview, flight, hotel, hotelSegments, cab, cabSegments, notes,
+          emailHtml: htmlDoc,
+          sent: false,
+          generatedAt: new Date().toISOString()
+        }
+      });
+      // Enable "Send confirmation"
+      if($('btnSendConfirm')) $('btnSendConfirm').disabled = false;
+      setSendStatusUI(getTripById(rid));
+    }
+  }
+
+  
+  
+  // ===== Store helpers (Stage-8 writes confirmation + status) =====
+  function getQueryParam(name){
+    try{ return new URLSearchParams(location.search).get(name) || ''; }catch(e){ return ''; }
+  }
+  function getRole(){
+    const r = (getQueryParam('role') || '').toLowerCase().trim();
+    return r || 'traveldesk';
+  }
+    function getRequestId(){
+    // Priority: URL rid/tripId -> manual input -> last selected
+    const fromUrl = getQueryParam('rid') || getQueryParam('tripId') || '';
+    if(fromUrl) return fromUrl.trim();
+    const fromInput = (document.getElementById('ridInput')?.value || '').trim();
+    if(fromInput) return fromInput;
+    return (localStorage.getItem('etg-selected-trip-id') || '').trim() || '';
+  }
+
+  // Local (legacy) + Global stores
+  function loadTripsStore(){
+    // Stage 7 sometimes stores an array, sometimes an object. Here we treat it as read-only fallback.
+    try{ return JSON.parse(localStorage.getItem(TRIPS_KEY) || '[]'); }catch(e){ return []; }
+  }
+  function saveTripsStore(store){
+    try{ localStorage.setItem(TRIPS_KEY, JSON.stringify(store)); }catch(e){}
+  }
+
+  function normalizeTrips(store){
+    // supports: Array, {trips:[]}, {data:[]}, {<email>:[...]} (bucket object)
+    if(store && !Array.isArray(store) && typeof store==='object' && !('trips' in store) && !('data' in store)){
+      const flat = [];
+      for(const k of Object.keys(store)){
+        const v = store[k];
+        if(Array.isArray(v)) flat.push(...v);
+      }
+      return {rootType:'buckets', root:store, list:flat};
+    }
+    if(Array.isArray(store)) return {rootType:'array', root:store, list:store};
+    if(store && Array.isArray(store.trips)) return {rootType:'objTrips', root:store, list:store.trips};
+    if(store && Array.isArray(store.data))  return {rootType:'objData',  root:store, list:store.data};
+    return {rootType:'array', root:[], list:[]};
+  }
+
+  // ✅ Global trips store to ensure cross-role visibility (User / TravelDesk / Manager)
+// Stage-2 uses a schema: { byId:{...}, pending:[], completed:[] }.
+// Stage-8 must read/write that schema safely (and still support older plain maps).
+function _readGlobalRaw(){
+  // Prefer the configured global key, but support legacy key used by older Stage-8 builds.
+  const legacyKey = 'etg-trips-global';
+  try{
+    let obj = JSON.parse(localStorage.getItem(GLOBAL_TRIPS_KEY) || '{}');
+    if(!obj || typeof obj !== 'object' || Array.isArray(obj)) obj = {};
+
+    // If current key is empty but legacy has data, migrate once.
+    let hasAny = false;
+    if(obj.byId && typeof obj.byId === 'object' && !Array.isArray(obj.byId) && Object.keys(obj.byId).length) hasAny = true;
+    if(!hasAny && Object.keys(obj).length) hasAny = true;
+
+    if(!hasAny && legacyKey && legacyKey !== GLOBAL_TRIPS_KEY){
+      try{
+        const legacy = JSON.parse(localStorage.getItem(legacyKey) || '{}');
+        if(legacy && typeof legacy === 'object' && !Array.isArray(legacy)){
+          obj = legacy;
+          // Persist into the new key so all stages read the same data
+          try{ localStorage.setItem(GLOBAL_TRIPS_KEY, JSON.stringify(obj)); }catch(e){}
+        }
+      }catch(e){}
+    }
+    return obj;
+  }catch(e){ return {}; }
+}
+function _splitBuckets(byId){
+  const pending = [], completed = [];
+  const isDone = (t)=>{
+    const st = String((t && t.status) || '').toLowerCase();
+    return st.includes('completed') || st.includes('booked') || st.includes('ticketed') || st.includes('confirmed');
+  };
+  Object.keys(byId||{}).forEach(id=>{
+    const t = byId[id];
+    if(!t) return;
+    (isDone(t) ? completed : pending).push(t);
+  });
+  const score = (t)=>{
+    const d = t?.updatedAt || t?.createdAt || '';
+    const ms = Date.parse(d);
+    return isNaN(ms) ? 0 : ms;
+  };
+  pending.sort((a,b)=>score(b)-score(a));
+  completed.sort((a,b)=>score(b)-score(a));
+  return { pending, completed };
+}
+function loadGlobalTrips(){
+  const raw = _readGlobalRaw();
+  // Stage-2 schema
+  if(raw && raw.byId && typeof raw.byId === 'object' && !Array.isArray(raw.byId)){
+    return raw.byId;
+  }
+  // Older plain byId map
+  return raw && typeof raw === 'object' ? raw : {};
+}
+function saveGlobalTrips(byId){
+  const raw = _readGlobalRaw();
+  const map = (byId && typeof byId === 'object') ? byId : {};
+  // If Stage-2 schema exists, preserve it and rebuild buckets
+  if(raw && raw.byId && typeof raw.byId === 'object' && !Array.isArray(raw.byId)){
+    const buckets = _splitBuckets(map);
+    const merged = Object.assign({}, raw, { byId: map, pending: buckets.pending, completed: buckets.completed });
+    try{ localStorage.setItem(GLOBAL_TRIPS_KEY, JSON.stringify(merged)); }catch(e){}
+    return;
+  }
+  // Otherwise, write Stage-2 compatible schema (so Stage-2 can render immediately)
+  try{
+    const buckets = _splitBuckets(map);
+    localStorage.setItem(GLOBAL_TRIPS_KEY, JSON.stringify({ byId: map, pending: buckets.pending, completed: buckets.completed }));
+  }catch(e){}
+}
+function upsertGlobalTrip(id, patch){
+  if(!id) return null;
+  const all = loadGlobalTrips(); // byId map
+  const key = String(id);
+  const existing = all[key] || {};
+  const merged = Object.assign({}, existing, patch || {});
+  merged.id = key;
+  merged.updatedAt = new Date().toISOString();
+  if(!merged.createdAt) merged.createdAt = existing.createdAt || merged.updatedAt;
+  all[key] = merged;
+  saveGlobalTrips(all);
+  return merged;
+}
+function matchTripId(trip, id){
+    const sid = String(id);
+    if(!trip) return false;
+    const vals = [trip.id, trip.requestId, trip.rid, trip.tripId];
+    return vals.some(v => v!==undefined && v!==null && String(v)===sid);
+  }
+
+  function getGlobalTrip(id){
+    if(!id) return null;
+    const all = loadGlobalTrips();
+    const key = String(id);
+    if(all[key]) return all[key];
+    // fallback: search by embedded ids
+    for(const k of Object.keys(all)){
+      const t = all[k];
+      if(matchTripId(t, key)) return t;
+    }
+    return null;
+  }
+
+  function upsertTripById(id, patch){
+    if(!id) return null;
+
+    // 1) update global store (source of truth for cross-role visibility)
+    const existingGlobal = getGlobalTrip(id) || {};
+    const mergedGlobal = Object.assign({}, existingGlobal, patch || {});
+    mergedGlobal.id = String(id);
+    if(!mergedGlobal.createdAt) mergedGlobal.createdAt = existingGlobal.createdAt || new Date().toISOString();
+    mergedGlobal.updatedAt = new Date().toISOString();
+    upsertGlobalTrip(id, mergedGlobal);
+
+    // 2) best-effort: also update legacy TRIPS_KEY store if it already contains the trip (so older stages still see status)
+    const raw = loadTripsStore();
+    const norm = normalizeTrips(raw);
+    let found = null;
+    for(const item of norm.list){
+      if(item && String(item.id) === String(id)){ found = item; break; }
+    }
+    if(found){
+      Object.assign(found, patch || {});
+      if(norm.rootType==='array'){
+        saveTripsStore(norm.list);
+      }else if(norm.rootType==='objTrips'){
+        norm.root.trips = norm.list; saveTripsStore(norm.root);
+      }else if(norm.rootType==='objData'){
+        norm.root.data = norm.list; saveTripsStore(norm.root);
+      }else{
+        // buckets: write back as-is (we don't know which bucket). Still keep global as the truth.
+        saveTripsStore(norm.root);
+      }
+    }
+
+    return getGlobalTrip(id);
+  }
+
+  function getTripById(id){
+    if(!id) return null;
+    // 1) global store
+    const g = getGlobalTrip(id);
+    if(g) return g;
+
+    // 2) legacy store fallback
+    const raw = loadTripsStore();
+    const norm = normalizeTrips(raw);
+    return norm.list.find(x => matchTripId(x, id)) || null;
+  }
+
+  
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    if(!t){ alert(msg); return; }
+    t.textContent = msg;
+    t.style.display = 'block';
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(()=>{ t.style.display='none'; }, 2600);
+  }
+
+  // ===== UI helpers: Status + Role views =====
+  function setSendStatusUI(trip){
+    const el = $('sendStatusText');
+    const btnSend = $('btnSendConfirm');
+    const role = getRole();
+    const rid = getRequestId();
+
+    if(!el) return;
+
+    if(!rid){
+      el.textContent = 'No Request ID found in URL (rid). Open this page from the trip workflow so rid is passed.';
+      if(btnSend) btnSend.disabled = true;
+      return;
+    }
+
+    if(!trip){
+      el.textContent = 'Trip not found in storage for Request ID: ' + rid;
+      if(btnSend) btnSend.disabled = true;
+      return;
+    }
+
+    const c = trip.confirmation || null;
+    const sent = !!(c && c.sent);
+    const completed = String(trip.status||'').toUpperCase() === 'COMPLETED' || !!trip.completedAt;
+    const ack = !!(c && c.acknowledged);
+
+    if(completed){
+      el.textContent = '✅ Completed (Acknowledged by user).';
+      if(btnSend) btnSend.disabled = true;
+      setTravelDeskLock(true);
+      return;
+    }
+
+    if(sent){
+      const sentAt = c.sentAt ? new Date(c.sentAt).toLocaleString() : '';
+      el.textContent = '📩 Sent to user/manager' + (sentAt ? (' at ' + sentAt) : '') + (ack ? ' · Acknowledged' : '');
+      if(btnSend) btnSend.disabled = true;
+      setTravelDeskLock(true);
+      return;
+    }
+
+    if(c){
+      el.textContent = 'Draft confirmation generated. Click “Send confirmation” to trigger to user & reporting manager.';
+      if(role==='traveldesk') setTravelDeskLock(false);
+      if(btnSend) btnSend.disabled = false;
+      return;
+    }
+
+    el.textContent = 'Not sent yet. Generate the email first.';
+    if(btnSend) btnSend.disabled = true;
+  }
+
+  function buildConfirmationSummaryText(conf){
+    if(!conf) return 'No confirmation details available.';
+    const o = conf.overview || {};
+    const f = conf.flight || {};
+    const h = conf.hotel || {};
+    const c = conf.cab || {};
+    const lines = [];
+    if(o.travelerName) lines.push('Traveler: ' + o.travelerName);
+    if(o.employeeCode) lines.push('Employee ID: ' + o.employeeCode);
+    if(o.purpose) lines.push('Purpose: ' + o.purpose);
+
+    if(f.airline || f.from || f.to || f.depTime || f.pnr){
+      lines.push('');
+      lines.push('Flight:');
+      if(f.airline) lines.push('• ' + f.airline);
+      if(f.from || f.to) lines.push('• ' + (f.from||'') + ' → ' + (f.to||''));
+      if(f.depTime) lines.push('• Departure: ' + f.depTime);
+      if(f.pnr) lines.push('• PNR: ' + f.pnr);
+      if(f.ticketNo) lines.push('• Ticket: ' + f.ticketNo);
+    }
+
+    if(h.name || h.city || h.checkIn || h.checkOut || h.confNo){
+      lines.push('');
+      lines.push('Hotel:');
+      if(h.name) lines.push('• ' + h.name);
+      if(h.city) lines.push('• ' + h.city);
+      if(h.checkIn || h.checkOut) lines.push('• ' + (h.checkIn||'') + ' to ' + (h.checkOut||''));
+      if(h.confNo) lines.push('• Confirmation: ' + h.confNo);
+    }
+
+    if(c.type || c.city || c.pickup || c.drop || c.date || c.confNo){
+      lines.push('');
+      lines.push('Cab:');
+      if(c.type) lines.push('• ' + c.type);
+      if(c.city) lines.push('• City: ' + c.city);
+      if(c.pickup || c.drop) lines.push('• ' + (c.pickup||'') + ' → ' + (c.drop||''));
+      if(c.date) lines.push('• Date: ' + c.date);
+      if(c.time) lines.push('• Time: ' + c.time);
+      if(c.confNo) lines.push('• Booking ID: ' + c.confNo);
+    }
+
+    if(conf.notes) {
+      lines.push('');
+      lines.push('Notes:');
+      lines.push(conf.notes);
+    }
+
+    return lines.join('\n').trim() || 'Confirmation details are available.';
+  }
+
+  function renderUserConfirmation(trip){
+    const card = $('userConfirmationCard');
+    const summaryEl = $('userConfirmationSummary');
+    const ackBtn = $('btnAcknowledge');
+    const ackStatus = $('userAckStatus');
+
+    if(!card || !summaryEl) return;
+
+    const conf = trip && trip.confirmation ? trip.confirmation : null;
+
+    if(!conf || !conf.sent){
+      card.style.display = 'none';
+      return;
+    }
+
+    card.style.display = '';
+    summaryEl.textContent = buildConfirmationSummaryText(conf);
+
+    const completed = String(trip.status||'').toUpperCase() === 'COMPLETED' || !!trip.completedAt;
+    const acknowledged = !!conf.acknowledged;
+
+    if(ackBtn){
+      ackBtn.disabled = completed || acknowledged;
+      ackBtn.textContent = completed || acknowledged ? 'Acknowledged' : 'Acknowledge';
+    }
+    if(ackStatus){
+      if(completed || acknowledged){
+        const when = conf.ackAt ? new Date(conf.ackAt).toLocaleString() : (trip.completedAt ? new Date(trip.completedAt).toLocaleString() : '');
+        ackStatus.textContent = '✅ Acknowledged' + (when ? (' at ' + when) : '') + '. Trip marked as completed.';
+      }else{
+        ackStatus.textContent = 'Please acknowledge after verifying the confirmation details.';
+      }
+    }
+
+    // show the exact email preview as well (read-only)
+    if(conf.emailHtml && $('emailPreviewFrame')){
+      $('emailPreviewFrame').srcdoc = conf.emailHtml;
+      if($('emailHtml')) $('emailHtml').value = conf.emailHtml;
+    }
+  }
+
+  function applyRoleUI(){
+  const role = getRole();
+  const isUser = (role === 'user');
+  const isManager = (role === 'manager' || role === 'reportingmanager' || role === 'rm');
+  const isTravellerView = isUser || isManager;
+
+  // In traveller view: user/manager should be able to SWITCH tabs and VIEW details,
+  // but should NOT be able to edit or generate/send.
+  const hideInTraveller = [
+    'approvalDashCard',     // internal summary
+    'btnGenerate',
+    'btnClear',
+    'btnAddFlightSegment',
+    'btnAddHotelSegment',
+    'btnAddCabSegment'
+  ];
+
+  hideInTraveller.forEach(id=>{
+    const el = $(id);
+    if(!el) return;
+    if(isTravellerView) el.classList.add('is-hidden');
+    else el.classList.remove('is-hidden');
+  });
+
+  // Email HTML textarea should be hidden for traveller view (but preview iframe stays visible)
+  const emailHtmlBox = $('emailHtml');
+  if(emailHtmlBox){
+    const card = emailHtmlBox.closest('.card');
+    if(card){
+      if(isTravellerView) card.classList.add('is-hidden');
+      else card.classList.remove('is-hidden');
+    }
+  }
+
+  // Send button: only TravelDesk can click
+  const sendBtn = $('btnSendConfirm');
+  if(sendBtn){
+    if(isTravellerView){
+      sendBtn.classList.add('is-hidden');
+      sendBtn.disabled = true;
+    }else{
+      sendBtn.classList.remove('is-hidden');
+      // enabled/disabled is controlled by setSendStatusUI()
+    }
+  }
+
+  // User confirmation card should only appear to user/manager
+  const userCard = $('userConfirmationCard');
+  if(userCard){
+    userCard.style.display = isTravellerView ? '' : 'none';
+  }
+
+  // Lock all inputs for traveller view (but keep tab buttons clickable)
+  if(isTravellerView){
+    document.querySelectorAll('input,textarea,select').forEach(el=>{
+      if(el.id === 'userAckComment') return;
+      el.setAttribute('disabled','disabled');
+    });
+  }else{
+    document.querySelectorAll('input,textarea,select').forEach(el=>{
+      el.removeAttribute('disabled');
+    });
+  }
+}
+
+  // ===== Voucher helpers (store only file names for dashboard visibility) =====
+function fileNameFromInput(id){
+  const el = document.getElementById(id);
+  if(!el || !el.files || !el.files.length) return '';
+  return el.files[0].name || '';
+}
+
+function collectVoucherFilenames(){
+  const vouchers = [];
+  const add = (type, label, name) => {
+    if(!name) return;
+    vouchers.push({type, label, fileName: name});
+  };
+
+  // Primary inputs
+  add('flight', 'Flight voucher', fileNameFromInput('flightVoucher'));
+  add('hotel', 'Hotel voucher', fileNameFromInput('hotelVoucher'));
+  add('cab',   'Cab voucher',   fileNameFromInput('cabVoucher'));
+
+  // Flight segments
+  document.querySelectorAll('.flight-segment').forEach(block=>{
+    const idx = block.getAttribute('data-flight-index');
+    add('flight', 'Flight segment ' + idx + ' voucher', fileNameFromInput('seg'+idx+'Voucher'));
+  });
+
+  // Hotel segments
+  document.querySelectorAll('.hotel-segment').forEach(block=>{
+    const idx = block.getAttribute('data-hotel-index');
+    add('hotel', 'Hotel segment ' + idx + ' voucher', fileNameFromInput('hs'+idx+'Voucher'));
+  });
+
+  // Cab segments
+  document.querySelectorAll('.cab-segment').forEach(block=>{
+    const idx = block.getAttribute('data-cab-index');
+    add('cab', 'Cab segment ' + idx + ' voucher', fileNameFromInput('cs'+idx+'Voucher'));
+  });
+
+  return vouchers;
+}
+
+// Read attached voucher PDFs and store as data URLs so the User dashboard can open/download them.
+async function collectVoucherFiles(){
+  const inputs = [];
+
+  // Main (single) vouchers
+  ['flightVoucher','hotelVoucher','cabVoucher'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el && el.files && el.files.length) inputs.push(el.files[0]);
+  });
+
+  // Segment vouchers (Flight/Hotel/Cab segments)
+  document.querySelectorAll('input[type="file"][accept="application/pdf"]').forEach(el=>{
+    try{
+      if(el && el.files && el.files.length) inputs.push(el.files[0]);
+    }catch(e){}
+  });
+
+  // De-dup by (name,size,lastModified)
+  const seen = new Set();
+  const unique = [];
+  for(const f of inputs){
+    const k = [f.name,f.size,f.lastModified].join('|');
+    if(seen.has(k)) continue;
+    seen.add(k);
+    unique.push(f);
+  }
+
+  const toDataUrl = (file)=> new Promise((resolve)=>{
+    try{
+      const r = new FileReader();
+      r.onload = ()=> resolve({ name:file.name, type:file.type || 'application/pdf', size:file.size, dataUrl:String(r.result || '') });
+      r.onerror = ()=> resolve({ name:file.name, type:file.type || 'application/pdf', size:file.size, dataUrl:'' });
+      r.readAsDataURL(file);
+    }catch(e){
+      resolve({ name:file.name, type:file.type || 'application/pdf', size:file.size, dataUrl:'' });
+    }
+  });
+
+  const out = [];
+  for(const f of unique){
+    out.push(await toDataUrl(f));
+  }
+  return out;
+}
+
+
+function setTravelDeskLock(isLocked){
+  // Locks TravelDesk editing after sending to prevent duplicates/edits.
+  const idsToDisable = [
+    'btnGenerate','btnClear','btnAddFlightSegment','btnAddHotelSegment','btnAddCabSegment'
+  ];
+  idsToDisable.forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.disabled = !!isLocked;
+    el.classList.toggle('is-hidden', false);
+  });
+
+  // Disable all form fields (keep tabs clickable)
+  document.querySelectorAll('input,textarea,select').forEach(el=>{
+    // allow reading; but lock editing
+    if(isLocked){
+      // keep ridInput readable
+      el.setAttribute('disabled','disabled');
+    }else{
+      el.removeAttribute('disabled');
+    }
+  });
+
+  // Keep preview visible always
+  // Send button is handled by setSendStatusUI/applyRoleUI
+}
+
+// ===== Send / Acknowledge =====
+  async function sendConfirmation(){
+    const rid = getRequestId();
+    if(!rid){
+      alert('Missing Request ID (rid). Please open this file from the workflow so rid is passed in the URL.');
+      return;
+    }
+
+    const trip = getTripById(rid);
+    if(!trip){
+      alert('Trip not found for Request ID: ' + rid);
+      return;
+    }
+
+    if(!trip.confirmation || !trip.confirmation.emailHtml){
+      alert('Please click “Generate Email” first.');
+      return;
+    }
+
+    const nowIso = new Date().toISOString();
+
+    const vouchers = collectVoucherFilenames();
+    const voucherFiles = await collectVoucherFiles();
+    const sentToUser = trip.requesterEmail || (trip.requester && trip.requester.email) || '';
+    const sentToManager = trip.managerEmail || (trip.reportingManager && trip.reportingManager.email) || '';
+
+    const patch = {
+      status: 'Pending with User (Voucher sent)',
+      statusCode: 'VOUCHER_SENT',
+      confirmation: Object.assign({}, trip.confirmation, {
+        sent: true,
+        sentAt: nowIso,
+        sentTo: { user: sentToUser, manager: sentToManager },
+        vouchers: vouchers,
+          voucherFiles: voucherFiles,
+          // Convenience: Stage-2 opens this automatically if present
+          pdfDataUrl: (voucherFiles && voucherFiles[0] && voucherFiles[0].dataUrl) ? voucherFiles[0].dataUrl : (trip.confirmation && trip.confirmation.pdfDataUrl) || ''
+      }),
+      notifications: (Array.isArray(trip.notifications) ? trip.notifications.slice() : []).concat([{
+        type: 'VOUCHER_SENT',
+        at: nowIso,
+        to: { user: sentToUser, manager: sentToManager }
+      }])
+    };
+
+    const updated = upsertTripById(rid, patch);
+
+    // Create inbox-style notifications (simulation) so User/RM can see "sent" immediately
+    try{
+      const NOTIF_KEY = 'etg-notifications';
+      const inbox = JSON.parse(localStorage.getItem(NOTIF_KEY) || '{}');
+      const note = {
+        id: 'N-' + Math.random().toString(16).slice(2),
+        type: 'USER_ACKNOWLEDGED',
+        rid: String(rid),
+        createdAt: nowIso,
+        title: 'User acknowledged confirmation',
+        message: 'User acknowledged confirmation for Trip ' + String(rid) + '.',
+        read: false
+      };
+      const pushTo = (email)=>{
+        const k = (email || 'all').toLowerCase().trim() || 'all';
+        if(!Array.isArray(inbox[k])) inbox[k] = [];
+        inbox[k].unshift(note);
+      };
+      pushTo(sentToUser);
+      pushTo(sentToManager);
+      // also a global feed
+      pushTo('all');
+      localStorage.setItem(NOTIF_KEY, JSON.stringify(inbox));
+    }catch(e){}
+
+
+    // Also store last selected id for Stage2 / other screens
+    try{ localStorage.setItem('etg-selected-trip-id', String(rid)); }catch(e){}
+
+    showToast('✅ Confirmation sent to User & Reporting Manager (saved in system).');
+
+    setSendStatusUI(updated);
+    renderUserConfirmation(updated);
+  }
+
+  function acknowledgeConfirmation(){
+    const rid = getRequestId();
+    if(!rid){
+      alert('Missing Request ID (rid).');
+      return;
+    }
+
+    const trip = getTripById(rid);
+    if(!trip || !trip.confirmation || !trip.confirmation.sent){
+      alert('Confirmation not found / not sent yet.');
+      return;
+    }
+
+    const nowIso = new Date().toISOString();
+    const comment = $('userAckComment') ? $('userAckComment').value.trim() : '';
+
+    // Determine recipients for notification simulation
+    const sentToUser = trip.requesterEmail || (trip.requester && trip.requester.email) || '';
+    const sentToManager = trip.managerEmail || (trip.reportingManager && trip.reportingManager.email) || '';
+
+    const patch = {
+      status: 'COMPLETED',
+      completedAt: nowIso,
+      confirmation: Object.assign({}, trip.confirmation, {
+        acknowledged: true,
+        ackAt: nowIso,
+        ackComment: comment
+      }),
+      notifications: (Array.isArray(trip.notifications) ? trip.notifications.slice() : []).concat([{
+        type: 'USER_ACKNOWLEDGED',
+        at: nowIso,
+        comment: comment
+      }])
+    };
+
+    const updated = upsertTripById(rid, patch);
+
+    // Create inbox-style notifications (simulation) so User/RM can see "sent" immediately
+    try{
+      const NOTIF_KEY = 'etg-notifications';
+      const inbox = JSON.parse(localStorage.getItem(NOTIF_KEY) || '{}');
+      const note = {
+        id: 'N-' + Math.random().toString(16).slice(2),
+        type: 'USER_ACKNOWLEDGED',
+        rid: String(rid),
+        createdAt: nowIso,
+        title: 'User acknowledged confirmation',
+        message: 'User acknowledged confirmation for Trip ' + String(rid) + '.',
+        read: false
+      };
+      const pushTo = (email)=>{
+        const k = (email || 'all').toLowerCase().trim() || 'all';
+        if(!Array.isArray(inbox[k])) inbox[k] = [];
+        inbox[k].unshift(note);
+      };
+      pushTo(sentToUser);
+      pushTo(sentToManager);
+      // also a global feed
+      pushTo('all');
+      localStorage.setItem(NOTIF_KEY, JSON.stringify(inbox));
+    }catch(e){}
+
+
+    alert('✅ Acknowledged. Trip marked as completed for both User and TravelDesk.');
+
+    setSendStatusUI(updated);
+    renderUserConfirmation(updated);
+  }
+
+  // ===== Ensure UI refresh when page opens =====
+  (function bootLoadConfirmationView(){
+    try{
+      const rid = getRequestId();
+      if(!rid) return;
+      const trip = getTripById(rid);
+      setSendStatusUI(trip);
+      renderUserConfirmation(trip);
+    }catch(e){}
+  })();
+// ===== Init =====
+  function init(){
+    // Preview default
+    clearPreview();
+
+    // Buttons
+    $('btnClear').addEventListener('click', clearPreview);
+    $('btnGenerate').addEventListener('click', generateEmail);
+    if($('btnSendConfirm')) $('btnSendConfirm').addEventListener('click', sendConfirmation);
+    if($('btnAcknowledge')) $('btnAcknowledge').addEventListener('click', acknowledgeConfirmation);
+    $('btnAddFlightSegment').addEventListener('click', addFlightSegment);
+    $('btnAddHotelSegment').addEventListener('click', addHotelSegment);
+    $('btnAddCabSegment').addEventListener('click', addCabSegment);
+
+    // Hotel calc
+    ['hotelCheckIn','hotelCheckOut','hotelRateNight'].forEach(id => {
+      const el = $(id);
+      if(el){
+        el.addEventListener('change', calculateHotelStay);
+        el.addEventListener('input', calculateHotelStay);
+      }
+    });
+    calculateHotelStay();
+
+    attachCalendarIconHandlers();
+    initTabs();
+    // Ensure correct initial visibility
+    try{ document.querySelectorAll('.tab-panel').forEach(p=>{ p.style.display = p.classList.contains('active') ? 'block' : 'none'; }); }catch(e){}
+    loadStage8Context();
+    try{ const rid = getRequestId(); if(document.getElementById('ridInput')) document.getElementById('ridInput').value = rid || ''; }catch(e){}
+    applyRoleUI();
+  }
+
+  init();
+</script>
+
+<script>window.ETG_API_BASE = window.ETG_API_BASE || '';</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/etg-realtime.js"></script>
+
+</body>
+</html>

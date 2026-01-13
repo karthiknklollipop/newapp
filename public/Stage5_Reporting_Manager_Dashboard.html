@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ETG Travel — Reporting Manager Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:linear-gradient(135deg,#020617,#0f172a);
+    color:#e5e7eb;
+  }
+  .page{max-width:1120px;margin:32px auto 72px;padding:0 16px;}
+  .header-shell{
+    border-radius:18px;
+    box-shadow:0 22px 45px rgba(15,23,42,.7);
+    overflow:hidden;
+    margin-bottom:18px;
+    border:1px solid rgba(30,64,175,.8);
+    background:rgba(15,23,42,1);
+  }
+  .header{
+    background:radial-gradient(circle at 0 0,#38bdf8 0,#1d4ed8 40%,#020617 100%);
+    border-bottom:1px solid rgba(148,163,184,.4);
+    padding:18px 24px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    color:#e5f0ff;
+  }
+  .logo-pill{
+    width:40px;height:40px;border-radius:999px;
+    background:rgba(15,23,42,.3);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:18px;
+    box-shadow:0 10px 25px rgba(15,23,42,.6);
+    user-select:none;
+  }
+  .header-text-main{font-size:18px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;}
+  .header-text-sub{font-size:12px;opacity:.85;}
+  .header-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+  .header-meta{ text-align:right;font-size:11px;opacity:.9; }
+  .profile{
+    position:relative;
+    display:flex;align-items:center;gap:10px;
+    background:rgba(15,23,42,.35);
+    border:1px solid rgba(148,163,184,.35);
+    border-radius:999px;
+    padding:6px 10px;
+  }
+  .avatar{
+    width:28px;height:28px;border-radius:999px;
+    background:rgba(2,6,23,.55);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:12px;
+    border:1px solid rgba(148,163,184,.35);
+  }
+  .profile-name{font-size:12px;font-weight:600;white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis;}
+  .profile-sub{font-size:10px;opacity:.85;white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis;}
+  .profile-btn{
+    border:none;background:transparent;color:#e5f0ff;
+    font-size:11px;cursor:pointer;padding:6px 8px;border-radius:10px;
+  }
+  .profile-btn:hover{background:rgba(2,6,23,.35);}
+  .profile-menu{
+    position:absolute;right:0;top:44px;min-width:220px;
+    background:rgba(2,6,23,.98);
+    border:1px solid rgba(51,65,85,.9);
+    border-radius:14px;
+    box-shadow:0 18px 40px rgba(0,0,0,.45);
+    overflow:hidden;
+    display:none;
+    z-index:10;
+  }
+  .profile-menu.open{display:block;}
+  .menu-row{padding:10px 12px;border-bottom:1px solid rgba(55,65,81,.75);font-size:12px;color:#e5e7eb;}
+  .menu-row:last-child{border-bottom:none;}
+  .menu-muted{font-size:11px;color:#9ca3af;margin-top:4px;}
+  .menu-action{
+    width:100%;
+    border:none;
+    background:transparent;
+    color:#e5e7eb;
+    font-size:12px;
+    text-align:left;
+    padding:10px 12px;
+    cursor:pointer;
+  }
+  .menu-action:hover{background:rgba(30,64,175,.35);}
+  .card-row{display:flex;flex-wrap:wrap;gap:16px;padding:16px;}
+  .card{
+    background:rgba(15,23,42,.96);
+    border-radius:14px;
+    padding:14px 16px 16px;
+    border:1px solid rgba(51,65,85,.9);
+    box-shadow:0 14px 30px rgba(15,23,42,.7);
+  }
+  .card.flex-2{flex:2 1 0;}
+  .card.flex-1{flex:1 1 280px;}
+  .card h2{font-size:14px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.18em;color:#e5e7eb;}
+  .table-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;}
+  .toolbar-left{display:flex;align-items:center;gap:8px;font-size:11px;color:#9ca3af;flex-wrap:wrap;}
+  .toolbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+  .search-input{
+    border-radius:999px;border:1px solid rgba(55,65,81,.9);
+    background:#020617;padding:6px 10px;font-size:12px;color:#e5e7eb;min-width:220px;
+  }
+  .search-input::placeholder{color:#6b7280;}
+  .pill{
+    border-radius:999px;border:1px solid rgba(75,85,99,.9);
+    padding:4px 10px;font-size:11px;background:rgba(15,23,42,1);color:#e5e7eb;
+  }
+  .pill.action{cursor:pointer;}
+  .pill.action:hover{background:rgba(30,64,175,.25);}
+  .trip-list{width:100%;border-collapse:collapse;font-size:12px;}
+  .trip-list th,.trip-list td{padding:6px 8px;border-bottom:1px solid rgba(55,65,81,.9);vertical-align:top;}
+  .trip-list th{
+    font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#9ca3af;text-align:left;
+  }
+  .trip-list tbody tr:nth-child(odd){background:rgba(15,23,42,1);}
+  .trip-list tbody tr:nth-child(even){background:rgba(12,19,38,1);}
+  .trip-row{cursor:pointer;}
+  .trip-row:hover{background:rgba(30,64,175,.35);}
+  .trip-row.active{outline:1px solid rgba(56,189,248,.9);box-shadow:0 0 0 1px rgba(56,189,248,.5);}
+  .status-pill{
+    display:inline-flex;align-items:center;border-radius:999px;padding:2px 8px;font-size:10px;
+    border:1px solid rgba(148,163,184,.8);color:#e5e7eb;
+  }
+  .status-pill.sent{border-color:rgba(56,189,248,.9);color:#e0f2fe;}
+  .status-pill.pending{border-color:rgba(251,191,36,.9);color:#fef3c7;}
+  .status-pill.other{border-color:rgba(52,211,153,.9);color:#d1fae5;}
+  .meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 28px;font-size:12px;}
+  .meta-label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#9ca3af;}
+  .meta-value{font-size:13px;}
+  .quotation-preview{
+    border-radius:10px;border:1px solid rgba(55,65,81,.9);
+    background:#020617;padding:10px;max-height:420px;overflow:auto;font-size:12px;
+  }
+  .note{font-size:11px;color:#9ca3af;margin-top:6px;}
+  .empty-state{font-size:13px;color:#9ca3af;padding:12px 4px;}
+  .linkish{
+    border:none;background:transparent;color:#93c5fd;
+    cursor:pointer;font-size:12px;padding:0;
+    text-decoration:underline;
+  }
+  .linkish:hover{color:#bfdbfe;}
+  @media(max-width:900px){
+    .card-row{flex-direction:column;}
+    .meta-grid{grid-template-columns:1fr;}
+    .header-right{flex-direction:column;align-items:flex-end;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header-shell">
+    <div class="header">
+      <div class="logo-pill">ET</div>
+      <div>
+        <div class="header-text-main">Reporting Manager Dashboard</div>
+        <div class="header-text-sub">Pending requests & completed travel desk actions for your reportees</div>
+      </div>
+
+      <div class="header-right">
+        <div class="header-meta">
+          <div>Stage 5 – Prototype</div>
+          <div id="metaRoleLine">Manager view</div>
+        </div>
+
+        <!-- Profile (top-right) -->
+        <div class="profile" id="profileShell" aria-label="Profile">
+          <div class="avatar" id="profileAvatar">M</div>
+          <div style="line-height:1.1;">
+            <div class="profile-name" id="profileName">Manager</div>
+            <div class="profile-sub" id="profileEmail">—</div>
+          </div>
+          <button class="profile-btn" id="profileMenuBtn" type="button" aria-label="Open menu">▾</button>
+          <div class="profile-menu" id="profileMenu" role="menu" aria-label="Profile menu">
+            <div class="menu-row">
+              <div style="font-weight:600;" id="menuName">Manager</div>
+              <div class="menu-muted" id="menuEmail">—</div>
+            </div>
+            <button class="menu-action" id="signOutBtn" type="button">Sign out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two fields -->
+    <div class="card-row">
+      <div class="card flex-1">
+        <h2>Pending User Request</h2>
+        <div class="table-toolbar">
+          <div class="toolbar-left">
+            <span id="pendingCount">0 pending</span>
+            <span class="pill" id="reporteeCountPill">0 reportees</span>
+          </div>
+          <div class="toolbar-right">
+            <input id="pendingSearch" class="search-input" placeholder="Search by Req ID / employee / route..."/>
+          </div>
+        </div>
+
+        <table class="trip-list" id="pendingTable">
+          <thead>
+            <tr>
+              <th>Req ID</th>
+              <th>Employee</th>
+              <th>Route</th>
+              <th>Travel Dates</th>
+              <th>Status</th>
+              <th>View quotation</th>
+            </tr>
+          </thead>
+          <tbody id="pendingTableBody"></tbody>
+        </table>
+
+        <div class="empty-state" id="pendingEmpty" style="display:none;">
+          No pending requests for your reportees.
+        </div>
+      </div>
+    <div class="card-row">
+      <div class="card flex-2">
+        <h2>All User Details</h2>
+        <div class="table-toolbar">
+          <div class="toolbar-left">
+            <span id="completedCount">0 completed</span>
+            <span class="pill">Travel desk marked as completed</span>
+          </div>
+          <div class="toolbar-right">
+            <input id="completedSearch" class="search-input" placeholder="Search by Req ID / employee / route..."/>
+          </div>
+        </div>
+
+        <table class="trip-list" id="completedTable">
+          <thead>
+            <tr>
+              <th>Req ID</th>
+              <th>Employee</th>
+              <th>Route</th>
+              <th>Travel Dates</th>
+              <th>Status</th>
+              <th>View quotation</th>
+            </tr>
+          </thead>
+          <tbody id="completedTableBody"></tbody>
+        </table>
+
+        <div class="empty-state" id="completedEmpty" style="display:none;">
+          No completed items found for your reportees.
+        </div>
+      </div>
+    </div>
+
+    <div class="card-row">
+      <div class="card flex-2">
+        <h2>Quotation Preview</h2>
+        <div id="quotationPreview" class="quotation-preview">
+          Select a request to preview quotation.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // -----------------------------
+  // Storage helpers (same store as earlier stages)
+  // -----------------------------
+  function loadTripStore(){
+    try{
+      var raw = localStorage.getItem('etg-trips') || '{}';
+      return JSON.parse(raw);
+    }catch(e){
+      return {};
+    }
+
+  }
+
+  // -----------------------------
+  // Cross-file handoff: ingest confirmed trip from Stage 6 (file:// safe)
+  // -----------------------------
+  function _b64ToUtf8(b64){
+    try{
+      return decodeURIComponent(escape(atob(b64)));
+    }catch(e){
+      try{ return atob(b64); }catch(e2){ return ''; }
+    }
+  }
+
+  function upsertTripIntoStore(trip){
+    if(!trip || !trip.id) return;
+    var store = loadTripStore();
+
+    function upsertIntoList(list){
+      var found = false;
+      for(var i=0;i<list.length;i++){
+        if(list[i] && list[i].id === trip.id){
+          list[i] = Object.assign({}, list[i], trip);
+          found = true;
+          break;
+        }
+      }
+      if(!found) list.unshift(trip);
+      return list;
+    }
+
+    if(Array.isArray(store)){
+      store = upsertIntoList(store);
+    }else if(store && typeof store === 'object'){
+      var key = trip.email || trip.employeeEmail || trip.employeeMail || 'unknown';
+      var list = Array.isArray(store[key]) ? store[key] : [];
+      store[key] = upsertIntoList(list);
+    }else{
+      store = [trip];
+    }
+
+    try{ localStorage.setItem('etg-trips', JSON.stringify(store)); }catch(e){}
+  }
+
+  function ingestConfirmedFromUrl(){
+    try{
+      var qs = new URLSearchParams(window.location.search || '');
+      var b64 = qs.get('confirmed') || '';
+      if(!b64) return;
+
+      var jsonText = _b64ToUtf8(b64);
+      if(!jsonText) return;
+
+      var trip = JSON.parse(jsonText);
+      upsertTripIntoStore(trip);
+
+      // Clean URL so refresh doesn't duplicate inserts
+      qs.delete('confirmed');
+      var newUrl = window.location.pathname + (qs.toString() ? ('?' + qs.toString()) : '');
+      try{ window.history.replaceState({}, document.title, newUrl); }catch(e){}
+    }catch(e){}
+  }
+  function flattenAllTrips(){
+    var store = loadTripStore();
+    var all = [];
+    if(Array.isArray(store)){
+      store.forEach(function(t){ all.push(t); });
+    }else if(store && typeof store === 'object'){
+      Object.keys(store).forEach(function(key){
+        var list = store[key];
+        if(Array.isArray(list)){
+          list.forEach(function(t){ all.push(t); });
+        }
+      });
+    }
+    return all;
+  }
+
+
+  // -----------------------------
+  // De-dupe trips by Request ID (prevents duplicate rows for same Req ID)
+  // -----------------------------
+  function dedupeTripsById(trips){
+    var byId = {};
+    (trips || []).forEach(function(t){
+      if(!t) return;
+      var id = String(t.id || t.reqId || t.requestId || '').trim();
+      if(!id) return;
+
+      if(!byId[id]){
+        byId[id] = Object.assign({}, t);
+        byId[id]._mergedFrom = 1;
+        return;
+      }
+
+      var cur = byId[id];
+
+      // Prefer records that have quotationHtml / confirmation data / latest timestamps
+      var score = function(x){
+        if(!x) return 0;
+        var s = 0;
+        if(x.quotationHtml) s += 10;
+        if(x.userConfirmed || x.userConfirmedAt || x.confirmedAt || x.userConfirmedSelection) s += 8;
+        if(x.selectedFlightOption || x.selectedHotelOption || x.confirmedFlight || x.confirmedHotel) s += 5;
+        if(x.updatedAt || x.lastUpdatedAt || x.modifiedAt) s += 2;
+        return s;
+      };
+
+      var pick = (score(t) >= score(cur)) ? t : cur;
+      var other = (pick === t) ? cur : t;
+
+      // Merge: keep "pick" as base, fill missing from "other"
+      var merged = Object.assign({}, pick);
+      Object.keys(other).forEach(function(k){
+        var v = other[k];
+        if(v === undefined || v === null) return;
+        var mv = merged[k];
+        var empty = (mv === undefined || mv === null || mv === '' || mv === '—');
+        if(empty){
+          merged[k] = v;
+        }
+      });
+
+      // Always keep the better quotationHtml if present
+      if(!merged.quotationHtml && (cur.quotationHtml || t.quotationHtml)){
+        merged.quotationHtml = cur.quotationHtml || t.quotationHtml;
+      }
+
+      merged._mergedFrom = (cur._mergedFrom || 1) + 1;
+      byId[id] = merged;
+    });
+
+    // Return in original-ish order: keep the first occurrence order
+    var seen = {};
+    var out = [];
+    (trips || []).forEach(function(t){
+      if(!t) return;
+      var id = String(t.id || t.reqId || t.requestId || '').trim();
+      if(!id) return;
+      if(seen[id]) return;
+      seen[id] = true;
+      out.push(byId[id]);
+    });
+
+    return out;
+  }
+
+  function formatDateIso(val){
+    if(!val){ return '—'; }
+    try{
+      var d = new Date(val);
+      if(isNaN(d.getTime())) return val;
+      var dd = String(d.getDate()).padStart(2,'0');
+      var mm = String(d.getMonth()+1).padStart(2,'0');
+      var yy = d.getFullYear();
+      return dd + '-' + mm + '-' + yy;
+    }catch(e){
+      return val;
+    }
+  }
+
+  function getModesLabel(trip){
+    var modeStr = (trip.modeOfTravel || '').toLowerCase();
+    var modes = [];
+    if(trip.hasFlight || modeStr.indexOf('flight') !== -1){ modes.push('Flight'); }
+    if(trip.hasHotel || modeStr.indexOf('hotel') !== -1){ modes.push('Hotel'); }
+    if(trip.hasCab || modeStr.indexOf('cab') !== -1 || modeStr.indexOf('car') !== -1){ modes.push('Cab'); }
+    return modes.length ? modes.join(' + ') : '—';
+  }
+
+  function statusClass(status){
+    if(!status) return 'pending';
+    var s = String(status).toLowerCase();
+    if(s.indexOf('quot') !== -1) return 'sent';
+    if(s.indexOf('pending') !== -1) return 'pending';
+    return 'other';
+  }
+
+  function isCompletedStatus(status){
+    if(!status) return false;
+    var s = String(status).toLowerCase();
+    return (
+      s.indexOf('completed') !== -1 ||
+      s.indexOf('ticketed') !== -1 ||
+      s.indexOf('closed') !== -1
+    );
+  }
+
+  // -----------------------------
+  // Manager / Reportee mapping
+  // -----------------------------
+  function getCurrentUser(){
+    var name = '';
+    var email = '';
+    try{
+      name = localStorage.getItem('etg-current-user-name') || '';
+      email = localStorage.getItem('etg-current-user-email') || '';
+    }catch(e){}
+    return { name: name || 'Manager', email: (email || '').toLowerCase() };
+  }
+
+  function getReporteeEmails(){
+    // Supported inputs (any one):
+    // 1) etg-reportee-emails as CSV: "a@x.com,b@y.com"
+    // 2) etg-manager-reportees as JSON:
+    //    { "manager@x.com": ["a@x.com","b@y.com"], "another@x.com": [...] }
+    // 3) etg-current-reportees as JSON array: ["a@x.com","b@y.com"]
+    var csv = '';
+    var mapRaw = '';
+    var listRaw = '';
+    try{
+      csv = localStorage.getItem('etg-reportee-emails') || '';
+      mapRaw = localStorage.getItem('etg-manager-reportees') || '';
+      listRaw = localStorage.getItem('etg-current-reportees') || '';
+    }catch(e){}
+
+    var current = getCurrentUser();
+    var out = [];
+
+    // (3) explicit list
+    if(listRaw){
+      try{
+        var parsed = JSON.parse(listRaw);
+        if(Array.isArray(parsed)){
+          parsed.forEach(function(x){
+            if(x){ out.push(String(x).toLowerCase().trim()); }
+          });
+        }
+      }catch(e){}
+    }
+
+    // (2) manager->reportees map
+    if(!out.length && mapRaw){
+      try{
+        var mp = JSON.parse(mapRaw);
+        if(mp && typeof mp === 'object'){
+          var k = current.email || '';
+          var arr = mp[k] || mp[String(k).toLowerCase()] || null;
+          if(Array.isArray(arr)){
+            arr.forEach(function(x){
+              if(x){ out.push(String(x).toLowerCase().trim()); }
+            });
+          }
+        }
+      }catch(e){}
+    }
+
+    // (1) csv fallback
+    if(!out.length && csv){
+      csv.split(',').forEach(function(x){
+        var v = String(x || '').toLowerCase().trim();
+        if(v){ out.push(v); }
+      });
+    }
+
+    // If still empty: allow "manager sees all" as a safe prototype fallback
+    if(!out.length){
+      return null; // null => don't filter by reportee list
+    }
+
+    // de-dupe
+    var uniq = {};
+    var cleaned = [];
+    out.forEach(function(e){
+      if(!e) return;
+      if(!uniq[e]){
+        uniq[e] = true;
+        cleaned.push(e);
+      }
+    });
+    return cleaned;
+  }
+
+  function filterTripsForManager(trips){
+    var reportees = getReporteeEmails();
+    if(!reportees){ // no mapping found -> show all
+      return trips;
+    }
+    return trips.filter(function(t){
+      if(!t) return false;
+      var em = String(t.email || '').toLowerCase();
+      if(reportees.indexOf(em) !== -1) return true;
+
+      // fallback: allow if trip explicitly targets this manager
+      try{
+        var cu = getCurrentUser();
+        var mgr = String((t.reportingManagerEmail || t.managerEmail || '')).toLowerCase();
+        if(cu && cu.email && mgr && mgr === cu.email) return true;
+      }catch(e){}
+
+      return false;
+    });
+  }
+
+  // -----------------------------
+  // Rendering
+  // -----------------------------
+  function normalizeTripDisplay(trip){
+    // Employee / traveller
+    var email = (trip.email || trip.requesterEmail || (trip.requester && trip.requester.email) || (trip.requestDetails && (trip.requestDetails.email || trip.requestDetails.requesterEmail)) || '').trim();
+    var employee =
+      trip.travelerName ||
+      trip.travellerName ||
+      trip.traveler ||
+      trip.traveller ||
+      trip.employeeName ||
+      trip.employee ||
+      trip.requesterName ||
+      (trip.requester && (trip.requester.name || trip.requester.fullName)) ||
+      (trip.requestDetails && (trip.requestDetails.requesterName || trip.requestDetails.travellerName || trip.requestDetails.employeeName || trip.requestDetails.name)) ||
+      (trip.profile && (trip.profile.name || trip.profile.fullName)) ||
+      '';
+    employee = String(employee || '').trim();
+
+    if(!employee && email){
+      employee = email.split('@')[0].replace(/[._-]+/g,' ').trim();
+    }
+    if(!employee) employee = '—';
+    if(!email){
+      email = (trip.contactEmail || trip.userEmail || (trip.user && trip.user.email) || '').trim() || '—';
+    }
+
+    // Route
+    var fromPart = (trip.fromCity || trip.originCity || trip.from || (trip.itinerary && (trip.itinerary.fromCity || trip.itinerary.from)) || '').trim();
+    var toPart   = (trip.toCity   || trip.destinationCity || trip.to   || (trip.itinerary && (trip.itinerary.toCity || trip.itinerary.to))   || '').trim();
+    var route =
+      (trip.routeSummary || trip.route || (trip.itinerary && (trip.itinerary.routeSummary || trip.itinerary.route)) || '').trim();
+
+    // If still missing, try to build from flight segment text
+    if(!route){
+      if(fromPart || toPart){
+        route = (fromPart || 'From') + ' → ' + (toPart || 'To');
+      }else{
+        // try common stage fields
+        var segFrom = (trip.flightFrom || trip.flightOrigin || trip.origin || '').trim();
+        var segTo   = (trip.flightTo   || trip.flightDestination || trip.destination || '').trim();
+        if(segFrom || segTo){
+          route = (segFrom || 'From') + ' → ' + (segTo || 'To');
+        }else{
+          route = '—';
+        }
+      }
+    }
+
+    // Dates
+    var depart = trip.departDate || trip.startDate || (trip.dates && (trip.dates.depart || trip.dates.start)) || (trip.itinerary && (trip.itinerary.departDate || trip.itinerary.startDate)) || '';
+    var ret    = trip.returnDate || trip.endDate   || (trip.dates && (trip.dates.return || trip.dates.end))   || (trip.itinerary && (trip.itinerary.returnDate || trip.itinerary.endDate))   || '';
+    var datesText = '—';
+    if(depart){
+      datesText = String(depart);
+      if(ret) datesText += ' – ' + String(ret);
+    }
+
+    // Status
+    var statusText =
+      trip.travelDeskStatus ||
+      trip.traveldeskStatus ||
+      trip.travelDesk_state ||
+      trip.status ||
+      (trip.quotationHtml ? 'Quotation Sent' : 'Pending');
+
+    return { employee: employee, email: email || '—', route: route, datesText: datesText, statusText: statusText };
+  }
+
+  function renderTable(opts){
+    var tbody = opts.tbody;
+    var emptyEl = opts.emptyEl;
+    var trips = opts.trips;
+    var searchEl = opts.searchEl;
+    var mode = opts.mode; // 'pending' or 'completed'
+    var countEl = opts.countEl;
+    var tableBodyId = opts.tableBodyId;
+
+    var query = (searchEl && searchEl.value) ? String(searchEl.value).toLowerCase() : '';
+
+    tbody.innerHTML = '';
+    var rendered = [];
+    trips.forEach(function(trip){
+      if(!trip) return;
+      var d = normalizeTripDisplay(trip);
+
+      // mode filter
+      var completed = isCompletedStatus(d.statusText);
+      if(mode === 'pending' && completed) return;
+      if(mode === 'completed' && !completed) return;
+
+      // search filter
+      if(query){
+        var hay = ((trip.id || '') + ' ' + d.employee + ' ' + d.email + ' ' + d.route).toLowerCase();
+        if(hay.indexOf(query) === -1) return;
+      }
+
+      rendered.push(trip);
+
+      var tr = document.createElement('tr');
+      tr.className = 'trip-row';
+      tr.dataset.tripId = trip.id || '';
+      tr.dataset.table = tableBodyId;
+
+      var quoteLabel = trip.quotationHtml
+        ? '<button type="button" class="linkish view-quote" data-trip-id="' + (trip.id || '') + '">View quotation</button>'
+        : '—';
+
+      if(mode === 'pending'){
+        tr.innerHTML = ''
+          + '<td>' + (trip.id || '—') + '</td>'
+          + '<td>' + (d.employee || '—') + '</td>'
+          + '<td>' + (d.route || '—') + '</td>'
+          + '<td>' + (d.datesText || '—') + '</td>'
+          + '<td><span class="status-pill ' + statusClass(d.statusText) + '">' + d.statusText + '</span></td>'
+          + '<td>' + quoteLabel + '</td>';
+      } else {
+        var viewBtn = trip.quotationHtml
+          ? '<button type="button" class="linkish view-quote" data-trip-id="' + (trip.id || '') + '">View quotation</button>'
+          : '—';
+        tr.innerHTML = ''
+          + '<td>' + (trip.id || '—') + '</td>'
+          + '<td>' + (d.employee || '—') + '</td>'
+          + '<td>' + (d.route || '—') + '</td>'
+          + '<td>' + (d.datesText || '—') + '</td>'
+          + '<td><span class="status-pill ' + statusClass(d.statusText) + '">' + d.statusText + '</span></td>'
+          + '<td>' + viewBtn + '</td>';
+      }
+
+      tr.addEventListener('click', function(){
+        selectTrip(trip.id, tableBodyId);
+      });
+
+      tbody.appendChild(tr);
+    });
+
+    if(countEl){
+      countEl.textContent = rendered.length + ' ' + mode;
+    }
+
+    if(!rendered.length){
+      emptyEl.style.display = 'block';
+    } else {
+      emptyEl.style.display = 'none';
+    }
+
+    return rendered;
+  }
+
+  function selectTrip(tripId, tableBodyId){
+    var all = filterTripsForManager(flattenAllTrips());
+    var selected = null;
+    all.forEach(function(t){
+      if(selected) return;
+      if(t && String(t.id) === String(tripId)){
+        selected = t;
+      }
+    });
+
+    // highlight row
+    document.querySelectorAll('.trip-row').forEach(function(r){
+      r.classList.toggle('active', (r.dataset.tripId === String(tripId)) && (r.dataset.table === tableBodyId));
+    });
+
+    if(!selected){ return; }
+
+    var d = normalizeTripDisplay(selected);
+    var modesLabel = getModesLabel(selected);
+    var quoteDate = selected.quotationSentAt ? formatDateIso(selected.quotationSentAt) : '—';
+
+    
+    (function(el){ if(el){ el.textContent = selected.id || '—'; } })(document.getElementById('meta-req-id'));
+    (function(el){ if(el){ el.innerHTML = '<span class="status-pill ' + statusClass(d.statusText) + '">' + (d.statusText || '—') + '</span>'; } })(document.getElementById('meta-status'));
+    (function(el){ if(el){ el.textContent = d.employee; } })(document.getElementById('meta-employee'));
+    (function(el){ if(el){ el.textContent = d.email; } })(document.getElementById('meta-email'));
+    (function(el){ if(el){ el.textContent = d.route; } })(document.getElementById('meta-route'));
+    (function(el){ if(el){ el.textContent = d.datesText; } })(document.getElementById('meta-dates'));
+    (function(el){ if(el){ el.textContent = modesLabel; } })(document.getElementById('meta-modes'));
+    (function(el){ if(el){ el.textContent = quoteDate; } })(document.getElementById('meta-quote-sent'));
+
+    var preview = document.getElementById('quotationPreview');
+
+    // Build a simple "User confirmed" summary (robust to different field names)
+    function _pick(){
+      for(var i=0;i<arguments.length;i++){
+        var v = arguments[i];
+        if(v === undefined || v === null) continue;
+        if(typeof v === 'string' && v.trim() === '') continue;
+        return v;
+      }
+      return null;
+    }
+
+    var confirmedFlight = _pick(
+      selected.confirmedFlight,
+      selected.userConfirmedFlight,
+      selected.selectedFlightOption,
+      selected.flightSelected,
+      selected.flightOptionChosen,
+      (selected.userConfirmation && selected.userConfirmation.flight)
+    );
+
+    var confirmedHotel = _pick(
+      selected.confirmedHotel,
+      selected.userConfirmedHotel,
+      selected.selectedHotelOption,
+      selected.hotelSelected,
+      selected.hotelOptionChosen,
+      (selected.userConfirmation && selected.userConfirmation.hotel)
+    );
+
+    var confirmedAt = _pick(selected.userConfirmedAt, selected.confirmedAt, selected.userConfirmedOn, selected.confirmedOn);
+    var confirmedNote = _pick(selected.userConfirmationNote, selected.confirmationNote, selected.userRemarks);
+
+    var hasConfirmedInfo = !!(confirmedFlight || confirmedHotel || confirmedAt || confirmedNote);
+
+    var headerHtml = '';
+    if(hasConfirmedInfo){
+      headerHtml += '<div style="border:1px solid rgba(56,189,248,.45);background:rgba(2,6,23,.65);padding:10px 12px;border-radius:10px;margin-bottom:10px;">';
+      headerHtml += '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+      headerHtml += '<div style="font-weight:700;color:#e0f2fe;">User confirmed selection</div>';
+      headerHtml += '<div style="font-size:11px;color:#9ca3af;">' + (confirmedAt ? ('Confirmed on: ' + confirmedAt) : '') + '</div>';
+      headerHtml += '</div>';
+      headerHtml += '<div style="margin-top:8px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px;font-size:12px;">';
+      headerHtml += '<div><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;">Flight</div><div style="margin-top:2px;">' + (confirmedFlight ? String(confirmedFlight) : '—') + '</div></div>';
+      headerHtml += '<div><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;">Hotel</div><div style="margin-top:2px;">' + (confirmedHotel ? String(confirmedHotel) : '—') + '</div></div>';
+      headerHtml += '</div>';
+      if(confirmedNote){
+        headerHtml += '<div style="margin-top:8px;font-size:12px;color:#e5e7eb;"><span style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;">Remarks: </span>' + String(confirmedNote) + '</div>';
+      }
+      headerHtml += '</div>';
+    }
+
+    if(selected.quotationHtml){
+      preview.innerHTML = headerHtml + selected.quotationHtml;
+    }else if(hasConfirmedInfo){
+      preview.innerHTML = headerHtml + '<div style="color:#9ca3af;">No quotation stored yet for this request.</div>';
+    }else{
+      preview.textContent = 'No quotation stored yet for this request.';
+    }
+  }
+
+  function renderAll(){
+    var allTrips = dedupeTripsById(filterTripsForManager(flattenAllTrips()));
+
+    var reportees = getReporteeEmails();
+    var reporteeCount = reportees ? reportees.length : null;
+    var reporteePill = document.getElementById('reporteeCountPill');
+    if(reporteePill){
+      if(reporteeCount === null){
+        reporteePill.textContent = 'All users (no reportee map)';
+      } else {
+        reporteePill.textContent = reporteeCount + ' reportees';
+      }
+    }
+
+    var pendingRendered = renderTable({
+      tbody: document.getElementById('pendingTableBody'),
+      emptyEl: document.getElementById('pendingEmpty'),
+      trips: allTrips,
+      searchEl: document.getElementById('pendingSearch'),
+      mode: 'pending',
+      countEl: document.getElementById('pendingCount'),
+      tableBodyId: 'pendingTableBody'
+    });
+
+    var completedRendered = renderTable({
+      tbody: document.getElementById('completedTableBody'),
+      emptyEl: document.getElementById('completedEmpty'),
+      trips: allTrips,
+      searchEl: document.getElementById('completedSearch'),
+      mode: 'completed',
+      countEl: document.getElementById('completedCount'),
+      tableBodyId: 'completedTableBody'
+    });
+
+    // default selection: first pending else first completed
+    var first = (pendingRendered[0] && pendingRendered[0].id) ? pendingRendered[0].id
+              : (completedRendered[0] && completedRendered[0].id) ? completedRendered[0].id
+              : null;
+    if(first){
+      selectTrip(first, pendingRendered.length ? 'pendingTableBody' : 'completedTableBody');
+    }else{
+      document.getElementById('quotationPreview').textContent = 'No requests found in browser storage.';
+    }
+  }
+
+  // -----------------------------
+  // Profile UI + Sign out
+  // -----------------------------
+  function initProfile(){
+    var u = getCurrentUser();
+    document.getElementById('profileName').textContent = u.name || 'Manager';
+    document.getElementById('profileEmail').textContent = u.email || '—';
+    document.getElementById('menuName').textContent = u.name || 'Manager';
+    document.getElementById('menuEmail').textContent = u.email || '—';
+
+    var initial = (u.name || 'M').trim().charAt(0).toUpperCase();
+    document.getElementById('profileAvatar').textContent = initial || 'M';
+
+    var btn = document.getElementById('profileMenuBtn');
+    var menu = document.getElementById('profileMenu');
+    function toggleMenu(force){
+      if(!menu) return;
+      var next = (typeof force === 'boolean') ? force : !menu.classList.contains('open');
+      menu.classList.toggle('open', next);
+    }
+    if(btn){
+      btn.addEventListener('click', function(ev){
+        ev.stopPropagation();
+        toggleMenu();
+      });
+    }
+    document.addEventListener('click', function(){
+      toggleMenu(false);
+    });
+
+    var signOut = document.getElementById('signOutBtn');
+    if(signOut){
+      signOut.addEventListener('click', function(){
+        try{
+          localStorage.removeItem('etg-current-user-email');
+          localStorage.removeItem('etg-current-user-name');
+          localStorage.removeItem('etg-current-role');
+        }catch(e){}
+        // Redirect to your login page if you have one (update as needed)
+        window.location.href = 'Stage 1 (User log in Template).html';
+      });
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', function(){
+    ingestConfirmedFromUrl();
+    initProfile();
+    renderAll();
+
+    // re-render on search input
+    var ps = document.getElementById('pendingSearch');
+    var cs = document.getElementById('completedSearch');
+    if(ps){ ps.addEventListener('input', renderAll); }
+    if(cs){ cs.addEventListener('input', renderAll); }
+
+    // Delegate view-quote click in completed table
+    document.body.addEventListener('click', function(ev){
+      var t = ev.target;
+      if(t && t.classList && t.classList.contains('view-quote')){
+        ev.stopPropagation();
+        var id = t.getAttribute('data-trip-id') || '';
+        if(!id){ return; }
+        // Route to Stage 7 (Manager approval) with selected request id
+        try{
+          var url = 'Stage7 (RM approvel).html?rid=' + encodeURIComponent(id);
+          window.open(url, '_blank', 'noopener');
+        }catch(e){
+          // fallback: at least show preview
+          selectTrip(id, 'completedTableBody');
+        }
+      }
+    });
+  });
+</script>
+<!-- ETG Realtime (Socket.IO) -->
+
+<script>window.ETG_API_BASE = window.ETG_API_BASE || '';</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/etg-realtime.js"></script>
+
+</body>
+</html>
+

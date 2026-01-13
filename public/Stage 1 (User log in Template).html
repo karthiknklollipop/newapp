@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ETG Travel – Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0b1220;
+    --bg-soft:#020617;
+    --card:#020617;
+    --text:#e5e7eb;
+    --muted:#94a3b8;
+    --border:#1f2937;
+    --accent:#1d4ed8;
+    --accent-2:#38bdf8;
+    --danger:#f97373;
+    --shadow:0 24px 60px rgba(15,23,42,.8);
+    --radius:18px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    background:radial-gradient(circle at top,#1d4ed8 0,#020617 42%,#000 100%);
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+  }
+
+  .hidden{display:none;}
+
+  .shell{
+    width:100%;
+    max-width:1040px;
+    display:grid;
+    grid-template-columns:3fr 2fr;
+    gap:18px;
+    background:linear-gradient(135deg,rgba(15,23,42,0.98),rgba(15,23,42,0.98));
+    border-radius:24px;
+    border:1px solid rgba(37,99,235,.6);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  @media (max-width:900px){
+    .hidden{display:none;}
+
+  .shell{grid-template-columns:1fr;}
+  }
+
+  /* Left side – brand / info */
+  .left{
+    padding:26px 26px 24px;
+    background:radial-gradient(circle at 0 0,#1d4ed8 0,transparent 55%),radial-gradient(circle at 100% 0,#22d3ee 0,transparent 55%),linear-gradient(145deg,#020617,#020617);
+    border-right:1px solid rgba(37,99,235,.35);
+    position:relative;
+    overflow:hidden;
+  }
+  .orb{
+    position:absolute;
+    width:260px;height:260px;border-radius:50%;
+    background:radial-gradient(circle,#22d3ee 0,transparent 70%);
+    opacity:0.16;
+    top:-80px;right:-80px;
+  }
+  .logo-pill{
+    width:40px;height:40px;border-radius:999px;
+    background:rgba(15,23,42,.8);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:18px;
+    color:#e5e7eb;
+    box-shadow:0 15px 30px rgba(15,23,42,.9);
+    border:1px solid rgba(148,163,184,.6);
+  }
+  .brand-row{
+    display:flex;align-items:center;gap:10px;
+  }
+  .brand-name{
+    font-weight:800;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    font-size:12px;
+    color:#e5e7eb;
+  }
+  .tagline{
+    margin-top:18px;
+    font-size:24px;
+    font-weight:700;
+  }
+  .tagline span.accent{
+    background:linear-gradient(120deg,#38bdf8,#22c55e);
+    -webkit-background-clip:text;
+    color:transparent;
+  }
+  .subcopy{
+    margin-top:10px;
+    font-size:13px;
+    color:var(--muted);
+    max-width:420px;
+  }
+
+  .steps{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    font-size:11px;
+  }
+  .step-pill{
+    padding:8px 9px;
+    border-radius:12px;
+    border:1px solid rgba(148,163,184,.35);
+    background:rgba(15,23,42,.8);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .step-pill span.num{
+    width:22px;height:22px;border-radius:999px;
+    border:1px solid rgba(148,163,184,.5);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;
+    font-size:11px;
+  }
+  .step-pill.active{
+    border-color:#38bdf8;
+    background:radial-gradient(circle at 0 0,#1d4ed8 0,rgba(15,23,42,1) 60%);
+  }
+  .step-pill.active span.num{
+    background:linear-gradient(135deg,#38bdf8,#1d4ed8);
+    border:none;color:#f9fafb;
+  }
+  .meta-strip{
+    margin-top:18px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    font-size:11px;
+    color:var(--muted);
+  }
+  .meta-pill{
+    padding:5px 8px;
+    border-radius:999px;
+    border:1px solid rgba(148,163,184,.35);
+    background:rgba(15,23,42,.8);
+  }
+
+  /* Right side – login form */
+  .right{
+    padding:24px 22px 22px;
+    background:radial-gradient(circle at 100% 0,#1d4ed8 0,transparent 55%),linear-gradient(160deg,#020617,#020617);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+
+  .right-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+  }
+  .right-title{
+    font-size:16px;
+    font-weight:700;
+  }
+  .right-sub{
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  .role-tabs{
+    margin-top:6px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .role-tab{
+    border-radius:999px;
+    border:1px solid rgba(148,163,184,.4);
+    background:rgba(15,23,42,.9);
+    padding:7px 13px;
+    font-size:12px;
+    color:#e5e7eb;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    cursor:pointer;
+    transition:border-color .15s,background .15s,transform .06s;
+  }
+  .role-tab span.icon{font-size:15px;}
+  .role-tab.active{
+    background:linear-gradient(135deg,#38bdf8,#1d4ed8);
+    border-color:#38bdf8;
+    color:#f9fafb;
+    transform:translateY(-1px);
+  }
+
+  form{
+    margin-top:14px;
+  }
+  label{
+    display:block;
+    font-size:11px;
+    font-weight:600;
+    color:var(--muted);
+    margin:0 0 5px 2px;
+  }
+  input{
+    width:100%;
+    padding:11px 12px;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:rgba(15,23,42,0.95);
+    color:var(--text);
+    font-size:13px;
+    transition:border-color .15s,box-shadow .15s,background .15s;
+  }
+  input::placeholder{
+    color:#6b7280;
+  }
+  input:focus{
+    outline:none;
+    border-color:#38bdf8;
+    box-shadow:0 0 0 1px #38bdf8;
+    background:#020617;
+  }
+
+  .field{
+    margin-bottom:10px;
+  }
+  .row-inline{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:4px;
+    font-size:11px;
+    color:var(--muted);
+  }
+  .row-inline label{
+    margin:0;
+    display:flex;align-items:center;gap:5px;
+    cursor:pointer;
+  }
+  .row-inline input[type="checkbox"]{
+    width:auto;
+  }
+
+  .error{
+    margin-top:4px;
+    font-size:11px;
+    color:var(--danger);
+    display:none;
+  }
+  .error.show{display:block;}
+
+  .btn-primary{
+    margin-top:10px;
+    width:100%;
+    padding:11px 12px;
+    border-radius:999px;
+    border:none;
+    background:linear-gradient(135deg,#38bdf8,#1d4ed8);
+    color:#f9fafb;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 16px 35px rgba(37,99,235,.7);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+  }
+  .btn-primary:hover{
+    filter:brightness(1.04);
+  }
+
+  .copy-foot{
+    margin-top:10px;
+    font-size:11px;
+    color:var(--muted);
+    text-align:center;
+  }
+  .copy-foot span.badge{
+    padding:2px 7px;
+    border-radius:999px;
+    border:1px solid rgba(148,163,184,.4);
+    margin-left:4px;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+  }
+
+  .status-pill{
+    font-size:11px;
+    padding:4px 8px;
+    border-radius:999px;
+    border:1px solid rgba(148,163,184,.4);
+    color:var(--muted);
+  }
+
+
+  .step2-card{
+    margin-top:8px;
+    background:rgba(15,23,42,0.96);
+    border-radius:var(--radius);
+    border:1px solid rgba(148,163,184,.4);
+    padding:16px 14px 18px;
+    box-shadow:0 18px 40px rgba(15,23,42,.85);
+  }
+
+  .otp-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,0.78);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:80;
+  }
+  .otp-card{
+    background:#ffffff;
+    color:#0f172a;
+    width:360px;
+    max-width:90%;
+    border-radius:12px;
+    padding:24px 24px 20px;
+    box-shadow:0 18px 45px rgba(15,23,42,.35);
+    text-align:center;
+  }
+  .otp-title{
+    font-size:20px;
+    font-weight:600;
+    margin-bottom:20px;
+  }
+  .otp-captcha-box{
+    border-radius:8px;
+    border:1px solid #d4d4d8;
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:#f4f4f5;
+  }
+  .otp-captcha-label{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:14px;
+  }
+  .otp-captcha-label input[type="checkbox"]{
+    width:20px;
+    height:20px;
+  }
+
+  .password-wrapper{
+    display:flex;
+    align-items:center;
+    border-radius:6px;
+    border:1px solid rgba(148,163,184,.6);
+    padding:0 8px;
+    background:#0b1220;
+  }
+  .password-wrapper input{
+    flex:1;
+    border:none;
+    background:transparent;
+    padding:8px 4px;
+    color:inherit;
+  }
+  .password-wrapper input:focus{
+    outline:none;
+  }
+  .icon-btn{
+    border:none;
+    background:transparent;
+    cursor:pointer;
+    font-size:16px;
+    padding:4px;
+    color:inherit;
+  }
+  .link-sm{
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-size:13px;
+    color:#93c5fd;
+    padding:0;
+  }
+  .link-full{
+    display:block;
+    margin:16px auto 0;
+    text-align:center;
+  }
+  .btn-secondary-outline{
+    width:auto;
+    padding:7px 18px;
+    background:transparent;
+    border:1px solid rgba(148,163,184,.7);
+    box-shadow:none;
+  }
+  .btn-outline-full{
+    width:100%;
+    background:transparent;
+    border:1px solid rgba(148,163,184,.7);
+    box-shadow:none;
+    margin-top:16px;
+  }
+  .divider-or{
+    display:flex;
+    align-items:center;
+    margin:18px 0 4px;
+    gap:8px;
+    color:rgba(148,163,184,.9);
+    font-size:12px;
+  }
+  .divider-or::before,
+  .divider-or::after{
+    content:'';
+    flex:1;
+    border-top:1px solid rgba(51,65,85,.9);
+  }
+  .divider-or span{
+    padding:2px 8px;
+    border-radius:999px;
+    border:1px solid rgba(51,65,85,.9);
+    background:#020617;
+  }
+
+  .hidden{display:none;}
+
+
+  .toast{
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    display:grid;
+    gap:8px;
+    z-index:50;
+  }
+  .toast .item{
+    background:#020617;
+    border-radius:12px;
+    border:1px solid rgba(148,163,184,.4);
+    padding:9px 11px;
+    font-size:12px;
+    color:var(--text);
+    box-shadow:0 16px 30px rgba(15,23,42,.85);
+  }
+
+  .role-ic{width:16px;height:16px;display:inline-block;opacity:.95}
+  .role-tab{gap:8px}
+  .left{background:
+    radial-gradient(circle at 0 0, rgba(37,99,235,.35) 0, transparent 55%),
+    radial-gradient(circle at 100% 0, rgba(56,189,248,.25) 0, transparent 55%),
+    linear-gradient(145deg,#020617,#020617);
+  }
+  body{
+    background:
+      radial-gradient(circle at top, rgba(37,99,235,.45) 0, #020617 46%, #000 100%),
+      linear-gradient(135deg, rgba(255,255,255,.03) 0, rgba(255,255,255,0) 60%);
+  }
+  .subcopy{line-height:1.6}
+  .right-sub{line-height:1.4}
+  .meta-pill{backdrop-filter: blur(6px);}
+  .btn-primary{letter-spacing:.01em}
+  .copy-foot{line-height:1.6}
+
+
+/* ===== Corporate Font Standardisation (Applied Globally) ===== */
+html, body {
+  font-size: 13px;
+}
+h1 { font-size: 22px; }
+h2 { font-size: 18px; }
+h3 { font-size: 16px; }
+h4 { font-size: 14px; }
+
+label { font-size: 11px !important; }
+input, select, textarea, button {
+  font-size: 13px !important;
+}
+
+.table, table, th, td {
+  font-size: 12px !important;
+}
+
+.small, .muted, .hint, .note {
+  font-size: 11px !important;
+}
+
+/* Reduce visual density slightly */
+.card, .panel, .subcard {
+  line-height: 1.45;
+}
+
+
+/* ===== ETG Corporate Theme (Unified Colors + Controls) ===== */
+:root{
+  --etg-bg:#f6f8fb;
+  --etg-surface:#ffffff;
+  --etg-text:#0f172a;
+  --etg-muted:#64748b;
+  --etg-border:#e2e8f0;
+  --etg-accent:#1d4ed8;     /* corporate blue */
+  --etg-accent-2:#0ea5e9;   /* cyan highlight */
+  --etg-success:#16a34a;
+  --etg-danger:#dc2626;
+  --etg-warning:#f59e0b;
+  --etg-shadow:0 10px 25px rgba(2,6,23,.06),0 4px 12px rgba(2,6,23,.05);
+  --etg-radius:16px;
+}
+
+/* Map common variable names used across stages (so existing CSS picks up the theme) */
+:root{
+  --bg:var(--etg-bg);
+  --bg2:var(--etg-bg);
+  --card:var(--etg-surface);
+  --bg-elev:var(--etg-surface);
+  --text:var(--etg-text);
+  --muted:var(--etg-muted);
+  --border:var(--etg-border);
+  --accent:var(--etg-accent);
+  --accent-2:var(--etg-accent-2);
+  --success:var(--etg-success);
+  --danger:var(--etg-danger);
+  --warning:var(--etg-warning);
+  --shadow:var(--etg-shadow);
+  --radius:var(--etg-radius);
+}
+
+/* Base surfaces */
+body{
+  background:var(--etg-bg) !important;
+  color:var(--etg-text) !important;
+}
+
+/* Card polish */
+.card, .panel, .side, .shell, .header-shell, .card-stack{
+  border-color:var(--etg-border) !important;
+}
+
+/* Unified header look (keeps layout, upgrades colors) */
+.header, .header-shell .header{
+  background:linear-gradient(135deg,var(--etg-accent),#2563eb,var(--etg-accent-2)) !important;
+  color:#eef6ff !important;
+}
+.header *{color:inherit}
+
+/* Unified buttons (works even if stage uses different class names) */
+.btn, button.btn, .btn-primary, button.btn-primary, .btn.primary{
+  background:linear-gradient(135deg,var(--etg-accent),var(--etg-accent-2)) !important;
+  color:#fff !important;
+  border:none !important;
+  box-shadow:0 10px 22px rgba(29,78,216,.22) !important;
+}
+.btn-secondary, button.btn-secondary, .btn.secondary, .btn.ghost, .btn-ghost, .btn-secondary-outline, .btn-outline-full{
+  background:transparent !important;
+  color:var(--etg-text) !important;
+  border:1px solid var(--etg-border) !important;
+  box-shadow:none !important;
+}
+.btn.danger, .btn-danger, button.danger, .danger button{
+  background:transparent !important;
+  color:var(--etg-danger) !important;
+  border:1px solid rgba(220,38,38,.55) !important;
+}
+.btn.success, .btn-success{
+  background:linear-gradient(135deg,#16a34a,#22c55e) !important;
+  color:#fff !important;
+  border:none !important;
+}
+
+/* Inputs */
+input, select, textarea{
+  background:var(--etg-surface) !important;
+  color:var(--etg-text) !important;
+  border:1px solid var(--etg-border) !important;
+}
+input:focus, select:focus, textarea:focus{
+  outline:none !important;
+  box-shadow:0 0 0 3px rgba(14,165,233,.25) !important;
+  border-color:rgba(14,165,233,.55) !important;
+}
+
+/* Tables */
+table, .table{
+  border-color:var(--etg-border) !important;
+}
+th{
+  background:rgba(241,245,249,.9) !important;
+  color:var(--etg-muted) !important;
+}
+td{
+  background:transparent !important;
+}
+
+/* Compact density option (keeps readable, reduces bulk) */
+.table th, .table td, table th, table td{
+  padding:7px 9px !important;
+}
+
+/* Pills / badges */
+.badge, .pill, .tag, .status-pill{
+  border-color:var(--etg-border) !important;
+}
+
+/* Dark-mode pages: keep dark backgrounds but use same accent colors */
+@media (prefers-color-scheme: dark){
+  body{background:#0b1220 !important;color:#e5e7eb !important;}
+  :root{
+    --etg-bg:#0b1220;
+    --etg-surface:#0f172a;
+    --etg-text:#e5e7eb;
+    --etg-muted:#94a3b8;
+    --etg-border:#1f2937;
+    --etg-shadow:0 16px 30px rgba(0,0,0,.35);
+  }
+  th{background:rgba(15,23,42,.98) !important;}
+  input, select, textarea{background:#0b1327 !important;}
+  .btn-secondary, .btn-ghost, .btn.secondary, .btn.ghost{
+    color:#e5e7eb !important;
+    border-color:rgba(148,163,184,.35) !important;
+  }
+}
+
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+<div class="shell">
+  <!-- Left panel -->
+  <div class="left">
+    <div class="orb" aria-hidden="true"></div>
+    <div class="brand-row">
+      <div class="logo-pill">ET</div>
+      <div>
+        <div class="brand-name">ETG TRAVEL</div>
+        <div style="font-size:11px;color:#cbd5f5;margin-top:2px;">Corporate Travel Portal</div>
+      </div>
+    </div>
+
+    <div class="tagline">
+      Sign in to manage<br/>
+      <span class="accent">travel requests, approvals & ticketing.</span>
+    </div>
+    <p class="subcopy">
+      Use your corporate email and select your role. Access to Employee, Manager, and Travel Desk modules is controlled by your login credentials.
+    </p>
+
+    <div class="steps">
+      <div class="step-pill active">
+        <span class="num">1</span><span>Employee raises request</span>
+      </div>
+      <div class="step-pill">
+        <span class="num">2</span><span>Travel desk acknowledges</span>
+      </div>
+      <div class="step-pill">
+        <span class="num">3</span><span>Manager approves</span>
+      </div>
+      <div class="step-pill">
+        <span class="num">4</span><span>Tickets & itinerary issued</span>
+      </div>
+    </div>
+
+    <div class="meta-strip">
+      <div class="meta-pill">SSO-ready (future)</div>
+      <div class="meta-pill">Role-based access</div>
+      <div class="meta-pill">Audit trail & approvals</div>
+    </div>
+  </div>
+
+  <!-- Right panel (login form) -->
+  <div class="right">
+    <div id="loginStep1">
+      <div class="right-header">
+        <div>
+          <div class="right-title">Sign in</div>
+          <div class="right-sub">Choose your role and enter your corporate credentials.</div>
+        </div>
+        <div class="status-pill" id="roleLabel">
+          Role: Employee
+        </div>
+      </div>
+
+      <!-- Role selector -->
+      <div class="role-tabs" id="roleTabs">
+        <button type="button" class="role-tab active" data-role="EMPLOYEE">
+          <svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/></svg><span>Employee</span>
+        </button>
+        <button type="button" class="role-tab" data-role="MANAGER">
+          <svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 11a4 4 0 1 0-4-4a4 4 0 0 0 4 4Zm-8 1a4 4 0 1 0-4-4a4 4 0 0 0 4 4Zm8 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4ZM8 14c-.42 0-.88.03-1.37.1C4.44 14.38 2 15.38 2 18v2h5.5v-2c0-1.52.65-2.66 1.7-3.5A8.3 8.3 0 0 0 8 14Z"/></svg><span>Manager</span>
+        </button>
+        <button type="button" class="role-tab" data-role="TRAVEL_DESK">
+          <svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h16a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2Zm-2 7h20v7a2 2 0 0 1-2 2h-2v-3H6v3H4a2 2 0 0 1-2-2v-7Zm6 9v-2h8v2H8Z"/></svg><span>Travel Desk</span>
+        
+        <button type="button" class="role-tab" data-role="SUPER_ADMIN">
+          <svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4Zm0 2.18L19 6.09V11c0 4.52-3.02 8.9-7 10-3.98-1.1-7-5.48-7-10V6.09l7-2.91Zm-1 5.32h2v4h-2v-4Zm0 6h2v2h-2v-2Z"/>
+          </svg><span>Super Admin</span>
+        </button>
+</button>
+      </div>
+
+      <!-- Login form -->
+      <form id="loginForm" autocomplete="on" novalidate>
+        <input type="hidden" id="role" name="role" value="EMPLOYEE"/>
+
+        <div class="field">
+          <label for="email">Corporate email</label>
+          <input id="email" name="email" type="email" placeholder="name@etgworld.com"/>
+          <div class="error" id="err_email">Please enter a valid email.</div>
+        </div>
+
+
+        <button type="submit" class="btn-primary">
+          Continue
+          <span aria-hidden="true">→</span>
+        </button>
+        <div class="error" id="err_global" style="text-align:center;margin-top:6px;">
+          <!-- Filled on error -->
+        </div>
+      </form>
+    </div><!-- /loginStep1 -->
+
+    <div id="loginStep2" class="hidden">
+      <div class="right-header">
+        <div>
+          <div class="right-title">Sign in to your account</div>
+        </div>
+      </div>
+      <div class="step2-card">
+        <div class="field">
+          <label for="step2Email">Email Id</label>
+          <input id="step2Email" type="email" disabled />
+        </div>
+
+        <div class="field">
+          <label for="step2Password">Password</label>
+          <div class="password-wrapper">
+            <input id="step2Password" type="password" placeholder="Enter Password"/>
+            <button type="button" id="toggleStep2Pwd" class="icon-btn" aria-label="Show password">
+              &#128065;
+            </button>
+          </div>
+        </div>
+
+        <div class="row-inline" style="margin-top:4px;">
+          <label><input type="checkbox" id="rememberMe"/> Remember me on this device</label>
+          <button type="button" class="link-sm" id="btnForgotPwd">Forgot Password?</button>
+        </div>
+
+        <div class="row-inline" style="margin-top:12px;">
+          <button type="button" id="btnBack" class="btn-primary btn-secondary-outline">Back</button>
+          <button type="button" id="btnStep2SignIn" class="btn-primary">Sign In</button>
+        </div>
+
+        <div class="divider-or">
+          <span>or</span>
+        </div>
+
+        <button type="button" id="btnNewUser" class="btn-primary btn-outline-full">Sign up as a new user</button>
+
+        <button type="button" id="btnOtp" class="link-sm link-full">Sign in with OTP</button>
+      </div>
+    </div><!-- /loginStep2 -->
+
+
+    <!-- Admin utilities: bulk user import/export -->
+    <div style="margin-top:16px;font-size:11px;color:var(--muted);">
+      <div style="font-weight:600;margin-bottom:4px;">Admin tools (local only)</div>
+
+      <label style="display:block;margin-bottom:4px;">
+        <span>Import users JSON:</span>
+        <input type="file" id="userImportFile" accept=".json" style="margin-top:4px;font-size:11px;">
+      </label>
+
+      <label style="display:block;margin-bottom:4px;">
+        <span>Import users Excel (.xlsx):</span>
+        <input type="file" id="excelImportFile" accept=".xlsx,.xls" style="margin-top:4px;font-size:11px;">
+      </label>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
+        <button type="button" id="btnImportUsers" class="link-sm">Load users JSON</button>
+        <button type="button" id="btnImportExcel" class="link-sm">Load users from Excel</button>
+        <button type="button" id="btnExportUsers" class="link-sm">Download user info (Excel)</button>
+      </div>
+    </div>
+
+    <!-- OTP / Captcha Overlay -->
+    <div id="otpOverlay" class="otp-overlay hidden">
+      <div class="otp-card">
+        <div class="otp-title">Enter Captcha to send OTP</div>
+        <div class="otp-captcha-box">
+          <label class="otp-captcha-label">
+            <input type="checkbox" id="fakeCaptcha"/>
+            <span>I'm not a robot</span>
+          </label>
+        </div>
+        <div class="row-inline" style="margin-top:18px;justify-content:space-between;">
+          <button type="button" id="btnOtpBackOverlay" class="btn-primary btn-secondary-outline">Back</button>
+          <button type="button" id="btnSendOtp" class="btn-primary">Send OTP</button>
+        </div>
+      </div>
+    </div>
+
+
+    <div style="margin-top:14px;padding:10px 12px;border-radius:14px;border:1px solid rgba(148,163,184,.35);background:rgba(15,23,42,.75);">
+      <div style="font-size:12px;font-weight:700;margin-bottom:4px;">Need help?</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;">
+        For account access or role issues, contact <span style="color:#c7d2fe;">IT Support</span> or your HR administrator.
+        <span style="display:block;margin-top:4px;">This portal is for internal corporate use only.</span>
+      </div>
+    </div>
+
+
+    <div class="copy-foot">
+      ETG Travel – Internal use only
+      <span class="badge">v1.1 · Login</span>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" aria-live="polite"></div>
+
+
+<script>
+/**
+ * ETG Travel – Login (Front-end only demo)
+ * Storage: IndexedDB (primary) + localStorage/sessionStorage (remember-me context only)
+ * Note: This is NOT a real secure production auth. For production use a backend + hashed passwords server-side.
+ */
+
+const $ = (id) => document.getElementById(id);
+
+const roleDisplay = {
+  EMPLOYEE: 'Employee',
+  MANAGER: 'Manager',
+  TRAVEL_DESK: 'Travel Desk',
+  SUPER_ADMIN: 'Super Admin'
+};
+
+// ---------------------------
+// Storage availability checks
+// ---------------------------
+function storageAvailable(type){
+  try{
+    const storage = window[type];
+    const x = '__storage_test__' + String(Date.now());
+    storage.setItem(x, x);
+    storage.removeItem(x);
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+
+// ---------------------------
+// IndexedDB user store
+// ---------------------------
+const DB_NAME = 'etg-auth';
+const DB_VERSION = 1;
+const STORE_USERS = 'users';
+const STORE_LOGINS = 'logins';
+
+function openDb(){
+  return new Promise((resolve, reject)=>{
+    if(!('indexedDB' in window)){
+      reject(new Error('IndexedDB not supported in this browser.'));
+      return;
+    }
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+
+      if(!db.objectStoreNames.contains(STORE_USERS)){
+        const users = db.createObjectStore(STORE_USERS, { keyPath: 'email' }); // email is normalized lowercase
+        users.createIndex('email', 'email', { unique: true });
+        users.createIndex('role', 'role', { unique: false });
+        users.createIndex('updatedAt', 'updatedAt', { unique: false });
+      }
+
+      if(!db.objectStoreNames.contains(STORE_LOGINS)){
+        const logins = db.createObjectStore(STORE_LOGINS, { keyPath: 'id', autoIncrement: true });
+        logins.createIndex('email', 'email', { unique: false });
+        logins.createIndex('loggedAt', 'loggedAt', { unique: false });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function normalizeEmail(email){
+  return String(email || '').trim().toLowerCase();
+}
+
+function tx(db, storeName, mode='readonly'){
+  return db.transaction(storeName, mode).objectStore(storeName);
+}
+
+async function idbGetUser(email){
+  const db = await openDb();
+  return new Promise((resolve, reject)=>{
+    const store = tx(db, STORE_USERS, 'readonly');
+    const req = store.get(normalizeEmail(email));
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function idbUpsertUser(email, data){
+  const db = await openDb();
+  const key = normalizeEmail(email);
+  const now = new Date().toISOString();
+
+  const existing = await idbGetUser(key);
+  const merged = Object.assign({}, existing || {}, data || {}, {
+    email: key,
+    updatedAt: now,
+    createdAt: (existing && existing.createdAt) ? existing.createdAt : now
+  });
+
+  return new Promise((resolve, reject)=>{
+    const store = tx(db, STORE_USERS, 'readwrite');
+    const req = store.put(merged);
+    req.onsuccess = () => resolve(merged);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function idbBulkUpsert(users){
+  if(!Array.isArray(users) || !users.length) return 0;
+  const db = await openDb();
+  const now = new Date().toISOString();
+
+  return new Promise((resolve, reject)=>{
+    const t = db.transaction(STORE_USERS, 'readwrite');
+    const store = t.objectStore(STORE_USERS);
+
+    let count = 0;
+    users.forEach(u=>{
+      if(!u || !u.email) return;
+      const email = normalizeEmail(u.email);
+      const record = Object.assign({}, u, {
+        email,
+        updatedAt: now,
+        createdAt: u.createdAt || now
+      });
+      store.put(record);
+      count += 1;
+    });
+
+    t.oncomplete = () => resolve(count);
+    t.onerror = () => reject(t.error);
+    t.onabort = () => reject(t.error);
+  });
+}
+
+async function idbGetAllUsers(){
+  const db = await openDb();
+  return new Promise((resolve, reject)=>{
+    const store = tx(db, STORE_USERS, 'readonly');
+    const req = store.getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function idbAddLoginAudit(email, role, method, success){
+  try{
+    const db = await openDb();
+    const store = tx(db, STORE_LOGINS, 'readwrite');
+    store.add({
+      email: normalizeEmail(email),
+      role: role || '',
+      method: method || 'password',
+      success: !!success,
+      loggedAt: new Date().toISOString()
+    });
+  }catch(e){
+    // ignore audit failures
+  }
+}
+
+// ---------------------------
+// Password hashing (SHA-256)
+// ---------------------------
+async function sha256Hex(text){
+  const enc = new TextEncoder();
+  const bytes = enc.encode(String(text || ''));
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function normalizePassword(p){
+  if(p === undefined || p === null) return '';
+  return String(p).trim().replace(/^'/, '');
+}
+
+// ---------------------------
+// Toast helper
+// ---------------------------
+function showToast(msg){
+  const box = $('toast');
+  if(!box) return;
+  const item = document.createElement('div');
+  item.className = 'item';
+  item.textContent = msg;
+  box.appendChild(item);
+  setTimeout(()=>{
+    item.style.opacity = '0';
+    item.style.transform = 'translateY(6px)';
+    setTimeout(()=> item.remove(), 260);
+  }, 2200);
+}
+
+// ---------------------------
+// Role tabs
+// ---------------------------
+(function initRoleTabs(){
+  const tabs = document.querySelectorAll('.role-tab');
+  tabs.forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      const role = tab.dataset.role;
+      tabs.forEach(t=> t.classList.toggle('active', t === tab));
+      $('role').value = role;
+      $('roleLabel').textContent = 'Role: ' + roleDisplay[role];
+      showToast(roleDisplay[role] + ' mode selected');
+    });
+  });
+})();
+
+// ---------------------------
+// Validators
+// ---------------------------
+function isValidEmail(v){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+
+// ---------------------------
+// Remember-me login context (NOT the user DB)
+// ---------------------------
+function saveLoginContext(email, role, remember){
+  const data = {
+    email: normalizeEmail(email),
+    role,
+    remember: !!remember,
+    loggedAt: new Date().toISOString()
+  };
+
+  try{
+    if(remember){
+      localStorage.setItem('etg-login', JSON.stringify(data));
+      sessionStorage.removeItem('etg-login');
+    }else{
+      sessionStorage.setItem('etg-login', JSON.stringify(data));
+      localStorage.removeItem('etg-login');
+    }
+
+    // also store "current user" for other stages
+    const safeEmail = data.email;
+    const nameGuess = safeEmail ? safeEmail.split('@')[0].replace(/[._-]+/g,' ').trim() : '';
+    localStorage.setItem('etg-current-user-email', safeEmail);
+    localStorage.setItem('etg-current-user-name', nameGuess || safeEmail || '');
+    localStorage.setItem('etg-current-role', role || '');
+  }catch(e){
+    console.warn('Could not save login context', e);
+  }
+}
+
+function getLoginContext(){
+  try{
+    const local = localStorage.getItem('etg-login');
+    const sess = sessionStorage.getItem('etg-login');
+    return local ? JSON.parse(local) : (sess ? JSON.parse(sess) : null);
+  }catch(e){ return null; }
+}
+
+// ---------------------------
+// Navigation
+// ---------------------------
+function redirectToDashboard(role){
+  let target = '';
+  if(role === 'EMPLOYEE'){
+    target = 'Stage 2 (User submit the request).html';
+  }else if(role === 'MANAGER'){
+    target = 'Stage5_Reporting_Manager_Dashboard.html';
+  }else if(role === 'TRAVEL_DESK'){
+    target = 'Stage3_Traveldesk_Dashboard.html';
+  }else{
+    // Super Admin (defaults to Travel Desk dashboard unless you map to a dedicated admin console)
+    target = 'Stage3_Traveldesk_Dashboard.html';
+  }
+  // Pass email/role in URL as a fallback when running on file:// or when storage is blocked
+  const ctx = getLoginContext();
+  const email = ctx && ctx.email ? String(ctx.email).trim() : '';
+  const roleSafe = role || (ctx && ctx.role ? ctx.role : '');
+  const qs = 'fromLogin=1'
+    + (email ? '&email=' + encodeURIComponent(email) : '')
+    + (roleSafe ? '&role=' + encodeURIComponent(roleSafe) : '');
+  window.location.href = target + '?' + qs;
+}
+
+function goFinal(){
+  const ctx = getLoginContext();
+  const role = (ctx && ctx.role) ? ctx.role : ($('role') ? $('role').value : 'EMPLOYEE');
+  redirectToDashboard(role || 'EMPLOYEE');
+}
+
+// ---------------------------
+// Optional: migrate legacy localStorage etg-users → IndexedDB
+// ---------------------------
+(async function migrateLegacyUsers(){
+  try{
+    const legacyRaw = localStorage.getItem('etg-users');
+    if(!legacyRaw) return;
+
+    let legacy = {};
+    try{ legacy = JSON.parse(legacyRaw || '{}'); }catch(e){ legacy = {}; }
+
+    const entries = Object.entries(legacy || {});
+    if(!entries.length) return;
+
+    const toUpsert = [];
+    for(const [email, info] of entries){
+      const pwd = normalizePassword(info && info.password ? info.password : '');
+      const passwordHash = pwd ? await sha256Hex(pwd) : null;
+      toUpsert.push({
+        email,
+        passwordHash,
+        role: info.role || '',
+        firstName: info.firstName || info.first_name || '',
+        lastName: info.lastName || info.last_name || '',
+        dob: info.dob || info.dateOfBirth || info.DateOfBirth || '',
+        country: info.country || '',
+        phone: info.phone || info.mobile || '',
+        dateOfJoining: info.dateOfJoining || info.doj || '',
+        createdAt: info.createdAt || null
+      });
+    }
+    await idbBulkUpsert(toUpsert);
+
+    // keep legacy for safety but mark migrated (so we don't rehash every load)
+    localStorage.setItem('etg-users-migrated', '1');
+    showToast('User store upgraded (localStorage → IndexedDB).');
+  }catch(e){
+    console.warn('Legacy migration failed', e);
+  }
+})();
+
+// ---------------------------
+// Step 1 – email capture (and ensure user exists)
+// ---------------------------
+$('loginForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const email = ($('email').value || '').trim();
+  const role  = $('role').value;
+
+  $('err_email').classList.remove('show');
+  $('err_global').textContent = '';
+
+  if(!email || !isValidEmail(email)){
+    $('err_email').classList.add('show');
+    return;
+  }
+
+  // Ensure user record exists in IndexedDB (even before password is set)
+  try{
+    const existing = await idbGetUser(email);
+    if(!existing){
+      await idbUpsertUser(email, { role, passwordHash: null });
+    }else{
+      // keep role in sync with latest selection
+      await idbUpsertUser(email, { role: existing.role || role });
+    }
+  }catch(err){
+    console.error(err);
+    $('err_global').textContent = 'Storage error: cannot access user database in this browser mode.';
+    $('err_global').classList.add('show');
+    return;
+  }
+
+  // Save login context (no password yet)
+  saveLoginContext(email, role, false);
+
+  // Populate step 2 view
+  if($('step2Email')) $('step2Email').value = email;
+
+  // Switch panels
+  const step1 = $('loginStep1');
+  const step2 = $('loginStep2');
+  if(step1 && step2){
+    step1.classList.add('hidden');
+    step2.classList.remove('hidden');
+  }
+
+  showToast('Email captured. Please enter your password.');
+});
+
+// ---------------------------
+// Step 2 – actions
+// ---------------------------
+(function initStep2(){
+  const btnBack = $('btnBack');
+  const btnSignIn = $('btnStep2SignIn');
+  const btnNewUser = $('btnNewUser');
+  const btnOtp = $('btnOtp');
+  const togglePwd = $('toggleStep2Pwd');
+  const btnForgotPwd = $('btnForgotPwd');
+
+  const otpOverlay = $('otpOverlay');
+  const btnOtpBackOverlay = $('btnOtpBackOverlay');
+  const btnSendOtp = $('btnSendOtp');
+  const fakeCaptcha = $('fakeCaptcha');
+
+  let currentOtp = null;
+  let currentOtpMode = null; // 'reset' or 'login'
+
+  const openOtpOverlay = (mode) => {
+    currentOtpMode = mode;
+    if(otpOverlay) otpOverlay.classList.remove('hidden');
+    if(fakeCaptcha) fakeCaptcha.checked = false;
+  };
+  const closeOtpOverlay = () => {
+    if(otpOverlay) otpOverlay.classList.add('hidden');
+  };
+
+  const generateOtp = () => String(Math.floor(100000 + Math.random()*900000));
+
+  const sendMockOtp = () => {
+    const ctx = getLoginContext();
+    const email = ctx && ctx.email ? ctx.email : ($('email').value || '');
+    currentOtp = generateOtp();
+    console.log('Demo OTP for', email, 'is', currentOtp);
+    alert('Demo OTP for ' + email + ' is: ' + currentOtp + '\n(In real application this will be sent via email.)');
+    showToast('OTP sent to your registered email (demo).');
+  };
+
+  if(btnBack){
+    btnBack.addEventListener('click', ()=>{
+      const step1 = $('loginStep1');
+      const step2 = $('loginStep2');
+      if(step1 && step2){
+        step2.classList.add('hidden');
+        step1.classList.remove('hidden');
+      }
+      $('email').focus();
+    });
+  }
+
+  if(btnSignIn){
+    btnSignIn.addEventListener('click', async ()=>{
+      const pwdInput = $('step2Password');
+      const enteredPwd = pwdInput && pwdInput.value != null ? pwdInput.value.trim() : '';
+      const emailVal = ($('email').value || '').trim();
+      const roleVal = ($('role').value || 'EMPLOYEE');
+      const remember = $('rememberMe') ? !!$('rememberMe').checked : false;
+
+      // ==== DEMO BACKEND LOGIN (Option 3: username/password on localhost) ====
+      // If backend is running, it becomes the source of truth for roles + secure analytics access.
+      // Falls back to existing offline (IndexedDB) logic if backend is unreachable.
+      const API_BASE = (window.ETG_API_BASE || 'http://localhost:3001');
+      try{
+        const resp = await fetch(API_BASE + '/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type':'application/json' },
+          body: JSON.stringify({ email: emailVal, password: enteredPwd, role: roleVal })
+        });
+        if(resp.ok){
+          const out = await resp.json();
+          const token = out && out.token ? String(out.token) : '';
+          const userObj = out && out.user ? out.user : {};
+          if(token){
+            sessionStorage.setItem('etg-token', token);
+            sessionStorage.setItem('etg-user', JSON.stringify(userObj));
+            // keep existing context for cross-file prefill
+            saveLoginContext(emailVal, userObj.role || roleVal, remember);
+            await idbAddLoginAudit(emailVal, userObj.role || roleVal, 'backend-login', true);
+            showToast('Signed in (backend).');
+            goFinal();
+            return;
+          }
+        }else{
+          // If backend is reachable but credentials fail, stop here (do not allow offline bypass)
+          const err = await resp.json().catch(()=>({}));
+          showToast(err.error || 'Invalid email or password (backend).');
+          await idbAddLoginAudit(emailVal, roleVal, 'backend-login', false);
+          return;
+        }
+      }catch(e){
+        // Network error: backend not running → continue with offline demo login below
+        console.warn('Backend not reachable, using offline login:', e);
+      }
+
+
+      if(!emailVal || !isValidEmail(emailVal)){
+        showToast('Please enter a valid email in Step 1.');
+        return;
+      }
+
+      let user = null;
+      try{
+        user = await idbGetUser(emailVal);
+      }catch(e){
+        console.error(e);
+        showToast('Storage error: cannot access user database.');
+        return;
+      }
+
+      // If no password yet → ask to set it ONCE (and store hashed)
+      if(!user || !user.passwordHash){
+        const want = window.confirm('No password is set for this email yet. Do you want to create/set it now?');
+        if(!want){
+          showToast('Please use "Forgot Password?" to create one, or import users.');
+          await idbAddLoginAudit(emailVal, roleVal, 'password', false);
+          return;
+        }
+        const pwdRaw = window.prompt('Set a password for ' + emailVal + ':');
+        if(!pwdRaw || !pwdRaw.trim()){
+          showToast('Password setup cancelled.');
+          await idbAddLoginAudit(emailVal, roleVal, 'password', false);
+          return;
+        }
+        const finalPwd = normalizePassword(pwdRaw);
+        const hash = await sha256Hex(finalPwd);
+        await idbUpsertUser(emailVal, { passwordHash: hash, role: roleVal });
+        showToast('Password saved. Please click Sign In again.');
+        if(pwdInput) pwdInput.value = '';
+        await idbAddLoginAudit(emailVal, roleVal, 'set-password', true);
+        return;
+      }
+
+      // Validate password
+      const enteredNorm = normalizePassword(enteredPwd);
+      if(!enteredNorm){
+        showToast('Please enter your password.');
+        await idbAddLoginAudit(emailVal, roleVal, 'password', false);
+        return;
+      }
+
+      const enteredHash = await sha256Hex(enteredNorm);
+      if(enteredHash !== user.passwordHash){
+        showToast('Invalid email or password. Please try again.');
+        await idbAddLoginAudit(emailVal, roleVal, 'password', false);
+        return;
+      }
+
+      // Success: store login context, audit, redirect
+      saveLoginContext(emailVal, roleVal, remember);
+      await idbAddLoginAudit(emailVal, roleVal, 'password', true);
+      goFinal();
+    });
+  }
+
+  // Sign up (new user) → set password (hashed) + login
+  if(btnNewUser){
+    btnNewUser.addEventListener('click', async ()=>{
+      const emailVal = ($('email').value || '').trim();
+      const roleVal = ($('role').value || 'EMPLOYEE');
+      const remember = $('rememberMe') ? !!$('rememberMe').checked : false;
+
+      if(!emailVal || !isValidEmail(emailVal)){
+        showToast('Please enter a valid email in Step 1 before signing up.');
+        return;
+      }
+      const pwdRaw = window.prompt('Create a password for ' + emailVal + ':');
+      if(!pwdRaw || !pwdRaw.trim()){
+        showToast('Sign up cancelled.');
+        return;
+      }
+
+      const finalPwd = normalizePassword(pwdRaw);
+      const hash = await sha256Hex(finalPwd);
+
+      await idbUpsertUser(emailVal, { passwordHash: hash, role: roleVal });
+      saveLoginContext(emailVal, roleVal, remember);
+      await idbAddLoginAudit(emailVal, roleVal, 'signup', true);
+      showToast('Account created. Signing you in...');
+      goFinal();
+    });
+  }
+
+  // Forgot password → OTP reset
+  if(btnForgotPwd){
+    btnForgotPwd.addEventListener('click', ()=> openOtpOverlay('reset'));
+  }
+
+  // Sign in with OTP → OTP login
+  if(btnOtp){
+    btnOtp.addEventListener('click', ()=> openOtpOverlay('login'));
+  }
+
+  if(btnOtpBackOverlay){
+    btnOtpBackOverlay.addEventListener('click', ()=> closeOtpOverlay());
+  }
+
+  if(btnSendOtp){
+    btnSendOtp.addEventListener('click', async ()=>{
+      if(!fakeCaptcha || !fakeCaptcha.checked){
+        showToast('Please confirm the captcha to continue.');
+        return;
+      }
+      sendMockOtp();
+      closeOtpOverlay();
+
+      const entered = window.prompt('Enter the OTP sent to your email:');
+      if(!entered){
+        showToast('OTP entry cancelled.');
+        return;
+      }
+      if(entered.trim() !== currentOtp){
+        showToast('Invalid OTP. Please try again.');
+        return;
+      }
+
+      const emailVal = ($('email').value || '').trim();
+      const roleVal = ($('role').value || 'EMPLOYEE');
+      const remember = $('rememberMe') ? !!$('rememberMe').checked : false;
+
+      if(currentOtpMode === 'reset'){
+        if(!emailVal || !isValidEmail(emailVal)){
+          showToast('Please enter a valid email in Step 1 before resetting your password.');
+          return;
+        }
+        const newPwdRaw = window.prompt('Enter your new password:');
+        if(newPwdRaw && newPwdRaw.trim()){
+          const finalPwd = normalizePassword(newPwdRaw);
+          const hash = await sha256Hex(finalPwd);
+          await idbUpsertUser(emailVal, { passwordHash: hash });
+          await idbAddLoginAudit(emailVal, roleVal, 'otp-reset', true);
+          showToast('Password reset successful. Please sign in with your new password.');
+        }else{
+          showToast('Password reset cancelled.');
+          await idbAddLoginAudit(emailVal, roleVal, 'otp-reset', false);
+        }
+      }else if(currentOtpMode === 'login'){
+        // OTP login success (demo): ensure user exists, then login
+        await idbUpsertUser(emailVal, { role: roleVal });
+        saveLoginContext(emailVal, roleVal, remember);
+        await idbAddLoginAudit(emailVal, roleVal, 'otp-login', true);
+        showToast('OTP verified successfully (demo). Signing you in...');
+        goFinal();
+      }
+    });
+  }
+
+  if(togglePwd){
+    togglePwd.addEventListener('click', ()=>{
+      const pwd = $('step2Password');
+      if(!pwd) return;
+      pwd.type = (pwd.type === 'password') ? 'text' : 'password';
+    });
+  }
+})();
+
+// ---------------------------
+// Admin: import users from JSON (array)
+// Expected fields: email, password (optional), role (optional), firstName, lastName...
+// Password will be hashed before storing.
+// ---------------------------
+(function setupUserImportJSON(){
+  const fileInput = $('userImportFile');
+  const btnImport = $('btnImportUsers');
+  if(!fileInput || !btnImport) return;
+
+  btnImport.addEventListener('click', ()=>{
+    if(!fileInput.files || !fileInput.files[0]){
+      showToast('Please choose a JSON file to import.');
+      return;
+    }
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = async (e)=>{
+      try{
+        const raw = e.target.result;
+        const data = JSON.parse(raw);
+        if(!Array.isArray(data)){
+          showToast('JSON must be an array of user objects.');
+          return;
+        }
+
+        const mapped = [];
+        for(const u of data){
+          if(!u || !u.email) continue;
+          const pwd = normalizePassword(u.password || '');
+          const passwordHash = pwd ? await sha256Hex(pwd) : null;
+          mapped.push({
+            email: u.email,
+            passwordHash,
+            role: u.role || '',
+            firstName: u.firstName || u.first_name || '',
+            lastName: u.lastName || u.last_name || '',
+            dob: u.dateOfBirth || u.dob || u.DateOfBirth || '',
+            country: u.country || u.Country || '',
+            phone: u.phone || u.mobile || '',
+            dateOfJoining: u.dateOfJoining || u.date_of_joining || u.doj || ''
+          });
+        }
+
+        const count = await idbBulkUpsert(mapped);
+        showToast('Users imported successfully: ' + count);
+      }catch(err){
+        console.error(err);
+        showToast('Failed to import users. Please check JSON format.');
+      }
+    };
+    reader.readAsText(file);
+  });
+})();
+
+// ---------------------------
+// Admin: import users from Excel using SheetJS
+// Columns supported: email/password/role/firstName/lastName/country/dob/phone/dateOfJoining
+// ---------------------------
+(function setupUserImportExcel(){
+  const excelInput = $('excelImportFile');
+  const btnImportExcel = $('btnImportExcel');
+  if(!excelInput || !btnImportExcel) return;
+
+  const normalizePhone = (raw) => {
+    if(raw === undefined || raw === null) return '';
+    const digits = String(raw).replace(/\D/g,'');
+    return digits.slice(0,15);
+  };
+
+  const normalizeDob = (raw) => {
+    if(raw === undefined || raw === null || raw === '') return '';
+    if(typeof raw === 'number' && isFinite(raw)){
+      const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+      const ms = excelEpoch.getTime() + raw * 24*60*60*1000;
+      const d = new Date(ms);
+      const dd = String(d.getUTCDate()).padStart(2,'0');
+      const mm = String(d.getUTCMonth()+1).padStart(2,'0');
+      const yyyy = d.getUTCFullYear();
+      return dd + '/' + mm + '/' + yyyy;
+    }
+    return String(raw).trim();
+  };
+
+  btnImportExcel.addEventListener('click', ()=>{
+    if(!excelInput.files || !excelInput.files[0]){
+      showToast('Please choose an Excel file (.xlsx) to import.');
+      return;
+    }
+    const file = excelInput.files[0];
+    const reader = new FileReader();
+    reader.onload = async (e)=>{
+      try{
+        if(typeof XLSX === 'undefined'){
+          showToast('Excel library not loaded. Check your internet connection.');
+          return;
+        }
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(sheet);
+
+        const mapped = [];
+        for(const u of rows){
+          if(!u) continue;
+          const email = (u.email || u.Email || u.EMAIL || '').toString().trim();
+          if(!email) continue;
+          const pwd = normalizePassword(u.password || u.Password || u.PASSWORD || '');
+          const passwordHash = pwd ? await sha256Hex(pwd) : null;
+
+          mapped.push({
+            email,
+            passwordHash,
+            role: u.role || u.Role || '',
+            firstName: u.firstName || u.FirstName || u.first_name || '',
+            lastName: u.lastName || u.LastName || u.last_name || '',
+            dob: normalizeDob(u.dateOfBirth || u.DateOfBirth || u.DOB || u.dob || ''),
+            country: u.country || u.Country || '',
+            phone: normalizePhone(u.phone || u.Phone || u.mobile || u.Mobile || ''),
+            dateOfJoining: u.dateOfJoining || u.DateOfJoining || u.DOJ || u.doj || ''
+          });
+        }
+
+        const count = await idbBulkUpsert(mapped);
+        showToast('Users imported successfully: ' + count);
+      }catch(err){
+        console.error(err);
+        showToast('Failed to import Excel. Please check file format.');
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  });
+})();
+
+// ---------------------------
+// Admin: export users to CSV for Excel download
+// ---------------------------
+(function setupUserExportCSV(){
+  const btnExport = $('btnExportUsers');
+  if(!btnExport) return;
+
+  btnExport.addEventListener('click', async ()=>{
+    try{
+      const users = await idbGetAllUsers();
+      if(!users.length){
+        showToast('No users stored yet.');
+        return;
+      }
+
+      const lines = [];
+      // NOTE: passwords are stored as hashes; we do NOT export original passwords.
+      lines.push('Email,Role,FirstName,LastName,Country,DateOfBirth,Phone,DateOfJoining,CreatedAt,UpdatedAt,PasswordHash');
+      users.forEach(u=>{
+        const row = [
+          u.email || '',
+          u.role || '',
+          u.firstName || '',
+          u.lastName || '',
+          u.country || '',
+          u.dob || '',
+          (u.phone || ''),
+          (u.dateOfJoining || ''),
+          (u.createdAt || ''),
+          (u.updatedAt || ''),
+          (u.passwordHash || '')
+        ].map(v => '"' + String(v).replace(/"/g,'""') + '"');
+        lines.push(row.join(','));
+      });
+
+      const csvBlob = new Blob([lines.join('\n')], { type: 'text/csv' });
+      const url = URL.createObjectURL(csvBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'etg-users-export.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast('User export downloaded.');
+    }catch(e){
+      console.error(e);
+      showToast('Export failed: unable to read user database.');
+    }
+  });
+})();
+
+// ---------------------------
+// Auto-fill from remembered login (if any)
+// ---------------------------
+(function hydrateRememberedLogin(){
+  try{
+    if(!storageAvailable('localStorage') && !storageAvailable('sessionStorage')){
+      showToast('Storage is blocked in this browser mode. Login data cannot be saved.');
+      return;
+    }
+    const saved = localStorage.getItem('etg-login');
+    if(!saved) return;
+    const ctx = JSON.parse(saved);
+    if(!ctx || !ctx.email) return;
+
+    const role = ctx.role || 'EMPLOYEE';
+    if($('role')) $('role').value = role;
+    if($('roleLabel')) $('roleLabel').textContent = 'Role: ' + (roleDisplay[role] || 'Employee');
+
+    document.querySelectorAll('.role-tab').forEach(t=>{
+      t.classList.toggle('active', t.dataset.role === role);
+    });
+
+    if($('email')) $('email').value = ctx.email;
+    if($('step2Email')) $('step2Email').value = ctx.email;
+
+    const step1 = $('loginStep1');
+    const step2 = $('loginStep2');
+    if(step1 && step2){
+      step1.classList.add('hidden');
+      step2.classList.remove('hidden');
+    }
+    if($('rememberMe')) $('rememberMe').checked = true;
+
+    showToast('Welcome back. Please enter your password to continue.');
+  }catch(e){}
+})();
+</script>
+
+
+
+<!-- ETG Realtime (Socket.IO) -->
+
+<script>window.ETG_API_BASE = window.ETG_API_BASE || '';</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/etg-realtime.js"></script>
+
+</body>
+</html>

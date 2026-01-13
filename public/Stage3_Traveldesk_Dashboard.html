@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ETG Travel — Pending Requests (Travel Desk)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:linear-gradient(135deg,#0f172a,#020617);
+    color:#e5e7eb;
+  }
+  .page{
+    max-width:1120px;
+    margin:32px auto 72px;
+    padding:0 16px;
+  }
+
+  /* Header */
+  .header-shell{
+    border-radius:18px;
+    box-shadow:0 22px 45px rgba(15,23,42,.55);
+    overflow:hidden;
+    margin-bottom:18px;
+  }
+  .header{
+    background:radial-gradient(circle at 0 0,#38bdf8 0,#1d4ed8 38%,#020617 100%);
+    border-bottom:1px solid rgba(148,163,184,.4);
+    padding:18px 24px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    color:#e5f0ff;
+  }
+  .logo-pill{
+    width:40px;
+    height:40px;
+    border-radius:999px;
+    background:rgba(15,23,42,.3);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:18px;
+    box-shadow:0 10px 25px rgba(15,23,42,.6);
+  }
+  .header-text-main{
+    font-size:18px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+  }
+  .header-text-sub{
+    font-size:12px;
+    opacity:.8;
+  }
+  .header-meta{
+    margin-left:auto;
+    text-align:right;
+    font-size:11px;
+    opacity:.85;
+  }
+
+  /* Card container */
+  .card-stack{
+    background:rgba(15,23,42,.96);
+    border-radius:0 0 18px 18px;
+    border:1px solid rgba(30,64,175,.8);
+    border-top:none;
+    padding:18px 18px 22px;
+    box-shadow:0 18px 40px rgba(15,23,42,.65);
+  }
+
+  .card{
+    background:rgba(15,23,42,.97);
+    border-radius:14px;
+    padding:16px 18px 18px;
+    border:1px solid rgba(51,65,85,.8);
+    box-shadow:0 10px 25px rgba(15,23,42,.7);
+  }
+  .card h2{
+    font-size:13px;
+    margin:0 0 10px;
+    text-transform:uppercase;
+    letter-spacing:.16em;
+    color:#e5e7eb;
+  }
+  .note{
+    font-size:11px;
+    color:#9ca3af;
+    margin-top:6px;
+  }
+
+  /* MAIN TABS: Trip Details / Report Section */
+  .main-tab-bar{
+    display:flex;
+    gap:24px;
+    border-bottom:1px solid rgba(55,65,81,.9);
+    margin-bottom:14px;
+    padding:0 4px;
+  }
+  .main-tab{
+    padding:10px 0;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    color:#e5e7eb;
+    background:none;
+    border:none;
+  }
+  .main-tab span{
+    padding-bottom:6px;
+    display:inline-block;
+  }
+  .main-tab.active span{
+    color:#fb923c;
+    border-bottom:2px solid #fb923c;
+  }
+  .main-tab-pane{display:none;}
+  .main-tab-pane.active{display:block;}
+
+  /* Sub-tabs inside Trip Details */
+  .subtab-bar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:12px;
+  }
+  .subtab{
+    border-radius:999px;
+    border:1px solid rgba(75,85,99,.9);
+    background:rgba(15,23,42,1);
+    padding:7px 14px;
+    font-size:12px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    color:#e5e7eb;
+    box-shadow:0 6px 14px rgba(15,23,42,.8);
+  }
+  .subtab.active{
+    background:linear-gradient(135deg,#38bdf8,#1d4ed8);
+    border-color:#38bdf8;
+    color:#f9fafb;
+  }
+  .subtab-pane{display:none;}
+  .subtab-pane.active{display:block;}
+
+  /* Layout basics */
+  .row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .col-6{flex:0 0 calc(50% - 8px);}
+  .col-12{flex:0 0 100%;}
+  @media (max-width:900px){
+    .col-6{flex:0 0 100%;}
+  }
+
+  label{
+    display:block;
+    font-size:11px;
+    font-weight:600;
+    margin-bottom:4px;
+    color:#9ca3af;
+  }
+  input, select{
+    width:100%;
+    padding:8px 10px;
+    font-size:13px;
+    border-radius:9px;
+    border:1px solid rgba(55,65,81,.9);
+    background:#020617;
+    color:#e5e7eb;
+  }
+
+  /* Tables */
+  .table-shell{
+    border-radius:10px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    border:1px solid rgba(55,65,81,.9);
+    background:#020617;
+  }
+  .table-shell table{
+    border-collapse:collapse;
+    width:100%;
+    min-width:960px;
+    font-size:12px;
+  }
+  thead{
+    background:rgba(15,23,42,1);
+  }
+  th,td{
+    padding:8px 10px;
+    border-bottom:1px solid rgba(55,65,81,.9);
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    overflow:hidden;
+  }
+  th{
+    text-align:left;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:#9ca3af;
+  }
+  tbody tr:nth-child(even){background:rgba(15,23,42,.6);}
+  tbody tr:hover{background:rgba(37,99,235,.25);}
+
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    padding:2px 7px;
+    border-radius:999px;
+    font-size:10px;
+    border:1px solid rgba(75,85,99,.9);
+    background:rgba(15,23,42,1);
+  }
+  .badge-pending{border-color:#fbbf24;color:#facc15;}
+  .badge-confirmed{border-color:#4ade80;color:#bbf7d0;}
+  .badge-multi{border-color:#38bdf8;color:#7dd3fc;}
+
+  /* Status detail: pending with whom */
+  .status-cell{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .badge-owner{
+    display:inline-flex;
+    align-items:center;
+    padding:2px 7px;
+    border-radius:999px;
+    font-size:10px;
+    border:1px dashed rgba(75,85,99,.9);
+    background:rgba(15,23,42,1);
+  }
+  .badge-owner-user{
+    border-color:#f97316;
+    color:#fed7aa;
+  }
+  .badge-owner-manager{
+    border-color:#a855f7;
+    color:#e9d5ff;
+  }
+  .badge-owner-desk{
+    border-color:#38bdf8;
+    color:#7dd3fc;
+  }
+
+  /* Buttons */
+  button{
+    border-radius:999px;
+    border:1px solid transparent;
+    padding:7px 14px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,#38bdf8,#1d4ed8);
+    color:#f9fafb;
+    border:none;
+    box-shadow:0 12px 25px rgba(37,99,235,.5);
+  }
+  .btn-secondary{
+    background:#020617;
+    border:1px solid #4b5563;
+    color:#e5e7eb;
+  }
+  .btn-ghost{
+    background:transparent;
+    border:1px solid #4b5563;
+    color:#9ca3af;
+  }
+  .btn-small{padding:4px 10px;font-size:11px;}
+  .actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    margin-top:12px;
+  }
+
+  /* Report chips */
+  .metric-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+    margin-top:8px;
+  }
+  .metric-card{
+    border-radius:12px;
+    padding:10px 12px;
+    border:1px solid rgba(55,65,81,.9);
+    background:radial-gradient(circle at 0 0,#020617 0,#020617 55%,#020617 100%);
+  }
+  .metric-label{
+    font-size:11px;
+    color:#9ca3af;
+    margin-bottom:4px;
+  }
+  .metric-value{
+    font-size:18px;
+    font-weight:600;
+  }
+  .metric-sub{
+    font-size:10px;
+    color:#6b7280;
+    margin-top:2px;
+  }
+  .report-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:10px;
+    align-items:flex-end;
+  }
+  .report-row .col{
+    flex:0 0 auto;
+  }
+
+
+/* Profile chip in header */
+.header{
+  position:relative;
+}
+.header-profile{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  position:relative;
+}
+.profile-chip{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:4px 10px;
+  border-radius:999px;
+  border:1px solid rgba(191,219,254,.6);
+  background:rgba(15,23,42,.35);
+  color:#e5f0ff;
+  font-size:12px;
+  cursor:pointer;
+}
+.profile-chip:hover{
+  background:rgba(15,23,42,.6);
+}
+.profile-avatar{
+  width:28px;
+  height:28px;
+  border-radius:999px;
+  background:rgba(15,23,42,.9);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:600;
+  font-size:12px;
+}
+.profile-avatar.large{
+  width:36px;
+  height:36px;
+  font-size:14px;
+}
+.profile-text{
+  display:flex;
+  flex-direction:column;
+  line-height:1.1;
+}
+.profile-name{
+  font-weight:600;
+  font-size:12px;
+}
+.profile-role,.profile-email{
+  font-size:11px;
+  opacity:.9;
+}
+.profile-menu{
+  position:absolute;
+  top:42px;
+  right:0;
+  width:260px;
+  background:#020617;
+  border-radius:16px;
+  box-shadow:0 18px 40px rgba(15,23,42,.8);
+  border:1px solid rgba(148,163,184,.5);
+  padding:10px 10px 8px;
+  z-index:40;
+}
+.profile-menu-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:4px 4px 8px;
+  border-bottom:1px solid rgba(55,65,81,.9);
+  margin-bottom:6px;
+}
+.profile-menu-body{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.profile-menu-item{
+  width:100%;
+  text-align:left;
+  background:transparent;
+  border:none;
+  color:#e5e7eb;
+  font-size:12px;
+  padding:6px 8px;
+  border-radius:10px;
+  cursor:pointer;
+}
+.profile-menu-item:hover{
+  background:rgba(15,23,42,.9);
+}
+.profile-menu-item.danger{
+  color:#fecaca;
+}
+
+/* Scroll arrows */
+.scroll-arrows{
+  position:fixed;
+  right:26px;
+  bottom:26px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  z-index:30;
+}
+.scroll-arrow{
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  border:none;
+  background:rgba(15,23,42,.85);
+  color:#e5e7eb;
+  font-size:16px;
+  cursor:pointer;
+  box-shadow:0 10px 25px rgba(15,23,42,.7);
+}
+.scroll-arrow:hover{
+  background:#0f172a;
+}
+
+
+/* Export dropdown */
+.export-wrap{
+  margin-left:16px;
+  position:relative;
+}
+.export-chip{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid rgba(191,219,254,.6);
+  background:rgba(15,23,42,.35);
+  color:#e5f0ff;
+  font-size:12px;
+  cursor:pointer;
+}
+.export-chip:hover{background:rgba(15,23,42,.6);}
+.export-menu{
+  position:absolute;
+  top:42px;
+  right:0;
+  width:260px;
+  background:#020617;
+  border-radius:16px;
+  box-shadow:0 18px 40px rgba(15,23,42,.8);
+  border:1px solid rgba(148,163,184,.5);
+  padding:10px 10px 8px;
+  z-index:45;
+}
+.export-menu-section{
+  font-size:11px;
+  color:#9ca3af;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  padding:6px 8px 4px;
+}
+.export-item{
+  width:100%;
+  text-align:left;
+  background:transparent;
+  border:none;
+  color:#e5e7eb;
+  font-size:12px;
+  padding:8px 10px;
+  border-radius:10px;
+  cursor:pointer;
+}
+.export-item:hover{background:rgba(15,23,42,.9);}
+
+  .hidden{
+    display:none !important;
+  }
+  .selected-trip-card{
+    margin-top:16px;
+    border-color:rgba(56,189,248,.7);
+    background:rgba(15,23,42,.98);
+  }
+  .selected-trip-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    column-gap:40px;
+    row-gap:10px;
+    font-size:12px;
+  }
+  .selected-trip-block{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  .selected-trip-label{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:#9ca3af;
+  }
+  .selected-trip-value{
+    font-size:13px;
+    color:#e5e7eb;
+  }
+  .selected-trip-actions{
+    margin-top:12px;
+    display:flex;
+    justify-content:flex-end;
+  }
+  @media (max-width:900px){
+    .selected-trip-grid{
+      grid-template-columns:1fr;
+    }
+  }
+
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header-shell">
+    <div class="header">
+      <div class="logo-pill">ET</div>
+      <div>
+        <div class="header-text-main">ETG TRAVEL — PENDING REQUESTS</div>
+        <div class="header-text-sub">Travel desk console | Confirmed options from employees</div>
+      </div>
+      <div class="header-meta">
+        <div>Travel Desk View</div>
+        <div>Stage: Post-confirmation</div>
+      </div>
+      
+      <div class="export-wrap">
+        <button class="export-chip" id="exportTrigger" type="button">Export ▾</button>
+        <div class="export-menu hidden" id="exportMenu" aria-hidden="true">
+          <div class="export-menu-section">Export</div>
+          <button type="button" class="export-item" id="exportExpensesBtn">Export Expenses</button>
+          <button type="button" class="export-item" id="exportSharedBtn">Export Shared Details</button>
+          <div class="export-menu-section" style="margin-top:6px;">History</div>
+          <button type="button" class="export-item" id="viewExportHistoryBtn">View Export History</button>
+          <button type="button" class="export-item" id="viewBulkHistoryBtn">View Bulk History</button>
+        </div>
+      </div>
+<div class="header-profile">
+        <button class="profile-chip" id="deskProfileTrigger" type="button">
+          <div class="profile-avatar" id="deskProfileAvatar">TD</div>
+          <div class="profile-text">
+            <div class="profile-name" id="deskProfileName">Travel Desk User</div>
+            <div class="profile-role" id="deskProfileRole">Travel Desk</div>
+          </div>
+        </button>
+        <div class="profile-menu hidden" id="deskProfileMenu" aria-hidden="true">
+          <div class="profile-menu-header">
+            <div class="profile-avatar large" id="deskProfileAvatarBig">TD</div>
+            <div>
+              <div class="profile-name" id="deskProfileNameBig">Travel Desk User</div>
+              <div class="profile-email" id="deskProfileEmail">traveldesk@example.com</div>
+            </div>
+          </div>
+          <div class="profile-menu-body">
+            <button type="button" class="profile-menu-item" id="deskProfileMyProfile">My Profile</button>
+            <button type="button" class="profile-menu-item danger" id="deskProfileSignOut">Sign Out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-stack">
+
+      <!-- MAIN TAB BAR -->
+      <div class="main-tab-bar">
+        <button class="main-tab active" data-main="trip" onclick="setMainTab('trip')">
+          <span>Trip Details</span>
+        </button>
+        <button class="main-tab" data-main="report" onclick="setMainTab('report')">
+          <span>Report Section</span>
+        </button>
+      </div>
+
+      <!-- MAIN TAB: TRIP DETAILS -->
+      <div id="main-tab-trip" class="main-tab-pane active">
+        <div class="card">
+          <h2>Trip Details</h2>
+
+          <!-- Sub tabs: Pending / Completed / All -->
+          <div class="subtab-bar">
+            <button type="button" class="subtab active" data-subtab="pending" onclick="setSubTab('pending')">
+              <span>Pending Request</span>
+              <span class="badge badge-pending" id="pending-count-badge">0</span>
+            </button>
+            <button type="button" class="subtab" data-subtab="completed" onclick="setSubTab('completed')">
+              <span>Completed</span>
+              <span class="badge badge-pending" id="completed-count-badge">0</span>
+            </button>
+            <button type="button" class="subtab" data-subtab="all" onclick="setSubTab('all')">
+              <span>All Request</span>
+              <span class="badge badge-pending" id="all-count-badge">0</span>
+            </button>
+          </div>
+
+          <!-- Pending Request tab -->
+          <div class="subtab-pane active" id="subtab-pending">
+            <div class="table-shell">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:90px;">Req ID</th>
+                    <th style="width:150px;">Employee</th>
+                    <th style="width:160px;">Route</th>
+                    <th style="width:130px;">Travel Dates</th>
+                    <th style="width:120px;">Modes Confirmed</th>
+                    <th style="width:130px;">Last Action</th>
+                    <th style="width:120px;">Status</th>
+                    <th style="width:120px;text-align:right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="pending-requests-body">
+                </tbody>              </table>
+            </div>
+            <div class="actions">
+              <button class="btn-ghost btn-small" type="button">Refresh</button>
+              <button class="btn-secondary btn-small" type="button">Export Pending List</button>
+            </div>
+          </div>
+
+          <!-- Completed tab -->
+          <div class="subtab-pane" id="subtab-completed">
+            <div class="table-shell">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:90px;">Req ID</th>
+                    <th style="width:150px;">Employee</th>
+                    <th style="width:160px;">Route</th>
+                    <th style="width:130px;">Travel Dates</th>
+                    <th style="width:120px;">Modes Confirmed</th>
+                    <th style="width:100px;">Status</th>
+                    <th style="width:120px;">Completed On</th>
+                    <th style="width:120px;text-align:right;">Action</th>
+                  </tr>
+                </thead>
+                                <tbody id="completed-requests-body">
+                </tbody>              </table>
+            </div>
+            <div class="actions">
+              <button class="btn-ghost btn-small" type="button">Refresh</button>
+              <button class="btn-secondary btn-small" type="button">Export Completed</button>
+            </div>
+          </div>
+
+          <!-- All Request tab -->
+          <div class="subtab-pane" id="subtab-all">
+            <div class="table-shell">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:90px;">Req ID</th>
+                    <th style="width:150px;">Employee</th>
+                    <th style="width:160px;">Route</th>
+                    <th style="width:130px;">Travel Dates</th>
+                    <th style="width:120px;">Modes Confirmed</th>
+                    <th style="width:100px;">Status</th>
+                    <th style="width:120px;">Last Updated</th>
+                    <th style="width:120px;text-align:right;">Action</th>
+                  </tr>
+                </thead>
+                                <tbody id="all-requests-body">
+                </tbody>              </table>
+            </div>
+            <div class="actions">
+              <button class="btn-ghost btn-small" type="button">Refresh</button>
+              <button class="btn-secondary btn-small" type="button">Export All Request</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div id="selected-trip-card" class="card selected-trip-card hidden">
+        <h2>Selected Trip – User Travel Information</h2>
+        <div class="selected-trip-grid">
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Req ID</div>
+            <div class="selected-trip-value" id="st-req-id">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Status</div>
+            <div class="selected-trip-value" id="st-status">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Employee</div>
+            <div class="selected-trip-value" id="st-employee">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Email</div>
+            <div class="selected-trip-value" id="st-email">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Route</div>
+            <div class="selected-trip-value" id="st-route">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Travel Dates</div>
+            <div class="selected-trip-value" id="st-dates">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Mode(s) Requested</div>
+            <div class="selected-trip-value" id="st-modes">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Last Action</div>
+            <div class="selected-trip-value" id="st-last-action">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Created On</div>
+            <div class="selected-trip-value" id="st-created">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Last Updated</div>
+            <div class="selected-trip-value" id="st-updated">—</div>
+          </div>
+        </div>
+        <div class="selected-trip-actions">
+
+        <div id="st-extra" style="margin-top:14px;border-top:1px solid rgba(55,65,81,.9);padding-top:12px;">
+          <div style="font-size:11px;color:#9ca3af;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">
+            Requested Details (Full)
+          </div>
+          <div id="st-extra-body" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:12px;"></div>
+          <div class="note" style="margin-top:8px;">
+            Travel Desk can review the full request here and proceed with quotation without returning to the dashboard.
+          </div>
+        </div>
+
+          <button type="button" class="btn-primary btn-small" id="btnReplyWithOptions">Reply with Options</button>
+        </div>
+        <div id="st-approval-wrap" style="margin-top:12px;display:none;">
+          <div style="font-size:12px;font-weight:700;margin-bottom:6px;">Manager Approved Itinerary</div>
+          <div id="st-approval" style="border:1px dashed #cbd5e1;border-radius:12px;padding:10px 12px;background:#f8fafc;"></div>
+          <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;">
+            <button type="button" class="btn-primary btn-small" id="btnOpenApprovedItinerary">Open Approved Itinerary</button>
+            <button type="button" class="btn-secondary btn-small" id="btnSendConfirmationVoucher">Send confirmation voucher</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN TAB: REPORT SECTION -->
+      <div id="main-tab-report" class="main-tab-pane">
+        <div class="card">
+          <h2>Report Section</h2>
+          <div class="row" style="align-items:flex-end;">
+            <div class="col-12">
+              <label for="reportRange">Report Range</label>
+              <select id="reportRange" onchange="toggleCustomRange(this.value)">
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="last3">Last 3 Months</option>
+                <option value="custom">Custom Range</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row" id="customRangeFields" style="margin-top:10px; display:none;">
+            <div class="col-6">
+              <label for="reportFrom">From Date</label>
+              <input type="date" id="reportFrom">
+            </div>
+            <div class="col-6">
+              <label for="reportTo">To Date</label>
+              <input type="date" id="reportTo">
+            </div>
+          </div>
+
+          <div class="metric-grid" id="deskReportMetrics">
+            <div class="metric-card">
+              <div class="metric-label">Pending Requests</div>
+              <div class="metric-value" id="mPending">0</div>
+              <div class="metric-sub">Awaiting ticketing / vouchers</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Completed Trips</div>
+              <div class="metric-value" id="mCompleted">0</div>
+              <div class="metric-sub">Completed / Ticketed / Issued</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Total Trips</div>
+              <div class="metric-value" id="mTotal">0</div>
+              <div class="metric-sub">All statuses</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Last Updated</div>
+              <div class="metric-value" style="font-size:14px;" id="mUpdated">—</div>
+              <div class="metric-sub">Auto refresh</div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;">
+              <div style="font-size:12px;color:#9ca3af;font-weight:600;letter-spacing:.12em;text-transform:uppercase;">Completed Trips (Report)</div>
+              <div style="font-size:11px;color:#9ca3af;">Showing completed trips only</div>
+            </div>
+            <div class="table-shell">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:90px;">Req ID</th>
+                    <th style="width:160px;">Employee</th>
+                    <th style="width:180px;">Route</th>
+                    <th style="width:140px;">Travel Dates</th>
+                    <th style="width:130px;">Status</th>
+                    <th style="width:140px;">Completed On</th>
+                    <th style="width:140px;text-align:right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="desk-report-completed-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="report-row">
+            <div class="col">
+              <button type="button" class="btn-ghost btn-small" id="reportDownloadCsvBtn">Download Completed (CSV)</button>
+            </div>
+            <div class="col">
+              <button type="button" class="btn-ghost btn-small" id="reportDownloadJsonBtn">Download Completed (JSON)</button>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;">
+            <div style="font-size:12px;color:#9ca3af;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">Export History</div>
+            <div class="table-shell">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:180px;">When</th>
+                    <th style="width:200px;">Type</th>
+                    <th style="width:140px;">Trips</th>
+                    <th style="width:220px;">By</th>
+                  </tr>
+                </thead>
+                <tbody id="export-history-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="note">
+            Export menu works from any tab. Reports auto-refresh every few seconds in the same browser to feel real-time.
+          </div>
+</div>
+      </div>
+
+    </div>
+  </div>
+  <!-- Scroll arrows -->
+  <div class="scroll-arrows">
+    <button type="button" class="scroll-arrow up" id="scrollUpBtn">▲</button>
+    <button type="button" class="scroll-arrow down" id="scrollDownBtn">▼</button>
+  </div>
+
+<script>
+  function setMainTab(id){
+    document.querySelectorAll('.main-tab').forEach(btn=>{
+      btn.classList.toggle('active', btn.dataset.main === id);
+    });
+    document.querySelectorAll('.main-tab-pane').forEach(pane=>{
+      pane.classList.toggle('active', pane.id === 'main-tab-' + id);
+    });
+  }
+
+  function setSubTab(id){
+    document.querySelectorAll('.subtab').forEach(btn=>{
+      btn.classList.toggle('active', btn.dataset.subtab === id);
+    });
+    document.querySelectorAll('.subtab-pane').forEach(pane=>{
+      pane.classList.toggle('active', pane.id === 'subtab-' + id);
+    });
+  }
+
+  // Show/hide custom range fields
+  function toggleCustomRange(value){
+    var customRow = document.getElementById('customRangeFields');
+    if(!customRow) return;
+    if(value === 'custom'){
+      customRow.style.display = 'flex';
+    } else {
+      customRow.style.display = 'none';
+    }
+  }
+  
+
+  // Build cross-file links safely (keeps login context + adds parameters)
+  function buildStageLink(filename, extraParams){
+    extraParams = extraParams || {};
+    var cur = new URLSearchParams(window.location.search || '');
+    // keep common login params if present
+    var keepKeys = ['fromLogin','email','role','name'];
+    keepKeys.forEach(function(k){
+      var v = cur.get(k);
+      if(v !== null && v !== undefined && v !== ''){
+        extraParams[k] = extraParams[k] || v;
+      }
+    });
+    // build query
+    var q = new URLSearchParams();
+    Object.keys(extraParams).forEach(function(k){
+      if(extraParams[k] !== undefined && extraParams[k] !== null && String(extraParams[k]) !== ''){
+        q.set(k, String(extraParams[k]));
+      }
+    });
+    return filename + (q.toString() ? ('?' + q.toString()) : '');
+  }
+
+  // -------- Export + Report helpers (Travel Desk) --------
+  function ensureTravelDeskAccess(){
+    var ctx = getLoginContext();
+    if(!ctx){ return; } // allow demo if no login context
+    var role = String(ctx.role||'').toLowerCase();
+    var email = String(ctx.email||'').toLowerCase();
+    var isDesk = role.indexOf('travel') !== -1 || email.indexOf('traveldesk') !== -1;
+    if(!isDesk){
+      alert('Access restricted: please login with TravelDesk credentials to use this page.');
+    }
+  }
+
+  function loadExportHistory(){
+    try{
+      return JSON.parse(localStorage.getItem('etg-export-history') || '[]');
+    }catch(e){ return []; }
+  }
+  function saveExportHistory(list){
+    try{ localStorage.setItem('etg-export-history', JSON.stringify(list||[])); }catch(e){}
+  }
+  function addExportHistory(entry){
+    var list = loadExportHistory();
+    list.unshift(entry);
+    // keep last 50
+    list = list.slice(0,50);
+    saveExportHistory(list);
+    renderExportHistory();
+  }
+
+  function downloadText(filename, text){
+    var blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){
+      URL.revokeObjectURL(a.href);
+      a.remove();
+    }, 250);
+  }
+
+  function toCsv(rows){
+    if(!rows || !rows.length) return '';
+    var headers = Object.keys(rows[0]);
+    function esc(v){
+      if(v === null || v === undefined) return '';
+      var s = String(v);
+      if(s.indexOf('"') !== -1) s = s.replace(/"/g,'""');
+      if(/[",\n]/.test(s)) s = '"' + s + '"';
+      return s;
+    }
+    var out = [];
+    out.push(headers.map(esc).join(','));
+    rows.forEach(function(r){
+      out.push(headers.map(function(h){ return esc(r[h]); }).join(','));
+    });
+    return out.join('\n');
+  }
+
+  function getCompletedTripsForDesk(){
+    // Completed / Ticketed / Issued / Booked / Closed
+    var parts = partitionTrips();
+    return parts.completed || [];
+  }
+
+  function exportExpenses(){
+    var trips = getCompletedTripsForDesk();
+    var rows = trips.map(function(t){
+      return {
+        reqId: t.id || '',
+        employee: t.travelerName || t.email || '',
+        email: t.email || '',
+        route: (t.fromCity||'') + ' -> ' + (t.toCity||''),
+        departDate: t.departDate || '',
+        returnDate: t.returnDate || '',
+        status: t.status || '',
+        totalAmount: t.totalAmount || t.amount || t.totalCost || ''
+      };
+    });
+    var csv = toCsv(rows);
+    downloadText('TravelDesk_Export_Expenses_' + new Date().toISOString().slice(0,10) + '.csv', csv || 'No data');
+    var ctx = getLoginContext()||{};
+    addExportHistory({when:new Date().toISOString(), type:'Export Expenses', trips: rows.length, by:(ctx.email||'traveldesk')});
+  }
+
+  function exportSharedDetails(){
+    var trips = getCompletedTripsForDesk();
+    var rows = trips.map(function(t){
+      return {
+        reqId: t.id || '',
+        employee: t.travelerName || t.email || '',
+        email: t.email || '',
+        status: t.status || '',
+        confirmedOption: t.confirmedOption || t.selectedOption || '',
+        sharedOptions: JSON.stringify(t.optionsShared || t.options || t.quotationOptions || [])
+      };
+    });
+    var csv = toCsv(rows);
+    downloadText('TravelDesk_Export_SharedDetails_' + new Date().toISOString().slice(0,10) + '.csv', csv || 'No data');
+    var ctx = getLoginContext()||{};
+    addExportHistory({when:new Date().toISOString(), type:'Export Shared Details', trips: rows.length, by:(ctx.email||'traveldesk')});
+  }
+
+  function viewExportHistory(){
+    var list = loadExportHistory();
+    if(!list.length){
+      alert('No export history yet.');
+      return;
+    }
+    // simple view
+    var lines = list.slice(0,15).map(function(x){
+      return (x.when||'') + ' | ' + (x.type||'') + ' | trips: ' + (x.trips||0) + ' | ' + (x.by||'');
+    });
+    alert('Recent export history:\n\n' + lines.join('\n'));
+  }
+
+  function viewBulkHistory(){
+    // bulk history = exports with trips >= 5
+    var list = loadExportHistory().filter(function(x){ return (x.trips||0) >= 5; });
+    if(!list.length){
+      alert('No bulk exports yet.');
+      return;
+    }
+    var lines = list.slice(0,15).map(function(x){
+      return (x.when||'') + ' | ' + (x.type||'') + ' | trips: ' + (x.trips||0) + ' | ' + (x.by||'');
+    });
+    alert('Recent bulk export history:\n\n' + lines.join('\n'));
+  }
+
+  function setupExportMenu(){
+    var trigger = document.getElementById('exportTrigger');
+    var menu = document.getElementById('exportMenu');
+    if(!trigger || !menu) return;
+
+    function closeMenu(){
+      menu.classList.add('hidden');
+      menu.setAttribute('aria-hidden','true');
+    }
+    function toggleMenu(){
+      menu.classList.toggle('hidden');
+      menu.setAttribute('aria-hidden', menu.classList.contains('hidden') ? 'true' : 'false');
+    }
+
+    trigger.addEventListener('click', function(e){
+      e.stopPropagation();
+      toggleMenu();
+    });
+    document.addEventListener('click', function(){ closeMenu(); });
+    menu.addEventListener('click', function(e){ e.stopPropagation(); });
+
+    var exp1 = document.getElementById('exportExpensesBtn');
+    var exp2 = document.getElementById('exportSharedBtn');
+    var h1 = document.getElementById('viewExportHistoryBtn');
+    var h2 = document.getElementById('viewBulkHistoryBtn');
+
+    if(exp1) exp1.addEventListener('click', function(){ closeMenu(); exportExpenses(); });
+    if(exp2) exp2.addEventListener('click', function(){ closeMenu(); exportSharedDetails(); });
+    if(h1) h1.addEventListener('click', function(){ closeMenu(); viewExportHistory(); });
+    if(h2) h2.addEventListener('click', function(){ closeMenu(); viewBulkHistory(); });
+  }
+
+  function renderDeskReport(){
+    var trips = getCompletedTripsForDesk();
+    var tbody = document.getElementById('desk-report-completed-body');
+    if(tbody){
+      if(!trips.length){
+        tbody.innerHTML = '<tr><td colspan="7" style="padding:10px 12px;font-size:12px;color:#9ca3af;">No completed trips found yet. Once you mark a trip as Completed, it will appear here.</td></tr>';
+      }else{
+        tbody.innerHTML = '';
+        trips.forEach(function(t){
+          var reqId = t.id || '—';
+          var employee = t.travelerName || t.email || 'Employee';
+          var route = (t.fromCity || 'From') + ' → ' + (t.toCity || 'To');
+          var datesText = (t.departDate || '-') + (t.returnDate ? (' – ' + t.returnDate) : '');
+          var statusText = t.status || 'Completed';
+          var completedOn = formatDateIso(t.completedOn || t.lastUpdated || t.createdAt);
+
+          var tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td>'+reqId+'</td>'+
+            '<td>'+employee+'</td>'+
+            '<td>'+route+'</td>'+
+            '<td>'+datesText+'</td>'+
+            '<td><span class="badge badge-confirmed">'+statusText+'</span></td>'+
+            '<td>'+completedOn+'</td>'+
+            '<td style="text-align:right;"><button type="button" class="btn-secondary btn-small js-open-trip" data-trip-id="'+reqId+'">View</button></td>';
+          tbody.appendChild(tr);
+        });
+
+        tbody.querySelectorAll('.js-open-trip').forEach(function(btn){
+          btn.addEventListener('click', function(){
+            openTripFromDashboard(btn.getAttribute('data-trip-id'));
+          });
+        });
+      }
+    }
+
+    // metrics
+    var parts = partitionTrips();
+    var mP = document.getElementById('mPending');
+    var mC = document.getElementById('mCompleted');
+    var mT = document.getElementById('mTotal');
+    var mU = document.getElementById('mUpdated');
+    if(mP) mP.textContent = (parts.pending||[]).length;
+    if(mC) mC.textContent = (parts.completed||[]).length;
+    if(mT) mT.textContent = (parts.all||[]).length;
+    if(mU) mU.textContent = new Date().toLocaleString();
+  }
+
+  function renderExportHistory(){
+    var tbody = document.getElementById('export-history-body');
+    if(!tbody) return;
+    var list = loadExportHistory();
+    if(!list.length){
+      tbody.innerHTML = '<tr><td colspan="4" style="padding:10px 12px;font-size:12px;color:#9ca3af;">No export history yet.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = '';
+    list.slice(0,15).forEach(function(x){
+      var tr = document.createElement('tr');
+      var when = x.when ? new Date(x.when).toLocaleString() : '—';
+      tr.innerHTML =
+        '<td>'+when+'</td>'+
+        '<td>'+ (x.type||'') +'</td>'+
+        '<td>'+ (x.trips||0) +'</td>'+
+        '<td>'+ (x.by||'') +'</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  function wireReportDownloads(){
+    var csvBtn = document.getElementById('reportDownloadCsvBtn');
+    var jsonBtn = document.getElementById('reportDownloadJsonBtn');
+    if(csvBtn){
+      csvBtn.addEventListener('click', function(){
+        var trips = getCompletedTripsForDesk();
+        var rows = trips.map(function(t){
+          return {
+            reqId: t.id || '',
+            employee: t.travelerName || t.email || '',
+            email: t.email || '',
+            fromCity: t.fromCity || '',
+            toCity: t.toCity || '',
+            departDate: t.departDate || '',
+            returnDate: t.returnDate || '',
+            status: t.status || '',
+            completedOn: t.completedOn || ''
+          };
+        });
+        downloadText('TravelDesk_Report_Completed_' + new Date().toISOString().slice(0,10) + '.csv', toCsv(rows) || 'No data');
+        var ctx = getLoginContext()||{};
+        addExportHistory({when:new Date().toISOString(), type:'Download Completed (CSV)', trips: rows.length, by:(ctx.email||'traveldesk')});
+      });
+    }
+    if(jsonBtn){
+      jsonBtn.addEventListener('click', function(){
+        var trips = getCompletedTripsForDesk();
+        downloadText('TravelDesk_Report_Completed_' + new Date().toISOString().slice(0,10) + '.json', JSON.stringify(trips, null, 2));
+        var ctx = getLoginContext()||{};
+        addExportHistory({when:new Date().toISOString(), type:'Download Completed (JSON)', trips: trips.length, by:(ctx.email||'traveldesk')});
+      });
+    }
+  }
+
+// -------- 
+// -------- Travel Desk linkage with Stage 2 (employee requests) --------
+
+// Login context helper (shared with Stage 1 / Stage 2)
+function getLoginContext(){
+  try{
+    var local = localStorage.getItem('etg-login');
+    var sess  = sessionStorage.getItem('etg-login');
+    return local ? JSON.parse(local) : (sess ? JSON.parse(sess) : null);
+  }catch(e){
+    return null;
+  }
+}
+
+// Trip store helpers (re-use the same etg-trips store created in Stage 2)
+// ---- Global trip store (preferred) ----
+const GLOBAL_TRIPS_KEY = 'etg-trips-global';
+
+function loadGlobalTrips(){
+  try{
+    return JSON.parse(localStorage.getItem(GLOBAL_TRIPS_KEY) || '{}') || {};
+  }catch(e){
+    return {};
+  }
+}
+function saveGlobalTrips(map){
+  try{ localStorage.setItem(GLOBAL_TRIPS_KEY, JSON.stringify(map||{})); }catch(e){}
+}
+function getGlobalTripById(rid){
+  const map = loadGlobalTrips();
+  return map && map[String(rid)] ? map[String(rid)] : null;
+}
+function upsertGlobalTripById(rid, patch){
+  if(!rid) return null;
+  const map = loadGlobalTrips();
+  const current = map[String(rid)] || {};
+  const merged = Object.assign({}, current, patch||{});
+  map[String(rid)] = merged;
+  saveGlobalTrips(map);
+  return merged;
+}
+
+function loadTripStoreForDesk(){
+  // localStorage is blocked for file:// in some browsers (opaque origin).
+  // We fallback to an in-memory store populated from URL hash payload.
+  try{
+    var parsed = JSON.parse(localStorage.getItem('etg-trips') || '{}');
+    if(parsed && Object.keys(parsed).length){ return parsed; }
+  }catch(e){}
+  if(window.__etgHashTripStore && Object.keys(window.__etgHashTripStore).length){
+    return window.__etgHashTripStore;
+  }
+  return {};
+}
+
+function saveTripStoreForDesk(store){
+  try{
+    localStorage.setItem('etg-trips', JSON.stringify(store));
+  }catch(e){}
+}
+
+/**
+ * Ingest a submitted trip from URL hash payload: #trip=<base64url(json)>
+ * This is a robust fallback for running from file:// where localStorage may be blocked.
+ */
+function ingestTripFromHash(){
+  try{
+    var h = window.location.hash || '';
+    var m = h.match(/(?:^|[#&])trip=([^&]+)/);
+    if(!m || !m[1]) return;
+
+    var b64 = decodeURIComponent(m[1]).replace(/-/g,'+').replace(/_/g,'/');
+    // pad base64
+    while(b64.length % 4) b64 += '=';
+    var jsonStr = decodeURIComponent(escape(atob(b64)));
+    var trip = JSON.parse(jsonStr);
+    if(!trip || !trip.id) return;
+
+    // clear the hash so refresh doesn't duplicate
+    history.replaceState(null, document.title, window.location.pathname + window.location.search);
+
+    // Try to persist into shared store
+    try{
+      var store = loadTripStoreForDesk() || {};
+      if(!Array.isArray(store.pending)) store.pending = [];
+      // avoid duplicates
+      var exists = store.pending.some(function(t){ return t && t.id === trip.id; });
+      if(!exists) store.pending.unshift(trip);
+      saveTripStoreForDesk(store);
+      return;
+    }catch(e){}
+
+    // Fallback to in-memory store
+    if(!window.__etgHashTripStore) window.__etgHashTripStore = {};
+    if(!Array.isArray(window.__etgHashTripStore.pending)) window.__etgHashTripStore.pending = [];
+    var exists2 = window.__etgHashTripStore.pending.some(function(t){ return t && t.id === trip.id; });
+    if(!exists2) window.__etgHashTripStore.pending.unshift(trip);
+  }catch(e){}
+}
+
+
+
+// -------- Cross-page payload helpers (ensures Stage 4 can always see the full request) --------
+function b64UrlEncode(str){
+  try{
+    var b64 = btoa(unescape(encodeURIComponent(str)));
+    return b64.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  }catch(e){
+    return '';
+  }
+}
+
+function persistSelectedTripPayload(trip){
+  if(!trip) return;
+  try{ localStorage.setItem('etg-selected-trip-payload', JSON.stringify(trip)); }catch(e){}
+  try{ sessionStorage.setItem('etg-selected-trip-payload', JSON.stringify(trip)); }catch(e){}
+}
+
+// -------- Trip normalization to ensure Employee + Email are always available --------
+function findUserProfileByEmail(email){
+  if(!email) return null;
+  var e = String(email).toLowerCase();
+  var candidateKeys = [
+    'etg-users','etg-user-store','etg-user-profiles','etg-profiles','etg-employees','etg-employee-profiles'
+  ];
+  for(var i=0;i<candidateKeys.length;i++){
+    var k = candidateKeys[i];
+    try{
+      var raw = localStorage.getItem(k);
+      if(!raw) continue;
+      var data = JSON.parse(raw);
+
+      // Array of users
+      if(Array.isArray(data)){
+        for(var a=0;a<data.length;a++){
+          var u = data[a] || {};
+          var ue = String(u.email || u.userEmail || u.employeeEmail || '').toLowerCase();
+          if(ue && ue === e) return u;
+        }
+      }
+
+      // Map/object of users by email or id
+      if(data && typeof data === 'object'){
+        if(data[e]) return data[e];
+        var keys = Object.keys(data);
+        for(var b=0;b<keys.length;b++){
+          var u2 = data[keys[b]] || {};
+          var ue2 = String(u2.email || u2.userEmail || u2.employeeEmail || '').toLowerCase();
+          if(ue2 && ue2 === e) return u2;
+        }
+      }
+    }catch(err){}
+  }
+  return null;
+}
+
+function guessNameFromEmail(email){
+  if(!email) return '';
+  var left = String(email).split('@')[0] || '';
+  left = left.replace(/[._-]+/g,' ').trim();
+  if(!left) return '';
+  return left.split(' ').map(function(w){
+    return w ? (w.charAt(0).toUpperCase() + w.slice(1)) : '';
+  }).join(' ').trim();
+}
+
+function normalizeTripForDesk(trip, ownerKey){
+  // return a shallow copy enriched with email + travelerName
+  var t = Object.assign({}, trip || {});
+  t.__ownerKey = ownerKey || t.__ownerKey || '';
+
+  // email fallbacks
+  if(!t.email){
+    t.email = t.userEmail || t.employeeEmail || t.requesterEmail || t.travellerEmail
+      || t.createdByEmail || t.createdBy || t.requestBy || t.__ownerKey || '';
+  }
+
+  // traveler name fallbacks
+  if(!t.travelerName){
+    t.travelerName = t.employeeName || t.employee || t.requesterName || t.createdByName || '';
+    if(!t.travelerName && t.email){
+      var u = findUserProfileByEmail(t.email);
+      if(u){
+        t.travelerName = u.name || u.fullName || u.employeeName || u.firstName || '';
+        if(!t.travelerName && u.firstName){
+          t.travelerName = (u.firstName || '') + (u.lastName ? (' ' + u.lastName) : '');
+        }
+      }
+    }
+    if(!t.travelerName && t.email){
+      t.travelerName = guessNameFromEmail(t.email);
+    }
+  }
+
+
+  // Infer requested modes (Flight/Hotel/Cab) from various schema variants
+  function _asList(v){
+    if(!v) return [];
+    if(Array.isArray(v)) return v;
+    if(typeof v === 'string') return v.split(/[,|]/).map(function(s){ return (s||'').trim(); }).filter(function(x){ return !!x; });
+    return [];
+  }
+
+  // Collect likely "mode" tokens from common fields
+  var _modeTokens = [];
+  _modeTokens = _modeTokens.concat(_asList(t.requestedModes));
+  _modeTokens = _modeTokens.concat(_asList(t.selectedModes));
+  _modeTokens = _modeTokens.concat(_asList(t.modes));
+  _modeTokens = _modeTokens.concat(_asList(t.travelModes));
+  _modeTokens = _modeTokens.concat(_asList(t.services));
+  _modeTokens = _modeTokens.concat(_asList(t.servicesRequested));
+  _modeTokens = _modeTokens.concat(_asList(t.bookingTypes));
+  _modeTokens = _modeTokens.concat(_asList(t.travelServices));
+
+  var _modeStr = String(t.modeOfTravel || t.travelMode || t.travelType || t.tripType || '').toLowerCase();
+  var _tokenStr = _modeTokens.join(' ').toLowerCase();
+
+  // Last-resort: scan full trip payload for keywords (covers nested objects like hotelRequest/cabRequest)
+  var _blob = '';
+  try{ _blob = JSON.stringify(t).toLowerCase(); }catch(e){ _blob = ''; }
+
+  function _hasAny(hay, needles){
+    for(var i=0;i<needles.length;i++){
+      if(hay.indexOf(needles[i]) !== -1) return true;
+    }
+    return false;
+  }
+
+  function _hasToken(tok){
+    return (_modeStr.indexOf(tok) !== -1) || (_tokenStr.indexOf(tok) !== -1);
+  }
+
+  // --- FLIGHT ---
+  var inferredFlight = !!(t.hasFlight || t.flightRequired || t.needFlight || t.includeFlight || t.flightNeeded || t.flightBooking || t.flightBook || t.airRequired)
+    || _hasToken('flight') || _hasToken('air') || _hasToken('airline')
+    || (t.flightOptions && Array.isArray(t.flightOptions) && t.flightOptions.length>0)
+    || _hasAny(_blob, ['"flight"', 'flightno', 'flight no', 'pnr', 'airline']);
+
+  // --- HOTEL ---
+  var inferredHotel = !!(t.hasHotel || t.hotelRequired || t.needHotel || t.includeHotel || t.hotelNeeded || t.hotelBooking || t.hotelBook || t.accommodationRequired || t.needAccommodation)
+    || _hasToken('hotel') || _hasToken('stay') || _hasToken('accommodation') || _hasToken('lodging')
+    || (t.hotelOptions && Array.isArray(t.hotelOptions) && t.hotelOptions.length>0)
+    || !!(t.checkInDate || t.checkOutDate || t.hotelCity || t.hotelName || t.hotelCheckIn || t.hotelCheckOut || t.checkIn || t.checkOut || t.stayFrom || t.stayTo || t.nights || t.numberOfNights)
+    || _hasAny(_blob, ['"hotel"', 'checkin', 'check-in', 'checkout', 'check-out', 'accommodation', 'lodging', 'room']);
+
+  // --- CAB ---
+  var inferredCab = !!(t.hasCab || t.cabRequired || t.needCab || t.includeCab || t.taxiRequired || t.carRequired || t.cabNeeded || t.needTaxi || t.needCar || t.pickupRequired || t.dropRequired)
+    || _hasToken('cab') || _hasToken('taxi') || _hasToken('car') || _hasToken('pickup') || _hasToken('drop')
+    || (t.cabOptions && Array.isArray(t.cabOptions) && t.cabOptions.length>0)
+    || !!(t.pickupLocation || t.dropLocation || t.pickUpLocation || t.dropOffLocation || t.pickup || t.drop || t.cabPickup || t.cabDrop)
+    || _hasAny(_blob, ['"cab"', '"taxi"', '"pickup"', '"drop"', 'pick up', 'drop off', 'chauffeur']);
+t.hasFlight = !!inferredFlight;
+  t.hasHotel  = !!inferredHotel;
+  t.hasCab    = !!inferredCab;
+
+  // Keep route summary consistent
+  if(!t.routeSummary && (t.fromCity || t.toCity)){
+    t.routeSummary = (t.fromCity || 'From') + ' → ' + (t.toCity || 'To');
+  }
+
+  return t;
+}
+
+
+function flattenAllTrips(){
+  // Merge trips from both stores and de-duplicate by Req ID (single source of truth per request)
+  var byId = {};
+
+  // 1) Primary store (Stage 2 / hash-ingested)
+  var store = loadTripStoreForDesk() || {};
+  Object.keys(store).forEach(function(key){
+    var list = store[key];
+    if(!Array.isArray(list)) return;
+    list.forEach(function(trip){
+      if(!trip || !trip.id) return;
+      byId[String(trip.id)] = normalizeTripForDesk(trip, key);
+    });
+  });
+
+  // 2) Global store mirror (preferred master if present)
+  try{
+    var g = loadGlobalTrips() || {};
+    Object.keys(g).forEach(function(rid){
+      var t = g[rid];
+      if(!t || !t.id) return;
+      byId[String(t.id)] = normalizeTripForDesk(t, 'global');
+    });
+  }catch(e){}
+
+  var all = Object.keys(byId).map(function(id){ return byId[id]; });
+
+  all.sort(function(a,b){
+    return new Date((b && b.createdAt) || 0) - new Date((a && a.createdAt) || 0);
+  });
+
+  return all;
+}
+
+
+// Update one trip in the shared store and persist
+function updateTripInStore(tripId, updater){
+  if(!tripId || !updater) return;
+  var store = loadTripStoreForDesk();
+  var changed = false;
+
+  Object.keys(store).forEach(function(key){
+    var list = store[key];
+    if(Array.isArray(list)){
+      list.forEach(function(t){
+        if(!t) return;
+        if(String(t.id) === String(tripId)){
+          updater(t);
+          changed = true;
+        }
+      });
+    }
+  });
+
+  if(changed){
+    saveTripStoreForDesk(store);
+  }
+
+  // Mirror the update into global store if present
+  try{
+    var gTrip = getGlobalTripById(tripId);
+    if(gTrip){
+      // apply same updater to a clone and upsert
+      var clone = Object.assign({}, gTrip);
+      updater(clone);
+      upsertGlobalTripById(tripId, clone);
+    }
+  }catch(e){}
+
+}
+
+function getModesLabel(trip){
+  var parts = [];
+  var modeStr = (trip.modeOfTravel || '').toLowerCase();
+  if(trip.hasFlight || modeStr.indexOf('flight') !== -1){
+    parts.push('Flight');
+  }
+  if(trip.hasHotel || modeStr.indexOf('hotel') !== -1){
+    parts.push('Hotel');
+  }
+  if(trip.hasCab || modeStr.indexOf('cab') !== -1 || modeStr.indexOf('taxi') !== -1 || modeStr.indexOf('car') !== -1){
+    parts.push('Cab');
+  }
+  if(parts.length === 0 && trip.modeOfTravel){
+    return trip.modeOfTravel;
+  }
+  if(parts.length === 1){
+    return parts[0];
+  }
+  if(parts.length === 2){
+    return parts.join(' & ');
+  }
+  if(parts.length >= 3){
+    return 'Flight + Hotel + Cab';
+  }
+  return '—';
+}
+
+function resolveOwnerBadgeClass(statusText){
+  var txt = (statusText || '').toLowerCase();
+  if(txt.indexOf('reporting manager') !== -1){
+    return 'badge-owner badge-owner-manager';
+  }
+  if(txt.indexOf('travel desk') !== -1){
+    return 'badge-owner badge-owner-desk';
+  }
+  return 'badge-owner badge-owner-user';
+}
+
+function partitionTrips(){
+  var all = flattenAllTrips();
+  var pending = [];
+  var completed = [];
+
+  all.forEach(function(t){
+    if(!t) return;
+    var s = (t.status || '').toLowerCase();
+    if(s.indexOf('complete') !== -1 || s.indexOf('ticket') !== -1 || s.indexOf('booked') !== -1 || s.indexOf('closed') !== -1){
+      completed.push(t);
+    }else{
+      // treat the rest as pending for now
+      pending.push(t);
+    }
+  });
+
+  return { all: all, pending: pending, completed: completed };
+}
+
+function formatDateIso(iso){
+  if(!iso) return '-';
+  try{
+    return iso.slice(0,10);
+  }catch(e){
+    return iso;
+  }
+}
+
+function renderPendingTable(list){
+  var tbody = document.getElementById('pending-requests-body');
+  if(!tbody){ return; }
+
+  if(!list || !list.length){
+    tbody.innerHTML = '<tr><td colspan="8" style="padding:10px 12px;font-size:12px;color:#9ca3af;">No pending requests from employees yet. Once a user submits a trip in Stage 2, it will appear here for the Travel Desk.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = '';
+  list.forEach(function(trip){
+    var reqId = trip.id || '—';
+    var employee = trip.travelerName || trip.email || 'Employee';
+    var route = (trip.fromCity || 'From') + ' → ' + (trip.toCity || 'To');
+    var datesText = '-';
+    if(trip.departDate){
+      datesText = trip.departDate;
+      if(trip.returnDate){
+        datesText += ' – ' + trip.returnDate;
+      }
+    }
+    var modesLabel = getModesLabel(trip);
+    var lastAction = trip.policyViolation
+      ? 'Policy violation – sent to Manager & Travel Desk'
+      : ((String(trip.statusCode||'').toUpperCase()==='VOUCHER_SENT' || (String(trip.status||'').toLowerCase().indexOf('voucher sent')!==-1))
+          ? 'Voucher sent – awaiting user acknowledgement'
+          : 'User submitted request');
+
+    var statusText = trip.status || (trip.policyViolation
+      ? 'Pending with Reporting Manager'
+      : 'Pending with Travel Desk');
+
+    var mainStatusLabel = statusText.toLowerCase().indexOf('pending') !== -1
+      ? 'Pending Booking'
+      : statusText;
+
+    var ownerBadgeClass = resolveOwnerBadgeClass(statusText);
+
+    var trEl = document.createElement('tr');
+    trEl.innerHTML = ''
+      + '<td>' + reqId + '</td>'
+      + '<td>' + employee + '</td>'
+      + '<td>' + route + '</td>'
+      + '<td>' + datesText + '</td>'
+      + '<td><span class="badge badge-multi">' + modesLabel + '</span></td>'
+      + '<td>' + lastAction + '</td>'
+      + '<td class="status-cell">'
+          + '<span class="badge badge-pending">' + mainStatusLabel + '</span>'
+          + '<span class="' + ownerBadgeClass + '">' + statusText + '</span>'
+        + '</td>'
+      + '<td style="text-align:right;">'
+        + '<button type="button" class="btn-primary btn-small js-open-trip" data-trip-id="' + reqId + '">Open</button>'
+        + '<button type="button" class="btn-secondary btn-small js-complete-trip" data-trip-id="' + reqId + '" style="margin-left:6px;">Mark Completed</button>'
+      + '</td>';
+
+    tbody.appendChild(trEl);
+  });
+
+  // Wire actions
+  tbody.querySelectorAll('.js-complete-trip').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-trip-id');
+      markTripCompleted(id);
+    });
+  });
+
+  tbody.querySelectorAll('.js-open-trip').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-trip-id');
+      openTripFromDashboard(id);
+    });
+  });
+}
+
+function renderCompletedTable(list){
+  var tbody = document.getElementById('completed-requests-body');
+  if(!tbody){ return; }
+
+  if(!list || !list.length){
+    tbody.innerHTML = '<tr><td colspan="8" style="padding:10px 12px;font-size:12px;color:#9ca3af;">No completed requests yet.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = '';
+  list.forEach(function(trip){
+    var reqId = trip.id || '—';
+    var employee = trip.travelerName || trip.email || 'Employee';
+    var route = (trip.fromCity || 'From') + ' → ' + (trip.toCity || 'To');
+    var datesText = '-';
+    if(trip.departDate){
+      datesText = trip.departDate;
+      if(trip.returnDate){
+        datesText += ' – ' + trip.returnDate;
+      }
+    }
+    var modesLabel = getModesLabel(trip);
+    var statusText = trip.status || 'Completed by Travel Desk';
+    var completedOn = formatDateIso(trip.completedOn || trip.lastUpdated || trip.createdAt);
+
+    var trEl = document.createElement('tr');
+    trEl.innerHTML = ''
+      + '<td>' + reqId + '</td>'
+      + '<td>' + employee + '</td>'
+      + '<td>' + route + '</td>'
+      + '<td>' + datesText + '</td>'
+      + '<td><span class="badge badge-multi">' + modesLabel + '</span></td>'
+      + '<td class="status-cell">'
+        + '<span class="badge badge-confirmed">Completed</span>'
+        + '<span class="badge-owner badge-owner-desk">' + statusText + '</span>'
+      + '</td>'
+      + '<td>' + completedOn + '</td>'
+      + '<td style="text-align:right;">'
+        + '<button type="button" class="btn-secondary btn-small js-open-trip" data-trip-id="' + reqId + '">View</button>'
+      + '</td>';
+
+    tbody.appendChild(trEl);
+  });
+
+  tbody.querySelectorAll('.js-open-trip').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-trip-id');
+      openTripFromDashboard(id);
+    });
+  });
+}
+
+function renderAllRequestsTable(list){
+  var tbody = document.getElementById('all-requests-body');
+  if(!tbody){ return; }
+
+  if(!list || !list.length){
+    tbody.innerHTML = '<tr><td colspan="8" style="padding:10px 12px;font-size:12px;color:#9ca3af;">No requests found.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = '';
+  list.forEach(function(trip){
+    var reqId = trip.id || '—';
+    var employee = trip.travelerName || trip.email || 'Employee';
+    var route = (trip.fromCity || 'From') + ' → ' + (trip.toCity || 'To');
+    var datesText = '-';
+    if(trip.departDate){
+      datesText = trip.departDate;
+      if(trip.returnDate){
+        datesText += ' – ' + trip.returnDate;
+      }
+    }
+    var modesLabel = getModesLabel(trip);
+    var statusText = trip.status || 'Pending with Travel Desk';
+    var mainBadgeClass = (statusText.toLowerCase().indexOf('pending') !== -1) ? 'badge-pending' : 'badge-confirmed';
+    var lastUpdated = formatDateIso(trip.lastUpdated || trip.completedOn || trip.createdAt);
+
+    var trEl = document.createElement('tr');
+    trEl.innerHTML = ''
+      + '<td>' + reqId + '</td>'
+      + '<td>' + employee + '</td>'
+      + '<td>' + route + '</td>'
+      + '<td>' + datesText + '</td>'
+      + '<td><span class="badge badge-multi">' + modesLabel + '</span></td>'
+      + '<td><span class="badge ' + mainBadgeClass + '">' + statusText + '</span></td>'
+      + '<td>' + lastUpdated + '</td>'
+      + '<td style="text-align:right;">'
+        + '<button type="button" class="btn-secondary btn-small js-open-trip" data-trip-id="' + reqId + '">View</button>'
+      + '</td>';
+
+    tbody.appendChild(trEl);
+  });
+
+  tbody.querySelectorAll('.js-open-trip').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-trip-id');
+      openTripFromDashboard(id);
+    });
+  });
+}
+
+function updateCounts(pendingCount, completedCount, allCount){
+  var p = document.getElementById('pending-count-badge');
+  if(p){ p.textContent = pendingCount; }
+  var c = document.getElementById('completed-count-badge');
+  if(c){ c.textContent = completedCount; }
+  var a = document.getElementById('all-count-badge');
+  if(a){ a.textContent = allCount; }
+}
+
+
+function findTripByIdFromDesk(id){
+  if(!id){ return null; }
+  var all = flattenAllTrips();
+  var found = null;
+  all.forEach(function(t){
+    if(found){ return; }
+    if(t && String(t.id) === String(id)){
+      found = t;
+    }
+  });
+  return found;
+}
+
+function showSelectedTripOnDesk(trip){
+  if(!trip){ return; }
+  var id = trip.id || '';
+  window.__etgSelectedTripId = id;
+  try{
+    if(id){ localStorage.setItem('etg-selected-trip-id', String(id)); }
+  }catch(e){}
+
+  function val(v){
+    return (v !== undefined && v !== null && v !== '') ? v : '—';
+  }
+
+  var employee = trip.travelerName || trip.employeeName || trip.employee || trip.email || '—';
+  var email = trip.email || '—';
+  var route = '';
+  if(trip.routeSummary){
+    route = trip.routeSummary;
+  }else{
+    var fromPart = trip.fromCity || '';
+    var toPart = trip.toCity || '';
+    route = (fromPart || 'From') + ' → ' + (toPart || 'To');
+  }
+  var datesText = '—';
+  if(trip.departDate){
+    datesText = trip.departDate;
+    if(trip.returnDate){
+      datesText += ' – ' + trip.returnDate;
+    }
+  }
+  var modesLabel = getModesLabel(trip);
+  var statusText = trip.status || (trip.policyViolation ? 'Pending with Reporting Manager' : 'Pending with Travel Desk');
+  var lastAction = trip.policyViolation ? 'Policy violation – sent to Manager & Travel Desk' : 'User submitted request';
+  var createdOn = trip.createdAt ? formatDateIso(trip.createdAt) : '—';
+  var updatedOn = trip.lastUpdated ? formatDateIso(trip.lastUpdated) : (trip.completedOn ? formatDateIso(trip.completedOn) : createdOn);
+
+  var map = {
+    'st-req-id': val(id),
+    'st-status': val(statusText),
+    'st-employee': val(employee),
+    'st-email': val(email),
+    'st-route': val(route),
+    'st-dates': val(datesText),
+    'st-modes': val(modesLabel),
+    'st-last-action': val(lastAction),
+    'st-created': val(createdOn),
+    'st-updated': val(updatedOn)
+  };
+
+  Object.keys(map).forEach(function(key){
+    var el = document.getElementById(key);
+    if(el){ el.textContent = map[key]; }
+  });
+
+  // Render extended requested details
+  var extraHost = document.getElementById('st-extra-body');
+  if(extraHost){
+    function esc(str){
+      return String(str||'')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
+    }
+    function addRow(label, value){
+      var v = (value !== undefined && value !== null && String(value).trim() !== '') ? String(value) : '—';
+      var div = document.createElement('div');
+      div.style.border = '1px solid rgba(55,65,81,.9)';
+      div.style.borderRadius = '12px';
+      div.style.padding = '10px 12px';
+      div.style.background = '#020617';
+      div.innerHTML =
+        '<div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;">'+label+'</div>' +
+        '<div style="margin-top:4px;font-size:13px;color:#e5e7eb;white-space:pre-line;">'+esc(v)+'</div>';
+      extraHost.appendChild(div);
+    }
+    // Clear
+    extraHost.innerHTML = '';
+    addRow('Trip Type', trip.tripType || trip.trip_type || trip.travelType || trip.travel_type || trip.type || '—');
+    addRow('Requested Modes', getModesLabel(trip));
+    // Flight summary
+    var flightSummary = trip.flightSummary || trip.flight || trip.flightDetails || '';
+    if(!flightSummary){
+      if(trip.fromCity || trip.toCity || trip.departDate){
+        flightSummary = (trip.fromCity||'') + ' → ' + (trip.toCity||'') + (trip.departDate ? (' | ' + trip.departDate) : '');
+        if(trip.returnDate) flightSummary += ' – ' + trip.returnDate;
+      }
+    }
+    addRow('Flight Request', flightSummary || (trip.hasFlight ? 'Requested' : 'Not requested'));
+    // Hotel summary
+    var hotelSummary = trip.hotelSummary || trip.hotel || trip.hotelDetails || '';
+    var checkIn = trip.checkInDate || trip.hotelCheckIn || trip.checkIn || trip.stayFrom;
+    var checkOut = trip.checkOutDate || trip.hotelCheckOut || trip.checkOut || trip.stayTo;
+    var nights = trip.nights || trip.numberOfNights || '';
+    var guests = trip.guests || trip.guestCount || trip.noOfGuests || '';
+    if(!hotelSummary){
+      var parts = [];
+      if(trip.hotelName) parts.push(trip.hotelName);
+      if(trip.hotelCity) parts.push(trip.hotelCity);
+      if(checkIn || checkOut) parts.push((checkIn||'') + (checkOut ? (' → ' + checkOut) : ''));
+      if(nights) parts.push(String(nights) + ' night(s)');
+      if(guests) parts.push('Guests: ' + guests);
+      hotelSummary = parts.join(' | ');
+    }
+    addRow('Hotel Request', hotelSummary || (trip.hasHotel ? 'Requested' : 'Not requested'));
+    // Cab summary
+    var cabSummary = trip.cabSummary || trip.cab || trip.cabDetails || '';
+    if(!cabSummary){
+      var p2 = [];
+      if(trip.pickupLocation || trip.pickUpLocation) p2.push('Pickup: ' + (trip.pickupLocation || trip.pickUpLocation));
+      if(trip.dropLocation || trip.dropOffLocation) p2.push('Drop: ' + (trip.dropLocation || trip.dropOffLocation));
+      cabSummary = p2.join(' | ');
+    }
+    addRow('Cab Request', cabSummary || (trip.hasCab ? 'Requested' : 'Not requested'));
+    // Purpose / Notes if any
+    addRow('Purpose', trip.purpose || trip.reason || trip.travelPurpose || '');
+    addRow('User Notes', trip.userNotes || trip.notes || trip.comments || '');
+  }
+
+  // === Manager Approved Itinerary (auto from Stage 7) ===
+  var approvalWrap = document.getElementById('st-approval-wrap');
+  var approvalHost = document.getElementById('st-approval');
+  var openApprovedBtn = document.getElementById('btnOpenApprovedItinerary');
+  var sendVoucherBtn = document.getElementById('btnSendConfirmationVoucher');
+
+  function renderApprovedItinerary(tr){
+    if(!approvalWrap || !approvalHost) return;
+    var mgr = tr && tr.managerApproval ? tr.managerApproval : null;
+    var sel = mgr && Array.isArray(mgr.approvedSelections) ? mgr.approvedSelections : [];
+    if(!mgr || !sel.length){
+      approvalWrap.style.display = 'none';
+      approvalHost.innerHTML = '';
+      return;
+    }
+    approvalWrap.style.display = 'block';
+
+    var html = '';
+    html += '<div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">'
+         + '<div><b>Status:</b> ' + (mgr.status || 'APPROVED') + '</div>'
+         + '<div style="color:#64748b;"><b>Approved at:</b> ' + (mgr.approvedAt ? formatDateIso(mgr.approvedAt) : '—') + '</div>'
+         + '</div>';
+
+    sel.forEach(function(s){
+      var mode = String(s.type||'').toUpperCase();
+      var label = (s.label || s.title || '-');
+      var vio = s.isViolation ? ' <span style="color:#b91c1c;font-weight:700;">(Policy deviation)</span>' : '';
+      var comment = s.comment ? ('<div style="margin-top:4px;color:#475569;"><b>Comment:</b> ' + escapeHtml(s.comment) + '</div>') : '';
+      html += '<div style="margin-top:10px;border:1px solid #e2e8f0;border-radius:12px;padding:10px 12px;background:#ffffff;">'
+           + '<div style="font-weight:800;color:#0f172a;">' + escapeHtml(mode) + ' — ' + escapeHtml(label) + '</div>'
+           + vio
+           + comment
+           + '</div>';
+    });
+
+    approvalHost.innerHTML = html;
+  }
+
+  // escape for injected HTML
+  function escapeHtml(str){
+    return String(str||'')
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#039;');
+  }
+
+  renderApprovedItinerary(trip);
+
+  if(openApprovedBtn){
+    openApprovedBtn.onclick = function(){
+      var mgr = trip && trip.managerApproval ? trip.managerApproval : null;
+      var sel = mgr && Array.isArray(mgr.approvedSelections) ? mgr.approvedSelections : [];
+      if(!mgr || !sel.length){
+        alert('Manager approval not found yet for this request. Please wait for Reporting Manager approval.');
+        return;
+      }
+      // Open Stage 7 (Manager Approved Itinerary view) with Request ID
+      window.location.href = buildStageLink('Stage7 (RM approvel).html', { rid: String(id) });
+    };
+  }
+
+  if(sendVoucherBtn){
+    sendVoucherBtn.onclick = function(){
+      var mgr = trip && trip.managerApproval ? trip.managerApproval : null;
+      var sel = mgr && Array.isArray(mgr.approvedSelections) ? mgr.approvedSelections : [];
+      if(!mgr || !sel.length){
+        alert('Manager approval not found yet for this request. Please wait for Reporting Manager approval.');
+        return;
+      }
+      // Open Stage 8 (Final confirmation) with Request ID so TravelDesk can upload vouchers + send confirmation
+      window.location.href = buildStageLink('Stage8 (Final confirmation).html.html', { rid: String(id), from: 'traveldesk' });
+    };
+  }
+
+  var card = document.getElementById('selected-trip-card');
+  if(card){
+    card.classList.remove('hidden');
+  }
+}
+
+function openTripFromDashboard(id){
+  if(!id){
+    alert('Unable to identify this request. Please try again.');
+    return;
+  }
+  var trip = findTripByIdFromDesk(id);
+  if(!trip){
+    alert('Unable to find this trip in the shared travel store.');
+    return;
+  }
+  showSelectedTripOnDesk(trip);
+  var card = document.getElementById('selected-trip-card');
+  if(card){
+    card.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+function renderAllTripLists(){
+  var parts = partitionTrips();
+  renderPendingTable(parts.pending);
+  renderCompletedTable(parts.completed);
+  renderAllRequestsTable(parts.all);
+  updateCounts(parts.pending.length, parts.completed.length, parts.all.length);
+}
+
+function markTripCompleted(id){
+  if(!id) return;
+  var nowIso = new Date().toISOString();
+  updateTripInStore(id, function(trip){
+    if(!trip) return;
+    trip.status = 'Completed by Travel Desk';
+    trip.statusCode = 'COMPLETED';
+    trip.completedOn = nowIso;
+    trip.lastUpdated = nowIso;
+  });
+  renderAllTripLists();
+  renderDeskReport();
+  renderExportHistory();
+}
+
+// -------- Profile + scroll arrows wiring --------
+function hydrateDeskProfile(){
+  var ctx = getLoginContext() || {};
+  var name = ctx.name || 'Travel Desk User';
+  var email = ctx.email || 'traveldesk@example.com';
+  var role  = ctx.role  || 'Travel Desk';
+
+  var nameEl = document.getElementById('deskProfileName');
+  var roleEl = document.getElementById('deskProfileRole');
+  var avatar = document.getElementById('deskProfileAvatar');
+  var nameBig = document.getElementById('deskProfileNameBig');
+  var emailEl = document.getElementById('deskProfileEmail');
+  var avatarBig = document.getElementById('deskProfileAvatarBig');
+
+  if(nameEl) nameEl.textContent = name;
+  if(roleEl) roleEl.textContent = role;
+  if(nameBig) nameBig.textContent = name;
+  if(emailEl) emailEl.textContent = email;
+
+  var initials = name.split(' ').map(function(p){ return p.charAt(0).toUpperCase(); }).join('').slice(0,2) || 'TD';
+  if(avatar) avatar.textContent = initials;
+  if(avatarBig) avatarBig.textContent = initials;
+}
+
+function setupDeskProfileMenu(){
+  var trigger = document.getElementById('deskProfileTrigger');
+  var menu = document.getElementById('deskProfileMenu');
+  var myProfileBtn = document.getElementById('deskProfileMyProfile');
+  var signOutBtn = document.getElementById('deskProfileSignOut');
+
+  if(!trigger || !menu) return;
+
+  function closeMenu(){
+    menu.classList.add('hidden');
+    menu.setAttribute('aria-hidden','true');
+  }
+  function toggleMenu(){
+    menu.classList.toggle('hidden');
+    menu.setAttribute('aria-hidden', menu.classList.contains('hidden') ? 'true' : 'false');
+  }
+
+  trigger.addEventListener('click', function(e){
+    e.stopPropagation();
+    toggleMenu();
+  });
+
+  document.addEventListener('click', function(){
+    closeMenu();
+  });
+
+  menu.addEventListener('click', function(e){
+    e.stopPropagation();
+  });
+
+  if(myProfileBtn){
+    myProfileBtn.addEventListener('click', function(){
+      // For now My Profile is the same card; we just ensure it stays open.
+      alert('This is the Travel Desk profile. In a real system this would open a full profile page.');
+    });
+  }
+
+  if(signOutBtn){
+    signOutBtn.addEventListener('click', function(){
+      try{
+        localStorage.removeItem('etg-login');
+        sessionStorage.removeItem('etg-login');
+      }catch(e){}
+      window.location.href = 'Stage 1 (User log in Template).html';
+    });
+  }
+}
+
+function setupScrollArrows(){
+  var up = document.getElementById('scrollUpBtn');
+  var down = document.getElementById('scrollDownBtn');
+  if(up){
+    up.addEventListener('click', function(){
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  }
+  if(down){
+    down.addEventListener('click', function(){
+      window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'});
+    });
+  }
+}
+
+
+  function wireRefreshButtons(){
+    document.querySelectorAll('button').forEach(function(b){
+      if((b.textContent||'').trim().toLowerCase() === 'refresh'){
+        b.addEventListener('click', function(){
+          renderAllTripLists();
+          renderDeskReport();
+          renderExportHistory();
+        });
+      }
+    });
+  }
+
+document.addEventListener('DOMContentLoaded', function(){
+  ingestTripFromHash();
+  renderAllTripLists();
+  ensureTravelDeskAccess();
+  setupExportMenu();
+  wireReportDownloads();
+  renderDeskReport();
+  renderExportHistory();
+  wireRefreshButtons();
+
+  // Real-time feel: refresh when storage changes or every 3s
+  window.addEventListener('storage', function(e){
+    if(e && (e.key === 'etg-trips' || e.key === 'etg-export-history')){
+      renderAllTripLists();
+      renderDeskReport();
+      renderExportHistory();
+    }
+  });
+  setInterval(function(){
+    renderAllTripLists();
+    renderDeskReport();
+    renderExportHistory();
+  }, 3000);
+  hydrateDeskProfile();
+  setupDeskProfileMenu();
+  setupScrollArrows();
+
+  var replyBtn = document.getElementById('btnReplyWithOptions');
+  if(replyBtn){
+    replyBtn.addEventListener('click', function(){
+      var tripId = window.__etgSelectedTripId || '';
+      try{
+        if(!tripId){
+          tripId = localStorage.getItem('etg-selected-trip-id') || '';
+        }
+      }catch(e){}
+      if(!tripId){
+        alert('Please click "Open" on a trip first, then use Reply with Options.');
+        return;
+      }
+      try{
+        localStorage.setItem('etg-selected-trip-id', String(tripId));
+      }catch(e){}
+      // Persist full selected trip so Stage 4 always shows complete request (even on file:// browsers)
+      var selectedTripObj = findTripByIdFromDesk(tripId);
+      if(selectedTripObj){
+        persistSelectedTripPayload(selectedTripObj);
+      }
+      // Also pass via URL hash payload as fallback
+      var payload = '';
+      try{ payload = b64UrlEncode(JSON.stringify(selectedTripObj || {id: tripId})); }catch(e){ payload = ''; }
+      window.location.href = 'Stage4_Travel_agent_option_STAGE4_INTERLINKED_STAGE5LINK.html' + (payload ? ('#trip=' + encodeURIComponent(payload)) : '');
+    });
+  }
+});
+</script>
+<!-- ETG Realtime (Socket.IO) -->
+
+<script>window.ETG_API_BASE = window.ETG_API_BASE || '';</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/etg-realtime.js"></script>
+
+</body>
+</html>

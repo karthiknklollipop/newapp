@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ETG Travel — Options Summary (Executive)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:linear-gradient(135deg,#0f172a,#020617);
+    color:#0f172a;
+  }
+  .page{
+    max-width:1040px;
+    margin:32px auto 72px;
+    padding:0 16px;
+  }
+
+  /* Header */
+  .header-shell{
+    border-radius:18px;
+    box-shadow:0 22px 45px rgba(15,23,42,.55);
+    overflow:hidden;
+    margin-bottom:18px;
+  }
+  .header{
+    background:radial-gradient(circle at 0 0,#38bdf8 0,#1d4ed8 38%,#020617 100%);
+    border-bottom:1px solid rgba(148,163,184,.4);
+    padding:18px 24px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    color:#e5f0ff;
+  }
+  .logo-pill{
+    width:40px;
+    height:40px;
+    border-radius:999px;
+    background:rgba(15,23,42,.3);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:18px;
+    box-shadow:0 10px 25px rgba(15,23,42,.6);
+  }
+  .header-text-main{
+    font-size:18px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+  }
+  .header-text-sub{
+    font-size:12px;
+    opacity:.8;
+  }
+  .header-meta{
+    margin-left:auto;
+    text-align:right;
+    font-size:11px;
+    opacity:.85;
+  }
+
+  /* Card container */
+  .card-stack{
+    background:rgba(15,23,42,.96);
+    border-radius:0 0 18px 18px;
+    border:1px solid rgba(30,64,175,.8);
+    border-top:none;
+    padding:18px 18px 22px;
+    box-shadow:0 18px 40px rgba(15,23,42,.65);
+  }
+
+  /* Cards */
+  .card{
+    background:rgba(15,23,42,.97);
+    border-radius:14px;
+    padding:16px 18px 18px;
+    border:1px solid rgba(51,65,85,.8);
+    box-shadow:0 10px 25px rgba(15,23,42,.7);
+    margin-top:12px;
+  }
+  .card:first-of-type{margin-top:0;}
+  .card h2{
+    font-size:13px;
+    margin:0 0 10px;
+    text-transform:uppercase;
+    letter-spacing:.16em;
+    color:#e5e7eb;
+  }
+
+  label{
+    display:block;
+    font-size:11px;
+    font-weight:600;
+    margin-bottom:4px;
+    color:#9ca3af;
+  }
+  input, textarea, select{
+    width:100%;
+    padding:9px 11px;
+    font-size:13px;
+    border-radius:9px;
+    border:1px solid rgba(55,65,81,.9);
+    background:#020617;
+    color:#e5e7eb;
+  }
+  input::placeholder, textarea::placeholder{
+    color:#6b7280;
+  }
+  input:focus, textarea:focus, select:focus{
+    outline:none;
+    border-color:#38bdf8;
+    box-shadow:0 0 0 1px #38bdf8;
+  }
+
+  .row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .col-4{flex:0 0 calc(33.333% - 8px);}
+  .col-6{flex:0 0 calc(50% - 8px);}
+  .col-8{flex:0 0 calc(66.666% - 8px);}
+  .col-12{flex:0 0 100%;}
+  @media (max-width:900px){
+    .col-4, .col-6, .col-8{flex:0 0 100%;}
+  }
+
+  .note{
+    font-size:11px;
+    color:#9ca3af;
+    margin-top:6px;
+  }
+
+  /* Mode selector tabs */
+  .mode-bar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .mode-tab{
+    border-radius:999px;
+    border:1px solid rgba(75,85,99,.9);
+    background:rgba(15,23,42,1);
+    padding:7px 14px;
+    font-size:12px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    color:#e5e7eb;
+    box-shadow:0 6px 14px rgba(15,23,42,.8);
+  }
+  .mode-tab span.icon{
+    font-size:14px;
+  }
+  .mode-tab.active{
+    background:linear-gradient(135deg,#38bdf8,#1d4ed8);
+    border-color:#38bdf8;
+    color:#f9fafb;
+  }
+
+  .mode-card{display:none;}
+  .mode-card.active{display:block;}
+
+  /* Option blocks */
+  .option-block{
+    border:1px solid rgba(55,65,81,.9);
+    padding:10px 12px 12px;
+    margin-top:9px;
+    border-radius:10px;
+    background:radial-gradient(circle at 0 0,#020617 0,#020617 55%,#020617 100%);
+  }
+  .option-title-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:6px;
+    font-size:11px;
+    font-weight:600;
+    color:#e5e7eb;
+    gap:10px;
+  }
+  .option-title-bar-left{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .option-pill{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    padding:3px 7px;
+    border-radius:999px;
+    background:rgba(15,23,42,1);
+    border:1px solid rgba(75,85,99,.9);
+  }
+  .option-title-bar-right{
+    margin-left:auto;
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+  .option-title-bar-right label{
+    margin:0;
+    font-weight:500;
+    color:#cbd5f5;
+  }
+
+  button{
+    border-radius:999px;
+    border:1px solid transparent;
+    padding:8px 16px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .btn-secondary{
+    background:transparent;
+    border-color:#4b5563;
+    color:#e5e7eb;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,#38bdf8,#1d4ed8);
+    color:#f9fafb;
+    border:none;
+    box-shadow:0 12px 25px rgba(37,99,235,.5);
+  }
+  .btn-tertiary{
+    background:#020617;
+    border-color:#4b5563;
+    color:#e5e7eb;
+    padding:7px 12px;
+  }
+  .btn-danger{
+    background:#020617;
+    border-color:#f97373;
+    color:#fecaca;
+    padding:3px 10px;
+    font-size:10px;
+  }
+
+  .actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:18px;
+  }
+
+  #emailHtml{
+    width:100%;
+    min-height:220px;
+    font-family:Consolas,Menlo,monospace;
+    font-size:12px;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid rgba(55,65,81,.9);
+    background:#020617;
+    color:#e5e7eb;
+    white-space:pre;
+  }
+  #emailPreview{
+    border-radius:10px;
+    border:1px solid rgba(55,65,81,.9);
+    background:#020617;
+    padding:12px;
+    max-height:480px;
+    overflow:auto;
+    font-size:13px;
+    color:#e5e7eb;
+  }
+
+  .hidden{
+    display:none !important;
+  }
+  .selected-trip-card{
+    margin-bottom:12px;
+    border-color:rgba(56,189,248,.7);
+    background:rgba(15,23,42,.98);
+  }
+  .selected-trip-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    column-gap:40px;
+    row-gap:8px;
+    font-size:12px;
+  }
+  .selected-trip-block{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  .selected-trip-label{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:#9ca3af;
+  }
+  .selected-trip-value{
+    font-size:13px;
+    color:#e5e7eb;
+  }
+  @media (max-width:900px){
+    .selected-trip-grid{
+      grid-template-columns:1fr;
+    }
+  }
+
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header-shell">
+    <div class="header">
+      <div class="logo-pill">ET</div>
+      <div>
+        <div class="header-text-main">Etg Travel — Options Summary</div>
+        <div class="header-text-sub">Internal travel desk quotation | Flights · Hotels · Cabs</div>
+      </div>
+      <div class="header-meta">
+        <div>Corporate Template v3</div>
+        <div>Generated via Travel Desk</div>
+      </div>
+    </div>
+    <div class="card-stack">
+
+      <div id="selectedTripCard" class="card selected-trip-card hidden">
+        <h2>Selected Trip – User Travel Information</h2>
+        <div class="selected-trip-grid">
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Req ID</div>
+            <div class="selected-trip-value" id="sel-req-id">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Status</div>
+            <div class="selected-trip-value" id="sel-status">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Employee</div>
+            <div class="selected-trip-value" id="sel-employee">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Email</div>
+            <div class="selected-trip-value" id="sel-email">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Route</div>
+            <div class="selected-trip-value" id="sel-route">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Travel Dates</div>
+            <div class="selected-trip-value" id="sel-dates">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Mode(s) Requested</div>
+            <div class="selected-trip-value" id="sel-modes">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Last Action</div>
+            <div class="selected-trip-value" id="sel-last-action">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Created On</div>
+            <div class="selected-trip-value" id="sel-created">—</div>
+          </div>
+          <div class="selected-trip-block">
+            <div class="selected-trip-label">Last Updated</div>
+            <div class="selected-trip-value" id="sel-updated">—</div>
+          </div>
+        
+      <div id="sel-extra" class="note" style="margin-top:12px;border-top:1px solid rgba(55,65,81,.9);padding-top:12px;">
+        <div style="font-size:11px;color:#9ca3af;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">
+          Requested Details (Full)
+        </div>
+        <div id="sel-extra-body" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;"></div>
+      </div>
+
+</div>
+      </div>
+
+
+      <!-- Travel mode selector -->
+      <div class="card">
+        <h2>Travel Mode</h2>
+        <div class="mode-bar">
+          <button type="button" class="mode-tab active" data-mode="F" onclick="setMode('F')">
+            <span class="icon">✈️</span><span>Flights</span>
+          </button>
+          <button type="button" class="mode-tab" data-mode="H" onclick="setMode('H')">
+            <span class="icon">🏨</span><span>Hotels</span>
+          </button>
+          <button type="button" class="mode-tab" data-mode="C" onclick="setMode('C')">
+            <span class="icon">🚖</span><span>Cabs</span>
+          </button>
+        </div>
+        <div class="note">
+          Select the mode requested in the ticket (e.g., Flights only). Only sections where you enter data will appear in the final email.
+        </div>
+      </div>
+
+      <!-- Flight options -->
+      <div class="card mode-card active" data-mode="F">
+        <h2>Flight — Options</h2>
+        <div id="flightOptions"></div>
+        <button type="button" class="btn-tertiary" onclick="addOption('F')">+ Add Flight Option</button>
+        <div class="note">Start with a single recommended option and add alternates if required.</div>
+      </div>
+
+      <!-- Hotel options -->
+      <div class="card mode-card" data-mode="H">
+        <h2>Hotel — Options</h2>
+        <div id="hotelOptions"></div>
+        <button type="button" class="btn-tertiary" onclick="addOption('H')">+ Add Hotel Option</button>
+        <div class="note">Use this only when the request includes stay arrangements.</div>
+      </div>
+
+      <!-- Cab options -->
+      <div class="card mode-card" data-mode="C">
+        <h2>Cab — Options</h2>
+        <div id="cabOptions"></div>
+        <button type="button" class="btn-tertiary" onclick="addOption('C')">+ Add Cab Option</button>
+        <div class="note">Leave empty if cab is not part of the itinerary.</div>
+      </div>
+
+      <!-- Extra notes -->
+      <div class="card">
+        <h2>Notes to Traveler</h2>
+        <textarea id="notes" rows="3" placeholder="Visa requirements, check-in reminders, baggage policy, local guidance, etc."></textarea>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button class="btn-primary" type="button" id="btnSendQuotation">Send Quotation</button>
+      </div>
+
+      <!-- Output -->
+      <div class="card">
+        <h2>Email HTML (for Outlook / tools)</h2>
+        <textarea id="emailHtml" readonly></textarea>
+        <div class="note">Copy this HTML into your email client (HTML mode) or into your ticketing system.</div>
+      </div>
+
+      <div class="card">
+        <h2>Email Preview (rendered)</h2>
+        <div id="emailPreview">Generated email preview will appear here.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function loadTripStoreForDesk(){
+    try{
+      var raw = localStorage.getItem('etg-trips') || '{}';
+      var parsed = JSON.parse(raw);
+      return parsed;
+    }catch(e){
+      return {};
+    }
+  }
+
+
+  // ---- Robust fallback: Stage 4 can load selected trip even when localStorage is blocked (file://) ----
+  function b64UrlDecodeToStr(b64url){
+    try{
+      var b64 = String(b64url||'').replace(/-/g,'+').replace(/_/g,'/');
+      while(b64.length % 4) b64 += '=';
+      return decodeURIComponent(escape(atob(b64)));
+    }catch(e){
+      return '';
+    }
+  }
+
+  function ingestTripFromHashIntoStore(){
+    try{
+      var h = window.location.hash || '';
+      var m = h.match(/(?:^|[#&])trip=([^&]+)/);
+      if(!m || !m[1]) return null;
+      var jsonStr = b64UrlDecodeToStr(decodeURIComponent(m[1]));
+      if(!jsonStr) return null;
+      var trip = JSON.parse(jsonStr);
+      if(!trip || !trip.id) return null;
+
+      // clear hash (avoid duplicates on refresh)
+      history.replaceState(null, document.title, window.location.pathname + window.location.search);
+
+      // persist into store
+      try{
+        var raw = localStorage.getItem('etg-trips') || '{}';
+        var store = JSON.parse(raw);
+        if(!store || typeof store !== 'object') store = {};
+        if(!Array.isArray(store.pending)) store.pending = [];
+        var exists = store.pending.some(function(t){ return t && String(t.id) === String(trip.id); });
+        if(!exists) store.pending.unshift(trip);
+        localStorage.setItem('etg-trips', JSON.stringify(store));
+      }catch(e){}
+
+      // also save selected trip payload
+      try{ localStorage.setItem('etg-selected-trip-payload', JSON.stringify(trip)); }catch(e){}
+      try{ sessionStorage.setItem('etg-selected-trip-payload', JSON.stringify(trip)); }catch(e){}
+      try{ localStorage.setItem('etg-selected-trip-id', String(trip.id)); }catch(e){}
+      try{ sessionStorage.setItem('etg-selected-trip-id', String(trip.id)); }catch(e){}
+      return trip;
+    }catch(e){
+      return null;
+    }
+  }
+
+  function loadSelectedTripPayload(){
+    var raw = null;
+    try{ raw = localStorage.getItem('etg-selected-trip-payload'); }catch(e){}
+    if(!raw){
+      try{ raw = sessionStorage.getItem('etg-selected-trip-payload'); }catch(e){}
+    }
+    if(!raw) return null;
+    try{ return JSON.parse(raw); }catch(e){ return null; }
+  }
+
+  // Normalize minimal fields so UI always shows Employee / Email / Modes
+  function guessNameFromEmail(email){
+    if(!email) return '';
+    var left = String(email).split('@')[0] || '';
+    left = left.replace(/[._-]+/g,' ').trim();
+    if(!left) return '';
+    return left.split(' ').map(function(w){
+      return w ? (w.charAt(0).toUpperCase() + w.slice(1)) : '';
+    }).join(' ').trim();
+  }
+
+  function normalizeTripForDisplay(trip){
+    var t = Object.assign({}, trip || {});
+    if(!t.email){
+      t.email = t.userEmail || t.employeeEmail || t.requesterEmail || t.travellerEmail || t.createdByEmail || t.createdBy || '';
+    }
+    if(!t.travelerName){
+      t.travelerName = t.employeeName || t.employee || t.requesterName || t.createdByName || '';
+      if(!t.travelerName && t.email) t.travelerName = guessNameFromEmail(t.email);
+    }
+
+    // infer modes (Flight/Hotel/Cab) from any nested tokens
+    var blob = '';
+    try{ blob = JSON.stringify(t).toLowerCase(); }catch(e){ blob = ''; }
+    function hasAny(needles){
+      for(var i=0;i<needles.length;i++){ if(blob.indexOf(needles[i]) !== -1) return true; }
+      return false;
+    }
+    var modeStr = String(t.modeOfTravel || t.travelMode || t.travelType || t.tripType || '').toLowerCase();
+
+    t.hasFlight = !!(t.hasFlight || hasAny(['"flight"', 'pnr', 'airline', 'flightno', 'flight no']) || modeStr.indexOf('flight')!==-1 || modeStr.indexOf('air')!==-1);
+    t.hasHotel  = !!(t.hasHotel  || hasAny(['"hotel"', 'checkin', 'check-in', 'checkout', 'check-out', 'accommodation']) || modeStr.indexOf('hotel')!==-1 || modeStr.indexOf('stay')!==-1);
+    t.hasCab    = !!(t.hasCab    || hasAny(['"cab"', '"taxi"', 'pickup', 'drop off', 'dropoff', 'chauffeur']) || modeStr.indexOf('cab')!==-1 || modeStr.indexOf('taxi')!==-1 || modeStr.indexOf('car')!==-1);
+
+    if(!t.routeSummary && (t.fromCity || t.toCity)){
+      t.routeSummary = (t.fromCity || 'From') + ' → ' + (t.toCity || 'To');
+    }
+    return t;
+  }
+
+  function getModesLabel(trip){
+    var parts = [];
+    var t = trip || {};
+    var modeStr = String(t.modeOfTravel || '').toLowerCase();
+    if(t.hasFlight || modeStr.indexOf('flight') !== -1) parts.push('Flight');
+    if(t.hasHotel || modeStr.indexOf('hotel') !== -1) parts.push('Hotel');
+    if(t.hasCab || modeStr.indexOf('cab') !== -1 || modeStr.indexOf('taxi') !== -1 || modeStr.indexOf('car') !== -1) parts.push('Cab');
+    if(!parts.length && t.modeOfTravel) return t.modeOfTravel;
+    if(parts.length === 2) return parts.join(' & ');
+    if(parts.length >= 3) return 'Flight + Hotel + Cab';
+    return parts[0] || '—';
+  }
+  function flattenAllTripsForDesk(){
+    var store = loadTripStoreForDesk();
+    var all = [];
+    if(Array.isArray(store)){
+      store.forEach(function(t){ all.push(t); });
+    }else if(store && typeof store === 'object'){
+      Object.keys(store).forEach(function(key){
+        var list = store[key];
+        if(Array.isArray(list)){
+          list.forEach(function(t){ all.push(t); });
+        }
+      });
+    }
+    return all;
+  }
+
+  function formatDateIsoDesk(val){
+    if(!val){ return '—'; }
+    try{
+      var d = new Date(val);
+      if(isNaN(d.getTime())) return val;
+      var dd = String(d.getDate()).padStart(2,'0');
+      var mm = String(d.getMonth()+1).padStart(2,'0');
+      var yy = d.getFullYear();
+      return dd + '-' + mm + '-' + yy;
+    }catch(e){
+      return val;
+    }
+  }
+
+  
+  function findSelectedTripForDesk(){
+    // 1) Ingest hash payload (fallback for file:// or when coming from Stage 3)
+    ingestTripFromHashIntoStore();
+
+    // 2) Read selected id
+    var id = null;
+    try{ id = localStorage.getItem('etg-selected-trip-id') || null; }catch(e){}
+    if(!id){
+      try{ id = sessionStorage.getItem('etg-selected-trip-id') || null; }catch(e){}
+    }
+
+    // 3) First try store lookup
+    if(id){
+      var all = flattenAllTripsForDesk();
+      for(var i=0;i<all.length;i++){
+        var t = all[i];
+        if(t && String(t.id) === String(id)){
+          return normalizeTripForDisplay(t);
+        }
+      }
+    }
+
+    // 4) Fallback: selected trip payload (persisted by Stage 3)
+    var payloadTrip = loadSelectedTripPayload();
+    if(payloadTrip){
+      // ensure selected id is set for rest of flow
+      try{ localStorage.setItem('etg-selected-trip-id', String(payloadTrip.id||'')); }catch(e){}
+      try{ sessionStorage.setItem('etg-selected-trip-id', String(payloadTrip.id||'')); }catch(e){}
+      return normalizeTripForDisplay(payloadTrip);
+    }
+    return null;
+  }
+
+function saveQuotationForTrip(tripId, quotationHtml, optionsData) {
+  if (!tripId) return;
+  try {
+    var raw = localStorage.getItem('etg-trips') || '{}';
+    var store = JSON.parse(raw);
+    var changed = false;
+
+    function updateList(list) {
+      if (!Array.isArray(list)) return;
+      list.forEach(function (t) {
+        if (!t) return;
+        if (String(t.id) === String(tripId)) {
+          t.quotationHtml = quotationHtml || '';
+          t.quotationSentAt = new Date().toISOString();
+          t.status = 'Pending with User';
+          t.lastUpdated = new Date().toISOString();
+
+          // NEW: store structured options for Stage 6
+          if (optionsData && typeof optionsData === 'object') {
+            t.quotationOptions = {
+              flights: Array.isArray(optionsData.flights) ? optionsData.flights : [],
+              hotels: Array.isArray(optionsData.hotels) ? optionsData.hotels : [],
+              cabs: Array.isArray(optionsData.cabs) ? optionsData.cabs : [],
+              notes: optionsData.notes || ''
+            };
+          }
+
+          changed = true;
+
+          // Compatibility aliases for older stages/readers
+          try{ t.optionsShared = t.quotationOptions; }catch(e){}
+          try{ t.quotation = t.quotationOptions; }catch(e){}
+
+        }
+      });
+    }
+
+    if (Array.isArray(store)) {
+      updateList(store);
+    } else if (store && typeof store === 'object') {
+      Object.keys(store).forEach(function (key) {
+        updateList(store[key]);
+      });
+    }
+
+    if (changed) {
+      localStorage.setItem('etg-trips', JSON.stringify(store));
+    }
+      // Also maintain a by-id map and currentTrip snapshot for simple lookups
+      try{
+        var byId = JSON.parse(localStorage.getItem('etg-trips-by-id') || '{}');
+        var all = [];
+        if(Array.isArray(store)){ all = store; }
+        else if(store && typeof store === 'object'){
+          Object.keys(store).forEach(function(k){
+            if(Array.isArray(store[k])) store[k].forEach(function(t){ all.push(t); });
+          });
+        }
+        all.forEach(function(t){
+          if(t && t.id){ byId[String(t.id)] = t; }
+        });
+        localStorage.setItem('etg-trips-by-id', JSON.stringify(byId));
+      }catch(e){}
+      try{ localStorage.setItem('currentTrip', JSON.stringify({id: tripId})); }catch(e){}
+
+  } catch (e) {
+    console.error('Unable to save quotation to trip store', e);
+  }
+}
+
+  function hydrateSelectedTripCard(){
+    var card = document.getElementById('selectedTripCard');
+    if(!card){ return; }
+    var trip = findSelectedTripForDesk();
+    if(!trip){
+      card.classList.add('hidden');
+      return;
+    }
+
+    card.classList.remove('hidden');
+
+    function val(v){
+      return (v !== undefined && v !== null && v !== '') ? v : '—';
+    }
+
+    var employee = trip.travelerName || trip.employeeName || trip.employee || trip.email || '—';
+    var email = trip.email || '—';
+    var route = '';
+    if(trip.routeSummary){
+      route = trip.routeSummary;
+    }else{
+      var fromPart = trip.fromCity || '';
+      var toPart = trip.toCity || '';
+      route = (fromPart || 'From') + ' → ' + (toPart || 'To');
+    }
+    var datesText = '—';
+    if(trip.departDate){
+      datesText = trip.departDate;
+      if(trip.returnDate){
+        datesText += ' – ' + trip.returnDate;
+      }
+    }
+    var modesLabel = getModesLabel(trip);
+
+    var statusText = trip.status || (trip.policyViolation ? 'Pending with Reporting Manager' : 'Pending with Travel Desk');
+    var lastAction = trip.policyViolation ? 'Policy violation – sent to Manager & Travel Desk' : 'User submitted request';
+    var createdOn = trip.createdAt ? formatDateIsoDesk(trip.createdAt) : '—';
+    var updatedOn = trip.lastUpdated ? formatDateIsoDesk(trip.lastUpdated) : (trip.completedOn ? formatDateIsoDesk(trip.completedOn) : createdOn);
+
+    var map = {
+      'sel-req-id': val(trip.id || ''),
+      'sel-status': val(statusText),
+      'sel-employee': val(employee),
+      'sel-email': val(email),
+      'sel-route': val(route),
+      'sel-dates': val(datesText),
+      'sel-modes': val(modesLabel),
+      'sel-last-action': val(lastAction),
+      'sel-created': val(createdOn),
+      'sel-updated': val(updatedOn)
+    };
+
+    Object.keys(map).forEach(function(id){
+      var el = document.getElementById(id);
+      if(el){ el.textContent = map[id]; }
+    });
+  }
+
+  const $ = id => document.getElementById(id);
+  const counters = { F:0, H:0, C:0 };
+
+  // Currency options HTML for dropdown
+  const currencyOptionsHtml = `
+    <option value="">Select currency</option>
+    <option value="INR">India — Indian Rupee (INR)</option>
+    <option value="USD">United States — US Dollar (USD)</option>
+    <option value="EUR">Eurozone — Euro (EUR)</option>
+    <option value="GBP">United Kingdom — Pound Sterling (GBP)</option>
+    <option value="AED">United Arab Emirates — Dirham (AED)</option>
+    <option value="SAR">Saudi Arabia — Riyal (SAR)</option>
+    <option value="QAR">Qatar — Riyal (QAR)</option>
+    <option value="OMR">Oman — Rial (OMR)</option>
+    <option value="KWD">Kuwait — Dinar (KWD)</option>
+    <option value="BHD">Bahrain — Dinar (BHD)</option>
+    <option value="AUD">Australia — Dollar (AUD)</option>
+    <option value="NZD">New Zealand — Dollar (NZD)</option>
+    <option value="CAD">Canada — Dollar (CAD)</option>
+    <option value="SGD">Singapore — Dollar (SGD)</option>
+    <option value="HKD">Hong Kong — Dollar (HKD)</option>
+    <option value="JPY">Japan — Yen (JPY)</option>
+    <option value="CNY">China — Yuan (CNY)</option>
+    <option value="THB">Thailand — Baht (THB)</option>
+    <option value="MYR">Malaysia — Ringgit (MYR)</option>
+    <option value="IDR">Indonesia — Rupiah (IDR)</option>
+    <option value="VND">Vietnam — Dong (VND)</option>
+    <option value="PKR">Pakistan — Rupee (PKR)</option>
+    <option value="NPR">Nepal — Rupee (NPR)</option>
+    <option value="LKR">Sri Lanka — Rupee (LKR)</option>
+    <option value="BDT">Bangladesh — Taka (BDT)</option>
+    <option value="CHF">Switzerland — Franc (CHF)</option>
+    <option value="SEK">Sweden — Krona (SEK)</option>
+    <option value="NOK">Norway — Krone (NOK)</option>
+    <option value="DKK">Denmark — Krone (DKK)</option>
+    <option value="ZAR">South Africa — Rand (ZAR)</option>
+    <option value="NGN">Nigeria — Naira (NGN)</option>
+    <option value="GHS">Ghana — Cedi (GHS)</option>
+    <option value="BRL">Brazil — Real (BRL)</option>
+    <option value="ARS">Argentina — Peso (ARS)</option>
+    <option value="CLP">Chile — Peso (CLP)</option>
+    <option value="MXN">Mexico — Peso (MXN)</option>
+    <option value="COP">Colombia — Peso (COP)</option>
+    <option value="PEN">Peru — Sol (PEN)</option>
+    <option value="RUB">Russia — Ruble (RUB)</option>
+    <option value="TRY">Türkiye — Lira (TRY)</option>
+    <option value="ILS">Israel — New Shekel (ILS)</option>
+    <option value="EGP">Egypt — Pound (EGP)</option>
+    <option value="KES">Kenya — Shilling (KES)</option>
+    <option value="TZS">Tanzania — Shilling (TZS)</option>
+    <option value="UGX">Uganda — Shilling (UGX)</option>
+    <option value="PLN">Poland — Złoty (PLN)</option>
+    <option value="CZK">Czech Republic — Koruna (CZK)</option>
+    <option value="HUF">Hungary — Forint (HUF)</option>
+    <option value="RON">Romania — Leu (RON)</option>
+    <option value="BGN">Bulgaria — Lev (BGN)</option>
+    <option value="UAH">Ukraine — Hryvnia (UAH)</option>
+    <option value="MAD">Morocco — Dirham (MAD)</option>
+    <option value="DZD">Algeria — Dinar (DZD)</option>
+    <option value="ETB">Ethiopia — Birr (ETB)</option>
+    <option value="MZN">Mozambique — Metical (MZN)</option>
+    <option value="BWP">Botswana — Pula (BWP)</option>
+    <option value="RWF">Rwanda — Franc (RWF)</option>
+    <option value="XOF">West Africa — CFA Franc (XOF)</option>
+    <option value="XAF">Central Africa — CFA Franc (XAF)</option>
+    <option value="XCD">Caribbean — East Caribbean Dollar (XCD)</option>
+  `;
+
+  function setMode(mode){
+    document.querySelectorAll('.mode-tab').forEach(btn=>{
+      btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+    document.querySelectorAll('.mode-card').forEach(card=>{
+      card.classList.toggle('active', card.dataset.mode === mode);
+    });
+  }
+
+  function containerId(section){
+    if(section === 'F') return 'flightOptions';
+    if(section === 'H') return 'hotelOptions';
+    return 'cabOptions';
+  }
+
+  // Renumber visible options per section
+  function renumberOptions(section){
+    const container = $(containerId(section));
+    if (!container) return;
+    const blocks = container.querySelectorAll('.option-block');
+    let i = 1;
+    blocks.forEach(block => {
+      const indexSpan = block.querySelector('.option-index');
+      if (indexSpan) indexSpan.textContent = '#' + i;
+      block.dataset.displayIndex = i;
+      i++;
+    });
+  }
+
+  function addOption(section){
+    counters[section]++;
+    const index = counters[section];
+    const container = $(containerId(section));
+
+    const block = document.createElement('div');
+    block.className = 'option-block';
+    block.dataset.group = section;
+    block.dataset.index = index;
+
+    const human = section === 'F' ? 'Flight'
+                 : section === 'H' ? 'Hotel'
+                 : 'Cab';
+
+    const titleId       = section + '_title_' + index;
+    const priceId       = section + '_price_' + index;
+    const detailsId     = section + '_details_' + index;
+    const notesId       = section + '_notes_' + index;
+    const recId         = section + '_rec_' + index;
+    const currencyId    = section + '_currency_' + index;
+    const mgrCurrencyId = section + '_mgr_currency_' + index;
+    const mgrPriceId    = section + '_mgr_price_' + index;
+
+    const titleLabel = (section === 'F') ? 'Routes' : 'Title';
+    const titlePlaceholder = (section === 'F')
+      ? 'e.g., BLR → DEL → BLR'
+      : `${human} description (e.g., Airline / hotel name / cab type)`;
+
+    let innerFields = '';
+
+    if (section === 'F') {
+      // Flights: Routes, Details, then Currency + Price, then Remarks
+      innerFields = `
+        <div class="row">
+          <div class="col-12">
+            <label for="${titleId}">${titleLabel}</label>
+            <input id="${titleId}" class="opt-title" placeholder="${titlePlaceholder}"/>
+          </div>
+          <div class="col-12">
+            <label for="${detailsId}">Details</label>
+            <textarea id="${detailsId}" class="opt-details" rows="2" placeholder="Key inclusions, timing, cancellation, policies, etc."></textarea>
+          </div>
+          <div class="col-6">
+            <label for="${currencyId}">Currency</label>
+            <select id="${currencyId}" class="opt-currency">
+              ${currencyOptionsHtml}
+            </select>
+          </div>
+          <div class="col-6">
+            <label for="${priceId}">Price</label>
+            <input id="${priceId}" class="opt-price" placeholder="Amount"/>
+          </div>
+          <div class="col-12">
+            <label>Manager review cost</label>
+          </div>
+          <div class="col-6">
+            <label for="${mgrCurrencyId}">Currency</label>
+            <select id="${mgrCurrencyId}" class="opt-mgr-currency">
+              ${currencyOptionsHtml}
+            </select>
+          </div>
+          <div class="col-6">
+            <label for="${mgrPriceId}">Amount</label>
+            <input id="${mgrPriceId}" class="opt-mgr-amount" placeholder="Amount"/>
+          </div>
+          <div class="col-12">
+            <label for="${notesId}">Remarks</label>
+            <textarea id="${notesId}" class="opt-notes" rows="2" placeholder="Special notes, pros/cons, corporate suitability, etc."></textarea>
+          </div>
+        </div>
+      `;
+    } else if (section === 'H') {
+      // Hotels: Title, Details, then Currency + Price, then Remarks
+      innerFields = `
+        <div class="row">
+          <div class="col-12">
+            <label for="${titleId}">${titleLabel}</label>
+            <input id="${titleId}" class="opt-title" placeholder="${titlePlaceholder}"/>
+          </div>
+          <div class="col-12">
+            <label for="${detailsId}">Details</label>
+            <textarea id="${detailsId}" class="opt-details" rows="2" placeholder="Room type, meal plan, location, cancellation, etc."></textarea>
+          </div>
+          <div class="col-6">
+            <label for="${currencyId}">Currency</label>
+            <select id="${currencyId}" class="opt-currency">
+              ${currencyOptionsHtml}
+            </select>
+          </div>
+          <div class="col-6">
+            <label for="${priceId}">Price</label>
+            <input id="${priceId}" class="opt-price" placeholder="Amount"/>
+          </div>
+          <div class="col-12">
+            <label>Manager review cost</label>
+          </div>
+          <div class="col-6">
+            <label for="${mgrCurrencyId}">Currency</label>
+            <select id="${mgrCurrencyId}" class="opt-mgr-currency">
+              ${currencyOptionsHtml}
+            </select>
+          </div>
+          <div class="col-6">
+            <label for="${mgrPriceId}">Amount</label>
+            <input id="${mgrPriceId}" class="opt-mgr-amount" placeholder="Amount"/>
+          </div>
+          <div class="col-12">
+            <label for="${notesId}">Remarks</label>
+            <textarea id="${notesId}" class="opt-notes" rows="2" placeholder="Early check-in, late checkout, inclusions, etc."></textarea>
+          </div>
+        </div>
+      `;
+    } else if (section === 'C') {
+      // Cabs: Title, Details, then Currency + Price, then Remarks
+      innerFields = `
+        <div class="row">
+          <div class="col-12">
+            <label for="${titleId}">${titleLabel}</label>
+            <input id="${titleId}" class="opt-title" placeholder="e.g., Sedan – Airport transfer"/>
+          </div>
+          <div class="col-12">
+            <label for="${detailsId}">Details</label>
+            <textarea id="${detailsId}" class="opt-details" rows="2" placeholder="Type, kms, hours, inclusions, waiting time, etc."></textarea>
+          </div>
+          <div class="col-6">
+            <label for="${currencyId}">Currency</label>
+            <select id="${currencyId}" class="opt-currency">
+              ${currencyOptionsHtml}
+            </select>
+          </div>
+          <div class="col-6">
+            <label for="${priceId}">Price</label>
+            <input id="${priceId}" class="opt-price" placeholder="Amount"/>
+          </div>
+          <div class="col-12">
+            <label>Manager review cost</label>
+          </div>
+          <div class="col-6">
+            <label for="${mgrCurrencyId}">Currency</label>
+            <select id="${mgrCurrencyId}" class="opt-mgr-currency">
+              ${currencyOptionsHtml}
+            </select>
+          </div>
+          <div class="col-6">
+            <label for="${mgrPriceId}">Amount</label>
+            <input id="${mgrPriceId}" class="opt-mgr-amount" placeholder="Amount"/>
+          </div>
+          <div class="col-12">
+            <label for="${notesId}">Remarks</label>
+            <textarea id="${notesId}" class="opt-notes" rows="2" placeholder="Night charges, tolls, parking, extra kms, etc."></textarea>
+          </div>
+        </div>
+      `;
+    }
+
+    block.innerHTML = `
+      <div class="option-title-bar">
+        <div class="option-title-bar-left">
+          <span class="option-pill">${human.toUpperCase()} OPTION</span>
+          <span class="option-index">#${index}</span>
+        </div>
+        <div class="option-title-bar-right">
+          <label><input type="checkbox" class="opt-rec" id="${recId}"/> Recommended</label>
+          <button type="button" class="btn-danger" onclick="removeOption(this)">Remove</button>
+        </div>
+      </div>
+      ${innerFields}
+    `;
+    container.appendChild(block);
+
+    // Fix visible numbering after adding
+    renumberOptions(section);
+  }
+
+  function removeOption(btn){
+    const block = btn.closest('.option-block');
+    const container = block.parentElement;
+    const section = block.dataset.group;
+    const blocks = container.querySelectorAll('.option-block');
+    if(blocks.length === 1){
+      // If it's the only one, just clear fields
+      block.querySelectorAll('input,textarea,select').forEach(el=>{
+        if(el.type === 'checkbox') el.checked = false;
+        else el.value = '';
+      });
+    }else{
+      container.removeChild(block);
+    }
+    // Fix visible numbering after removing
+    renumberOptions(section);
+  }
+
+  function getAgent() {
+    return {
+      name: "ETG Travel Desk",
+      email: "traveldesk@company.com",
+      phone: "",
+      ref: "",
+      greeting: "Dear Colleague,"
+    };
+  }
+
+  function collectSection(section) {
+    const contId = containerId(section);
+    const blocks = document.querySelectorAll('#' + contId + ' .option-block');
+    const options = [];
+    let counter = 0;
+    blocks.forEach(block => {
+      counter++;
+      const title        = block.querySelector('.opt-title')?.value.trim()        || '';
+      const price        = block.querySelector('.opt-price')?.value.trim()        || '';
+      const currency     = block.querySelector('.opt-currency')?.value.trim()     || '';
+      const mgrCurrency  = block.querySelector('.opt-mgr-currency')?.value.trim() || '';
+      const mgrAmount    = block.querySelector('.opt-mgr-amount')?.value.trim()   || '';
+      const details      = block.querySelector('.opt-details')?.value.trim()      || '';
+      const notes        = block.querySelector('.opt-notes')?.value.trim()        || '';
+      const rec          = block.querySelector('.opt-rec')?.checked || false;
+      if (title || price || currency || mgrCurrency || mgrAmount || details || notes) {
+        options.push({
+        title, price, currency,
+        // manager review cost (explicit keys for Stage 6)
+        mgrCurrency, mgrAmount,
+        managerReviewCurrency: mgrCurrency,
+        managerReviewAmount: mgrAmount,
+        managerReviewCostCurrency: mgrCurrency,
+        managerReviewCostAmount: mgrAmount,
+        managerReviewCost: { currency: mgrCurrency, amount: mgrAmount },
+        details, notes, rec, labelIndex: counter
+      });
+      }
+    });
+    return options;
+  }
+
+  function buildTableHtml(caption, options) {
+    if (!options.length) return '';
+    let rows = '';
+    options.forEach(o => {
+      const priceText = (o.currency || o.price)
+        ? `${o.currency ? o.currency + ' ' : ''}${o.price || ''}`.trim()
+        : '-';
+      const mgrText = (o.mgrCurrency || o.mgrAmount)
+        ? `${o.mgrCurrency ? o.mgrCurrency + ' ' : ''}${o.mgrAmount || ''}`.trim()
+        : '-';
+      rows += `
+        <tr>
+          <td style="border:1px solid #d8dde6;padding:6px 8px;">Option ${o.labelIndex}${o.rec ? ' (Recommended)' : ''}</td>
+          <td style="border:1px solid #d8dde6;padding:6px 8px;">${o.title || '-'}</td>
+          <td style="border:1px solid #d8dde6;padding:6px 8px;white-space:pre-line;">${o.details || '-'}</td>
+          <td style="border:1px solid #d8dde6;padding:6px 8px;text-align:right;">${priceText}</td>
+          <td style="border:1px solid #d8dde6;padding:6px 8px;text-align:right;">${mgrText}</td>
+          <td style="border:1px solid #d8dde6;padding:6px 8px;white-space:pre-line;">${o.notes || '-'}</td>
+        </tr>`;
+    });
+
+    return `
+      <h3 style="font-size:13px;color:#172b4d;margin:16px 0 4px;">${caption}</h3>
+      <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:12px;">
+        <thead>
+          <tr style="background:#f4f5f7;">
+            <th style="border:1px solid #d8dde6;padding:6px 8px;text-align:left;">Option</th>
+            <th style="border:1px solid #d8dde6;padding:6px 8px;text-align:left;">Title</th>
+            <th style="border:1px solid #d8dde6;padding:6px 8px;text-align:left;">Details</th>
+            <th style="border:1px solid #d8dde6;padding:6px 8px;text-align:right;">Price</th>
+            <th style="border:1px solid #d8dde6;padding:6px 8px;text-align:right;">Manager Review Cost</th>
+            <th style="border:1px solid #d8dde6;padding:6px 8px;text-align:left;">Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>`;
+  }
+
+  function buildEmailHtml() {
+    const agent = getAgent();
+
+    const flights = collectSection('F');
+    const hotels  = collectSection('H');
+    const cabs    = collectSection('C');
+    const notes   = $('notes').value.trim();
+
+    if (!flights.length && !hotels.length && !cabs.length) {
+      alert('Please fill at least one option in Flights / Hotels / Cabs.');
+      return null;
+    }
+
+    const today = new Date();
+    const dtStr = today.toLocaleDateString(undefined, {
+      day:'2-digit', month:'short', year:'numeric'
+    });
+
+
+const trip = findSelectedTripForDesk();
+let tripBlock = '';
+let greetingLine = agent.greeting;
+
+if (trip) {
+  const employee = trip.travelerName || trip.employeeName || trip.employee || trip.email || '';
+  const route = trip.routeSummary || ((trip.fromCity || '') || 'From') + ' → ' + ((trip.toCity || '') || 'To');
+  let datesText = '—';
+  if (trip.departDate) {
+    datesText = trip.departDate;
+    if (trip.returnDate) {
+      datesText += ' – ' + trip.returnDate;
+    }
+  }
+  const modeStr = (trip.modeOfTravel || '').toLowerCase();
+  const modes = [];
+  if (trip.hasFlight || modeStr.indexOf('flight') !== -1) modes.push('Flight');
+  if (trip.hasHotel || modeStr.indexOf('hotel') !== -1) modes.push('Hotel');
+  if (trip.hasCab || modeStr.indexOf('cab') !== -1 || modeStr.indexOf('car') !== -1) modes.push('Cab');
+  const modesLabel = modes.length ? modes.join(' + ') : '—';
+
+  tripBlock = `
+  <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:12px;margin:0 0 12px 0;">
+    <tr>
+      <td style="padding:4px 0;width:130px;"><strong>Req ID</strong></td>
+      <td style="padding:4px 0;">: ${trip.id || '—'}</td>
+    </tr>
+    <tr>
+      <td style="padding:4px 0;"><strong>Employee</strong></td>
+      <td style="padding:4px 0;">: ${employee || '—'}</td>
+    </tr>
+    <tr>
+      <td style="padding:4px 0;"><strong>Route</strong></td>
+      <td style="padding:4px 0;">: ${route || '—'}</td>
+    </tr>
+    <tr>
+      <td style="padding:4px 0;"><strong>Travel Dates</strong></td>
+      <td style="padding:4px 0;">: ${datesText}</td>
+    </tr>
+    <tr>
+      <td style="padding:4px 0;"><strong>Mode(s)</strong></td>
+      <td style="padding:4px 0;">: ${modesLabel}</td>
+    </tr>
+  </table>`;
+
+  if (employee) {
+    greetingLine = `Dear ${employee},`;
+  }
+}
+
+    const headerBlock = `
+      <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:12px;margin-bottom:12px;">
+        <tr>
+          <td style="padding:4px 0;"><strong>Date</strong></td>
+          <td style="padding:4px 0;">: ${dtStr}</td>
+        </tr>
+      </table>`;
+
+    let body = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>ETG Travel – Options Summary</title>
+</head>
+<body style="margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#172b4d;background:#f4f5f7;">
+  <table cellpadding="0" cellspacing="0" width="100%" style="background:#f4f5f7;padding:16px 0;">
+    <tr>
+      <td align="center">
+        <table cellpadding="0" cellspacing="0" width="720" style="background:#ffffff;border:1px solid #d8dde6;">
+          <tr>
+            <td style="padding:12px 18px;border-bottom:3px solid="#1d4ed8;">
+              <div style="font-size:16px;font-weight:bold;letter-spacing:.12em;text-transform:uppercase;color:#1d4ed8;">
+                ETG TRAVEL – OPTIONS SUMMARY
+              </div>
+              <div style="font-size:11px;color:#6b778c;margin-top:2px;">
+                Corporate quotation – Flights / Hotels / Cabs
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 18px 8px 18px;">
+              ${headerBlock}
+              ${tripBlock}
+              <p style="margin:0 0 8px 0;">${greetingLine}</p>
+              <p style="margin:0 0 12px 0;">
+                Please find below the curated options for your upcoming travel. All fares and availability are subject to change until confirmed.
+              </p>
+
+              ${buildTableHtml('Flight Options', flights)}
+              ${buildTableHtml('Hotel Options', hotels)}
+              ${buildTableHtml('Cab Options', cabs)}
+    `;
+
+    if (notes) {
+      body += `
+              <h3 style="font-size:13px;color:#172b4d;margin:16px 0 4px;">Additional Notes</h3>
+              <p style="margin:0 0 12px 0;">${notes.replace(/\n/g,'<br/>')}</p>
+      `;
+    }
+
+    body += `
+              <p style="margin:16px 0 8px 0;">
+                Kindly review the above options and confirm your preferred selection. We will proceed with booking based on your confirmation.
+              </p>
+
+              <p style="margin:16px 0 4px 0;">Regards,</p>
+              <p style="margin:0 0 2px 0;">ETG Travel Desk</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+<!-- ETG Realtime (Socket.IO) -->
+</body>
+</html>`;
+
+    return { html: body.trim(), flights, hotels, cabs, notes };
+  }
+
+  function handleSendQuotation() {
+    const result = buildEmailHtml();
+    if (!result) return;
+
+    // Keep showing the generated HTML + preview for travel desk reference
+    $('emailHtml').value = result.html;
+    $('emailPreview').innerHTML = result.html;
+
+    // Attach quotation + structured options to the selected trip so Stage 5 / 6 can show it
+    const trip = findSelectedTripForDesk && findSelectedTripForDesk();
+    if (trip && trip.id) {
+      const optionsData = {
+        flights: result.flights || [],
+        hotels: result.hotels || [],
+        cabs: result.cabs || [],
+        notes: result.notes || ''
+      };
+      saveQuotationForTrip(trip.id, result.html, optionsData);
+      try {
+        localStorage.setItem('etg-last-quotation-trip-id', String(trip.id));
+      } catch (e) {}
+    }
+
+    const payload = {
+      trip: trip || null,
+      emailHtml: result.html,
+      // send structured options to backend so Stage 6 can render them for the traveller
+      options: (trip && trip.id) ? (function(){
+        try{
+          return {
+            flights: result.flights || [],
+            hotels: result.hotels || [],
+            cabs: result.cabs || [],
+            notes: result.notes || ''
+          };
+        }catch(e){
+          return null;
+        }
+      })() : null
+    };
+
+    // Host app can implement this to actually send email + in-app notification
+    if (typeof window.etgSendQuotation === 'function') {
+      try {
+        window.etgSendQuotation(payload);
+      } catch (e) {
+        console.error('Error in etgSendQuotation hook:', e);
+      }
+    } else {
+      console.log('Quotation ready to send (wire etgSendQuotation(payload) in host app):', payload);
+      alert('Quotation generated. Please copy the HTML into your email / tool. In the full application, this button will also send email + in-app notification to the user and surface under My Trips.');
+    }
+
+    // Navigate to Stage 5 – My Trips dashboard (ensure this file exists in the same folder)
+    try {
+      window.location.href = 'Stage5_Reporting_Manager_Dashboard.html';
+    } catch (e) {
+      console.error('Unable to navigate to Stage 5 / My Trips page', e);
+    }
+  }
+
+  $('btnSendQuotation').addEventListener('click', handleSendQuotation);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    ingestTripFromHashIntoStore();
+    addOption('F');
+    addOption('H');
+    addOption('C');
+    hydrateSelectedTripCard();
+  });
+</script>
+
+<script>window.ETG_API_BASE = window.ETG_API_BASE || '';</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/etg-realtime.js"></script>
+
+</body>
+</html>
