@@ -4644,46 +4644,91 @@ try{
     });
   }
 
-  // Multi-city segments
-  function createSegRow(i){
-    const row = document.createElement('div');
-    row.className = 'row';
-    row.style.marginTop = '10px';
-    row.dataset.seg = String(i);
-    row.innerHTML = `
-      <div class="col-3">
-        <label>City *</label>
-        <input class="hCity" placeholder="e.g., New Delhi"/>
-      </div>
-      <div class="col-3">
-        <label>Check-in *</label>
-        <input class="hIn" type="date"/>
-      </div>
-      <div class="col-3">
-        <label>Check-out *</label>
-        <input class="hOut" type="date"/>
-      </div>
-      <div class="col-2">
-        <label>Nights</label>
-        <input class="hNights" type="number" min="1" placeholder="Auto" readonly/>
-      </div>
-      <div class="col-1" style="display:flex;align-items:end;justify-content:flex-end">
-        <button type="button" class="btn ghost hDel" title="Remove">✖</button>
-      </div>
-    `;
-    row.querySelector('.hDel')?.addEventListener('click', ()=>{
-      row.remove();
-      // Keep at least 1 segment
-      const holder = document.getElementById('hotelSegments');
-      if(holder && holder.children.length===0){
-        holder.appendChild(createSegRow(1));
+  // Multi-city segments (FLIGHT)
+function createFlightSegRow(i){
+  const row = document.createElement('div');
+  row.className = 'row';
+  row.style.marginTop = '10px';
+  row.dataset.seg = String(i);
+  row.innerHTML = `
+    <div class="col-3">
+      <label>From *</label>
+      <input class="fFrom" list="airportList" placeholder="City, Airport or IATA (e.g., DEL)"/>
+    </div>
+    <div class="col-3">
+      <label>To *</label>
+      <input class="fTo" list="airportList" placeholder="City, Airport or IATA (e.g., BOM)"/>
+    </div>
+    <div class="col-3">
+      <label>Departure Date *</label>
+      <input class="fDate" type="date"/>
+    </div>
+    <div class="col-2">
+      <label>Seat Class *</label>
+      <select class="fClass">
+        <option>Economy</option>
+        <option>Premium Economy</option>
+        <option>Business</option>
+      </select>
+    </div>
+    <div class="col-1" style="display:flex;align-items:end;justify-content:flex-end">
+      <button type="button" class="btn ghost fDel" title="Remove">✖</button>
+    </div>
+  `;
+  row.querySelector('.fDel')?.addEventListener('click', ()=>{
+    row.remove();
+    // Keep at least 2 segments for multi-city flight
+    const holder = document.getElementById('segments');
+    if(holder && holder.children.length < 2){
+      while(holder.children.length < 2){
+        holder.appendChild(createFlightSegRow(holder.children.length+1));
       }
-      updateServiceTripTypeUI();
-    });
-    return row;
-  }
+    }
+    updateServiceTripTypeUI();
+  });
+  return row;
+}
 
-  function bindHotelSegments(){
+// Multi-city segments (HOTEL)
+function createHotelSegRow(i){
+  const row = document.createElement('div');
+  row.className = 'row';
+  row.style.marginTop = '10px';
+  row.dataset.seg = String(i);
+  row.innerHTML = `
+    <div class="col-3">
+      <label>City *</label>
+      <input class="hCity" placeholder="e.g., New Delhi"/>
+    </div>
+    <div class="col-3">
+      <label>Check-in *</label>
+      <input class="hIn" type="date"/>
+    </div>
+    <div class="col-3">
+      <label>Check-out *</label>
+      <input class="hOut" type="date"/>
+    </div>
+    <div class="col-2">
+      <label>Nights</label>
+      <input class="hNights" type="number" min="1" placeholder="Auto" readonly/>
+    </div>
+    <div class="col-1" style="display:flex;align-items:end;justify-content:flex-end">
+      <button type="button" class="btn ghost hDel" title="Remove">✖</button>
+    </div>
+  `;
+  row.querySelector('.hDel')?.addEventListener('click', ()=>{
+    row.remove();
+    // Keep at least 1 segment
+    const holder = document.getElementById('hotelSegments');
+    if(holder && holder.children.length===0){
+      holder.appendChild(createHotelSegRow(1));
+    }
+    updateServiceTripTypeUI();
+  });
+  return row;
+}
+
+function bindHotelSegments(){
     const holder = $('hotelSegments');
     const add = $('btnAddHotelSeg');
     const clear = $('btnClearHotelSegs');
@@ -4691,7 +4736,7 @@ try{
 
     function ensureAtLeast(n){
       while(holder.children.length < n){
-        holder.appendChild(createSegRow(holder.children.length+1));
+        holder.appendChild(createHotelSegRow(holder.children.length+1));
       }
     }
 
@@ -4822,7 +4867,7 @@ function bindSegments(){
 
     function ensureAtLeast(n){
       while(holder.children.length < n){
-        holder.appendChild(createSegRow(holder.children.length+1));
+        holder.appendChild(createFlightSegRow(holder.children.length+1));
       }
     }
 
@@ -4853,6 +4898,12 @@ function bindSegments(){
       else el.removeAttribute('required');
     };
 
+    const setReqEl = (el, on)=>{
+      if(!el) return;
+      if(on) el.setAttribute('required','required');
+      else el.removeAttribute('required');
+    };
+
     const sync = ()=>{
       const onF = !!svcFlight.checked;
       const onH = !!svcHotel.checked;
@@ -4864,7 +4915,10 @@ function bindSegments(){
 
       // Required fields per block
       // Flight (ids already in page)
-      ['fromCity','toCity','seatClassSimple','departDate'].forEach(id=> setReq(id, onF));
+      ['fromCity','toCity','seatClassSimple','departDate'].forEach(id=> setReq(id, onF && !showMulti));
+      // Multi-city flight segments required when multi
+      document.querySelectorAll('#segments .fFrom, #segments .fTo, #segments .fDate, #segments .fClass')
+        .forEach(el=> setReqEl(el, onF && showMulti));
       // Return date only when round-trip
       const tripType = document.getElementById('tripType');
       const isRound = !tripType || (tripType.value === 'round');

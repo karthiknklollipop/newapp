@@ -89,9 +89,11 @@
     color:#e5e7eb;
   }
   .tagline{
-    margin-top:18px;
-    font-size:24px;
-    font-weight:700;
+    margin-top:22px;
+    font-size:30px;
+    font-weight:800;
+    letter-spacing:-0.02em;
+    line-height:1.15;
   }
   .tagline span.accent{
     background:linear-gradient(120deg,#38bdf8,#22c55e);
@@ -104,6 +106,34 @@
     color:var(--muted);
     max-width:420px;
   }
+
+.feature-list{
+  margin:14px 0 0;
+  padding:0;
+  list-style:none;
+  display:grid;
+  gap:10px;
+  max-width:460px;
+}
+.feature-list li{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(148,163,184,.28);
+  background:rgba(2,6,23,.45);
+  backdrop-filter: blur(8px);
+  color:rgba(226,232,240,.96);
+  line-height:1.45;
+}
+.feature-list .dot{
+  margin-top:6px;
+  width:8px;height:8px;border-radius:999px;
+  background:linear-gradient(135deg,#38bdf8,#22c55e);
+  flex:0 0 8px;
+  box-shadow:0 0 0 4px rgba(56,189,248,.12);
+}
 
   .steps{
     margin-top:18px;
@@ -633,8 +663,31 @@ td{
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+.logo-wrap{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:24px;
+}
+.logo-img{
+  height:48px;
+  width:auto;
+}
+</style>
+
 </head>
 <body>
+
+<div class="logo-wrap">
+  <img src="logo.png" alt="ETG Travel Logo" class="logo-img"
+       onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+  <div id="logo-fallback" style="display:none;font-size:22px;font-weight:700;letter-spacing:1px;">
+    ETG TRAVEL
+  </div>
+</div>
+
 <div class="shell">
   <!-- Left panel -->
   <div class="left">
@@ -648,12 +701,16 @@ td{
     </div>
 
     <div class="tagline">
-      Sign in to manage<br/>
-      <span class="accent">travel requests, approvals & ticketing.</span>
-    </div>
-    <p class="subcopy">
-      Use your corporate email and select your role. Access to Employee, Manager, and Travel Desk modules is controlled by your login credentials.
-    </p>
+  <span class="accent">Corporate travel</span>, simplified.
+</div>
+<p class="subcopy">
+  A single workspace for travel requests, approvals, ticketing, and confirmations — designed for fast, role‑based action.
+</p>
+<ul class="feature-list" aria-label="Key features">
+  <li><span class="dot"></span>Role-based access for Employee, Manager, and Travel Desk</li>
+  <li><span class="dot"></span>Approval trail + audit friendly workflow</li>
+  <li><span class="dot"></span>Centralized vouchers (flight / hotel / cab) under “My Trips”</li>
+</ul>
 
     <div class="steps">
       <div class="step-pill active">
@@ -691,25 +748,24 @@ td{
       </div>
 
       <!-- Role selector -->
-      <div class="role-tabs" id="roleTabs">
-        <button type="button" class="role-tab active" data-role="EMPLOYEE">
-          <svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/></svg><span>Employee</span>
-        </button>
-        <button type="button" class="role-tab" data-role="MANAGER">
-          <svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 11a4 4 0 1 0-4-4a4 4 0 0 0 4 4Zm-8 1a4 4 0 1 0-4-4a4 4 0 0 0 4 4Zm8 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4ZM8 14c-.42 0-.88.03-1.37.1C4.44 14.38 2 15.38 2 18v2h5.5v-2c0-1.52.65-2.66 1.7-3.5A8.3 8.3 0 0 0 8 14Z"/></svg><span>Manager</span>
-        </button>
-        <button type="button" class="role-tab" data-role="TRAVEL_DESK">
-          <svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h16a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2Zm-2 7h20v7a2 2 0 0 1-2 2h-2v-3H6v3H4a2 2 0 0 1-2-2v-7Zm6 9v-2h8v2H8Z"/></svg><span>Travel Desk</span>
-        
-        <button type="button" class="role-tab" data-role="SUPER_ADMIN">
-          <svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true">
-            <path fill="currentColor" d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4Zm0 2.18L19 6.09V11c0 4.52-3.02 8.9-7 10-3.98-1.1-7-5.48-7-10V6.09l7-2.91Zm-1 5.32h2v4h-2v-4Zm0 6h2v2h-2v-2Z"/>
-          </svg><span>Super Admin</span>
-        </button>
-</button>
-      </div>
+<div class="role-tabs" id="roleTabs">
+  <button type="button" class="role-tab active" data-role="EMPLOYEE">
+    <svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/></svg><span>Employee</span>
+  </button>
+  <button type="button" class="role-tab" data-role="MANAGER">
+    <svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 11a4 4 0 1 0-4-4a4 4 0 0 0 4 4Zm-8 1a4 4 0 1 0-4-4a4 4 0 0 0 4 4Zm8 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4ZM8 14c-.42 0-.88.03-1.37.1C4.44 14.38 2 15.38 2 18v2h5.5v-2c0-1.52.65-2.66 1.7-3.5A8.3 8.3 0 0 0 8 14Z"/></svg><span>Manager</span>
+  </button>
+  <button type="button" class="role-tab" data-role="TRAVEL_DESK">
+    <svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h16a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2Zm-2 7h20v7a2 2 0 0 1-2 2h-2v-3H6v3H4a2 2 0 0 1-2-2v-7Zm6 9v-2h8v2H8Z"/></svg><span>Travel Desk</span>
+  </button>
+  <button type="button" class="role-tab" data-role="SUPER_ADMIN">
+    <svg class="role-ic" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="currentColor" d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4Zm0 2.18L19 6.09V11c0 4.52-3.02 8.9-7 10-3.98-1.1-7-5.48-7-10V6.09l7-2.91Zm-1 5.32h2v4h-2v-4Zm0 6h2v2h-2v-2Z"/>
+    </svg><span>Super Admin</span>
+  </button>
+</div>
 
-      <!-- Login form -->
+<!-- Login form -->
       <form id="loginForm" autocomplete="on" novalidate>
         <input type="hidden" id="role" name="role" value="EMPLOYEE"/>
 

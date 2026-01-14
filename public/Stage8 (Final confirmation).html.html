@@ -119,6 +119,18 @@
 
   .note{font-size:11px;color:#6b7280;margin-top:6px;}
 
+  /* Preserve multi-leg flight details formatting (TravelDesk summary) */
+  .flight-itinerary{
+    white-space:pre; /* keep spaces + new lines */
+    font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    font-size:12px;
+    line-height:1.5;
+    margin:6px 0 0;
+    color:#374151;
+    overflow-x:auto;
+  }
+
+
   .section-tag{
     display:inline-flex;align-items:center;gap:6px;font-size:11px;
     text-transform:uppercase;letter-spacing:.14em;padding:3px 10px;
@@ -267,6 +279,15 @@
   .tab-panel.active{ display:block; }
 
   .is-hidden{display:none !important;}
+
+  /* Auto-captured fields (from voucher parsing) */
+  .auto-filled{
+    background:#ecfeff !important;
+    border-color:#38bdf8 !important;
+    box-shadow:0 0 0 1px rgba(56,189,248,.35) !important;
+  }
+  .auto-filled::placeholder{ color:#60a5fa; }
+
 </style>
 </head>
 <body>
@@ -1195,6 +1216,17 @@
     return found;
   }
 
+
+// Preserve multi-leg flight details so they don't collapse into a single line
+function formatItinerary(raw){
+  const s = String(raw || '').trim();
+  if(!s) return '';
+  // If already contains line breaks, keep as-is
+  if(s.includes('\n')) return s;
+  // Insert newline before each segment number (2,3,4...) followed by airline code + flight no.
+  return s.replace(/(\s)(\d+)\s+(?=[A-Z]{1,3}\s*\d+)/g, '\n$2 ');
+}
+
   function renderApprovalDashboard(trip){
     const host = $('approvalDashboard');
     if(!host) return;
@@ -1222,12 +1254,18 @@
       if(isUserConfirmed(label)) tags.push('User confirmed');
       if(isMgrApproved(label)) tags.push('Manager approved');
       const tagHtml = tags.length ? ` <span class="section-tag" style="margin-left:8px;background:#ecfeff;color:#0369a1;border-color:#bae6fd;">${esc(tags.join(' · '))}</span>` : '';
+      const detailsRaw = (opt?.details || opt?.notes || '').toString();
+      const detailsHtml = detailsRaw.trim()
+        ? (type === 'flight'
+            ? `<pre class="flight-itinerary">${esc(formatItinerary(detailsRaw))}</pre>`
+            : `<div class="note" style="margin-top:4px;">${esc(detailsRaw)}</div>`)
+        : '';
       return `
         <div style="border:1px solid #e5e7eb;border-radius:12px;padding:10px 12px;margin-top:10px;background:#ffffff;">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
             <div>
               <div style="font-weight:700;font-size:13px;">${esc(title)}${tagHtml}</div>
-              <div class="note" style="margin-top:4px;">${esc(opt?.details||opt?.notes||'')}</div>
+              ${detailsHtml}
             </div>
             <div style="text-align:right;min-width:120px;">
               <div style="font-size:11px;color:#6b7280;">${esc(type.toUpperCase())}</div>
@@ -2040,6 +2078,140 @@ async function collectVoucherFiles(){
 }
 
 
+// ===== Voucher Parsing (Enterprise) — Auto-capture fields from attached PDF via backend =====
+// Backend contract: POST {ETG_API_BASE}/api/v1/vouchers/parse (multipart: file + context JSON)
+// Response: { fields: { "<inputId>": { value, confidence }, ... }, overallConfidence, warnings, ... }
+async function parseVoucherAndAutofill(file, mode, segmentMeta){
+  // NOTE: Enterprise auto-capture requires an API endpoint. If this file is opened via file://
+  // the browser will treat relative URLs as local files and the API call will fail.
+  if(location && location.protocol === 'file:'){
+    showToast('⚠️ Auto-capture needs server (http/https). Open via localhost or ETG app, not file://');
+    return;
+  }
+
+  try{
+    const rid = getRequestId();
+    if(!rid || !file) return;
+
+    showToast('📄 Parsing voucher…');
+
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('context', JSON.stringify(Object.assign({ rid, mode }, segmentMeta || {})));
+
+    const base = (window.ETG_API_BASE || '').trim();
+    const url = (base ? base : '') + '/api/v1/vouchers/parse';
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'X-Request-Id': String(rid),
+        'X-Doc-Type': String(mode || 'auto')
+        // If your backend requires auth, prefer cookie session.
+        // For bearer: add Authorization header here.
+      },
+      body: fd
+    });
+
+    if(!res.ok){
+      let msg = '❌ Voucher parse failed';
+      try{
+        const t = await res.text();
+        if(t && t.length < 240) msg = msg + ' — ' + t;
+      }catch(e){}
+      showToast(msg);
+      return;
+    }
+
+    const data = await res.json();
+    const fields = data && data.fields ? data.fields : {};
+    const warnings = Array.isArray(data && data.warnings) ? data.warnings : [];
+
+    // Apply fields by DOM id (backend returns keys matching input IDs)
+    let filledCount = 0;
+    Object.keys(fields).forEach((id)=>{
+      const el = document.getElementById(id);
+      if(!el) return;
+
+      const v = (fields[id] && fields[id].value !== undefined && fields[id].value !== null)
+        ? String(fields[id].value).trim()
+        : '';
+      if(!v) return;
+
+      // Fill only if empty (safer). Change to always overwrite if needed.
+      if(!String(el.value || '').trim()){
+        el.value = v;
+        filledCount += 1;
+      }
+
+      // Highlight field as auto-captured
+      el.classList.add('auto-filled');
+      el.setAttribute('data-autofill', 'voucher');
+      if(fields[id] && typeof fields[id].confidence === 'number'){
+        el.setAttribute('data-autofill-confidence', String(fields[id].confidence));
+      }
+    });
+
+    // Trigger dependent calculations (hotel nights / totals)
+    try{ calculateHotelStay(); }catch(e){}
+
+    const conf = (data && typeof data.overallConfidence === 'number')
+      ? Math.round(data.overallConfidence * 100) + '%'
+      : '';
+
+    const warnNote = warnings.length ? ` · ⚠️ ${warnings.length} warning(s)` : '';
+    showToast(`✅ Auto-filled ${filledCount} field(s)` + (conf ? ` (confidence ${conf})` : '') + warnNote);
+  }catch(err){
+    console.error(err);
+    showToast('❌ Voucher parse error');
+  }
+}
+
+function wireVoucherAutoCapture(){
+  const wire = (inputId, mode) => {
+    const el = document.getElementById(inputId);
+    if(!el) return;
+    el.addEventListener('change', async ()=>{
+      const f = el.files && el.files[0];
+      if(!f) return;
+      await parseVoucherAndAutofill(f, mode, { sourceInputId: inputId });
+    });
+  };
+
+  // Primary vouchers (single)
+  wire('flightVoucher','flight');
+  wire('hotelVoucher','hotel');
+  wire('cabVoucher','cab');
+
+  // Segment vouchers are dynamic: use event delegation
+  document.body.addEventListener('change', async (e)=>{
+    const t = e.target;
+    if(!t || t.tagName !== 'INPUT' || t.type !== 'file') return;
+
+    // only pdf voucher inputs
+    const acc = String(t.accept || '');
+    if(!acc.includes('pdf')) return;
+
+    const id = t.id || '';
+    const f = t.files && t.files[0];
+    if(!f) return;
+
+    // Detect segment type based on naming convention used in this file:
+    // seg{idx}Voucher (flight), hs{idx}Voucher (hotel), cs{idx}Voucher (cab)
+    if(id.startsWith('seg') && id.endsWith('Voucher')){
+      await parseVoucherAndAutofill(f, 'flight', { segmentType:'flight', sourceInputId:id });
+    }else if(id.startsWith('hs') && id.endsWith('Voucher')){
+      await parseVoucherAndAutofill(f, 'hotel', { segmentType:'hotel', sourceInputId:id });
+    }else if(id.startsWith('cs') && id.endsWith('Voucher')){
+      await parseVoucherAndAutofill(f, 'cab', { segmentType:'cab', sourceInputId:id });
+    }
+  });
+}
+
+
+
+
+
 function setTravelDeskLock(isLocked){
   // Locks TravelDesk editing after sending to prevent duplicates/edits.
   const idsToDisable = [
@@ -2254,6 +2426,7 @@ function setTravelDeskLock(isLocked){
 
     attachCalendarIconHandlers();
     initTabs();
+    wireVoucherAutoCapture();
     // Ensure correct initial visibility
     try{ document.querySelectorAll('.tab-panel').forEach(p=>{ p.style.display = p.classList.contains('active') ? 'block' : 'none'; }); }catch(e){}
     loadStage8Context();
@@ -2265,8 +2438,22 @@ function setTravelDeskLock(isLocked){
 </script>
 
 <script>window.ETG_API_BASE = window.ETG_API_BASE || '';</script>
-<script src="/socket.io/socket.io.js"></script>
-<script src="/etg-realtime.js"></script>
+<script>
+  // Realtime scripts are available only when hosted under the ETG app server.
+  // When opened as file://, skip loading these to avoid console errors.
+  (function(){
+    try{
+      if(location && location.protocol === 'file:') return;
+      var s1 = document.createElement('script');
+      s1.src = '/socket.io/socket.io.js';
+      document.body.appendChild(s1);
+
+      var s2 = document.createElement('script');
+      s2.src = '/etg-realtime.js';
+      document.body.appendChild(s2);
+    }catch(e){}
+  })();
+</script>
 
 </body>
 </html>
