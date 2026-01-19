@@ -1221,10 +1221,10 @@
           <div class="title">Organization</div>
           <div class="row">
             <div class="col-4">
-              <label for="costCenter">Business Unit Name *</label>
-              <select id="costCenter" required>
-<option value="">Select Business Unit</option>
-<option value="AGRI INPUTS">AGRI INPUTS</option>
+              <label for="costCenter">Business Vertical Name *</label>
+              <select id="costCenter">
+                <option value="" selected>Select Business Vertical</option>
+                <option value="AGRI INPUTS">AGRI INPUTS</option>
 <option value="AGRI INPUTS - CURECHEM">AGRI INPUTS - CURECHEM</option>
 <option value="AGRI INPUTS - POLYMER">AGRI INPUTS - POLYMER</option>
 <option value="AGRI INPUTS - NON EIHL">AGRI INPUTS - NON EIHL</option>
@@ -1232,7 +1232,7 @@
 <option value="NUTRISCO">NUTRISCO</option>
 <option value="EXCHANGE TRADED">EXCHANGE TRADED</option>
 <option value="VAMARA">VAMARA</option>
-<option value="WAREHOUSING &amp; LOGISTICS">WAREHOUSING &amp; LOGISTICS</option>
+<option value="WAREHOUSING & LOGISTICS">WAREHOUSING & LOGISTICS</option>
 <option value="PUREOIL">PUREOIL</option>
 <option value="PARROGATE">PARROGATE</option>
 <option value="DAVID WHITEHEAD">DAVID WHITEHEAD</option>
@@ -1241,14 +1241,15 @@
 <option value="NUFORTH">NUFORTH</option>
 <option value="KYOSK">KYOSK</option>
 <option value="GROUP FUNCTION">GROUP FUNCTION</option>
-</select>
+              </select>
               <div id="err_costCenter" class="field-error hidden"></div>
             </div>
+
             <div class="col-4">
-              <label for="subBusinessUnitName">Sub Business Unit Name *</label>
-              <select id="subBusinessUnitName" required>
-<option value="">Select Sub Business Unit</option>
-<option value="AGRO CHEMICALS">AGRO CHEMICALS</option>
+              <label for="subBusinessVertical">Sub Business Vertical Name *</label>
+              <select id="subBusinessVertical">
+                <option value="" selected>Select Sub Business Vertical</option>
+                <option value="AGRO CHEMICALS">AGRO CHEMICALS</option>
 <option value="PACSYS">PACSYS</option>
 <option value="FERTILIZER">FERTILIZER</option>
 <option value="ONE STOP SHOP">ONE STOP SHOP</option>
@@ -1323,7 +1324,7 @@
 <option value="PL VEGOIL">PL VEGOIL</option>
 <option value="ETCV- JVD">ETCV- JVD</option>
 <option value="FL360">FL360</option>
-<option value="PL BASE &amp; REFINED METALS">PL BASE &amp; REFINED METALS</option>
+<option value="PL BASE & REFINED METALS">PL BASE & REFINED METALS</option>
 <option value="PL FREIGHT PHYSICAL">PL FREIGHT PHYSICAL</option>
 <option value="PL FREIGHT SPECIALIZED">PL FREIGHT SPECIALIZED</option>
 <option value="PL MULTI PRODUCT GLOBAL">PL MULTI PRODUCT GLOBAL</option>
@@ -1340,7 +1341,7 @@
 <option value="PARROGATE - VAMARA">PARROGATE - VAMARA</option>
 <option value="PARROGATE - PARROGATE">PARROGATE - PARROGATE</option>
 <option value="DAVID WHITEHEAD">DAVID WHITEHEAD</option>
-<option value="INSURANCE &amp; RISK SOLUTIONS">INSURANCE &amp; RISK SOLUTIONS</option>
+<option value="INSURANCE & RISK SOLUTIONS">INSURANCE & RISK SOLUTIONS</option>
 <option value="PESA CAPITAL">PESA CAPITAL</option>
 <option value="NUFORTH">NUFORTH</option>
 <option value="KYOSK">KYOSK</option>
@@ -1350,22 +1351,69 @@
 <option value="GROUP CPD">GROUP CPD</option>
 <option value="GROUP DIRECTOR">GROUP DIRECTOR</option>
 <option value="GROUP HQ COST">GROUP HQ COST</option>
-<option value="GROUP HR &amp; ADMIN">GROUP HR &amp; ADMIN</option>
+<option value="GROUP HR & ADMIN">GROUP HR & ADMIN</option>
 <option value="GROUP INTERNAL AUDIT">GROUP INTERNAL AUDIT</option>
-<option value="GROUP IT &amp; ERP">GROUP IT &amp; ERP</option>
-<option value="GROUP LEGAL &amp; COMPLIANCE">GROUP LEGAL &amp; COMPLIANCE</option>
+<option value="GROUP IT & ERP">GROUP IT & ERP</option>
+<option value="GROUP LEGAL & COMPLIANCE">GROUP LEGAL & COMPLIANCE</option>
 <option value="GROUP MANAGEMENT TRAINEE">GROUP MANAGEMENT TRAINEE</option>
-<option value="GROUP RISK &amp; INSURANCE">GROUP RISK &amp; INSURANCE</option>
+<option value="GROUP RISK & INSURANCE">GROUP RISK & INSURANCE</option>
 <option value="GROUP SHARED SERVICE">GROUP SHARED SERVICE</option>
 <option value="GROUP SUSTAINABILITY">GROUP SUSTAINABILITY</option>
 <option value="GROUP OTHERS">GROUP OTHERS</option>
 <option value="GROUP TREASURY">GROUP TREASURY</option>
-</select>
-              <div id="err_subBusinessUnitName" class="field-error hidden"></div>
+              </select>
+              <div id="err_subBusinessVertical" class="field-error hidden"></div>
             </div>
+
             <div class="col-4">
+              <label for="legalEntity">Legal Entity Name *</label>
+              <select id="legalEntity">
+                <option value="" selected>Select Legal Entity</option>
+                <option value="ETG Commodities INC.">ETG Commodities INC.</option>
+<option value="Dunnington Holdings Limited">Dunnington Holdings Limited</option>
+<option value="ETG Commodities Manitoba Inc.">ETG Commodities Manitoba Inc.</option>
+<option value="ETG Food Products Inc.">ETG Food Products Inc.</option>
+<option value="Agri Commodities & Finance LTD">Agri Commodities & Finance LTD</option>
+<option value="ETG Inputs Holdco Limited UAE">ETG Inputs Holdco Limited UAE</option>
+<option value="ETG Agri Inputs FZE">ETG Agri Inputs FZE</option>
+<option value="ETG Chem FZE-LLC">ETG Chem FZE-LLC</option>
+<option value="ETG CHEMEX FZCO">ETG CHEMEX FZCO</option>
+<option value="Agri Commodities & Finance FZ-LLC">Agri Commodities & Finance FZ-LLC</option>
+<option value="Agri Commodities & Finance LTD">Agri Commodities & Finance LTD</option>
+<option value="ETG Insurance & Risk Solution DMCC">ETG Insurance & Risk Solution DMCC</option>
+<option value="Agri Commodities Logistics & Packers DWC-LLC">Agri Commodities Logistics & Packers DWC-LLC</option>
+<option value="ETG Agro Industries LLC">ETG Agro Industries LLC</option>
+<option value="ETG PULSES MIDDLE EAST FZCO">ETG PULSES MIDDLE EAST FZCO</option>
+<option value="ETC Agro Processing (India) PTY.LTD">ETC Agro Processing (India) PTY.LTD</option>
+<option value="ETC Management Services India Private Limited">ETC Management Services India Private Limited</option>
+<option value="Greenfield Commodities Services Pvt Ltd">Greenfield Commodities Services Pvt Ltd</option>
+<option value="Killimanjaro Commodities (India) Private Limited">Killimanjaro Commodities (India) Private Limited</option>
+<option value="Wholesome Habits - India">Wholesome Habits - India</option>
+<option value="Beyond Beans Foundation">Beyond Beans Foundation</option>
+<option value="ETG Commodities B.V">ETG Commodities B.V</option>
+<option value="ETG Food Products B.V.">ETG Food Products B.V.</option>
+<option value="Consolidated Limeworks">Consolidated Limeworks</option>
+<option value="EIRS (PTY) LTD">EIRS (PTY) LTD</option>
+<option value="ETC Agro (Pty) Ltd">ETC Agro (Pty) Ltd</option>
+<option value="ETG Curechem - SA">ETG Curechem - SA</option>
+<option value="ETG Logistics Agency (Pty) Ltd">ETG Logistics Agency (Pty) Ltd</option>
+<option value="ETG Pulses SA (Pty) Ltd">ETG Pulses SA (Pty) Ltd</option>
+<option value="Falcon Gas (Pty)Ltd">Falcon Gas (Pty)Ltd</option>
+<option value="Falcon Steel Pty Ltd">Falcon Steel Pty Ltd</option>
+<option value="Kynoch Fertilizer (PTY) Ltd">Kynoch Fertilizer (PTY) Ltd</option>
+<option value="Rand Agri">Rand Agri</option>
+<option value="RE Groundnuts (Pty) Ltd">RE Groundnuts (Pty) Ltd</option>
+<option value="Sunshine Sugar Supplies (Pty) Ltd">Sunshine Sugar Supplies (Pty) Ltd</option>
+<option value="Tengwa Africa (Pty) Ltd">Tengwa Africa (Pty) Ltd</option>
+<option value="Tengwa Moahi (Pty) Ltd">Tengwa Moahi (Pty) Ltd</option>
+<option value="Vamara group support services (Pty) limited">Vamara group support services (Pty) limited</option>
+              </select>
+              <div id="err_legalEntity" class="field-error hidden"></div>
+            </div>
+
+            <div class="col-6">
               <label for="costCenterLocation">Cost Center Location *</label>
-              <input id="costCenterLocation" placeholder="e.g., Bangalore / Chennai / Dubai"/>
+              <input id="costCenterLocation" placeholder="e.g., Dubai / Mumbai / Singapore"/>
               <div id="err_costCenterLocation" class="field-error hidden"></div>
             </div>
 
@@ -1374,13 +1422,14 @@
               <input id="employeeId" placeholder="e.g., ETG-10293" />
               <div id="err_employeeId" class="field-error hidden"></div>
             </div>
+
             <div class="col-6">
               <label for="managerEmail">Manager Email (for approvals) *</label>
               <input id="managerEmail" type="email" placeholder="manager@something.com" autocomplete="email"/>
               <div id="err_managerEmail" class="field-error hidden"></div>
             </div>
-
           </div>
+
 
         <div class="actions">
           <button class="btn ghost" id="btnClear">Reset</button>
@@ -2282,20 +2331,23 @@ try{
 
       // Organization
       const costCenterEl = document.getElementById('costCenter');
-      const subBusinessUnitNameEl = document.getElementById('subBusinessUnitName');
-      const costCenterLocationEl = document.getElementById('costCenterLocation');
       const employeeIdEl = document.getElementById('employeeId');
       const managerEmailEl = document.getElementById('managerEmail');
 
-      const cc = user.businessUnitName || user.costCenter || user.department || user.dept || ctx.businessUnitName || ctx.costCenter;
+      const cc = user.costCenter || user.department || user.dept || ctx.costCenter;
       const emp = user.employeeId || user.empId || ctx.employeeId;
       const mgr = user.managerEmail || user.approverEmail || ctx.managerEmail;
 
       if(costCenterEl && cc) costCenterEl.value = String(cc);
-      const subBu = user.subBusinessUnitName || user.subBusinessUnit || user.subDepartment || ctx.subBusinessUnitName;
-      if(subBusinessUnitNameEl && subBu) subBusinessUnitNameEl.value = String(subBu);
-      const ccLoc = user.costCenterLocation || user.ccLocation || user.location || ctx.costCenterLocation;
-      if(costCenterLocationEl && ccLoc) costCenterLocationEl.value = String(ccLoc);
+      const sbvEl = document.getElementById('subBusinessVertical');
+      const leEl = document.getElementById('legalEntity');
+      const cclEl = document.getElementById('costCenterLocation');
+      const sbv = user.subBusinessVertical || ctx.subBusinessVertical;
+      const le  = user.legalEntity || ctx.legalEntity;
+      const ccl = user.costCenterLocation || ctx.costCenterLocation;
+      if(sbvEl && sbv) sbvEl.value = String(sbv);
+      if(leEl && le) leEl.value = String(le);
+      if(cclEl && ccl) cclEl.value = String(ccl);
       if(employeeIdEl && emp) employeeIdEl.value = String(emp);
       if(managerEmailEl && mgr) managerEmailEl.value = String(mgr);
     }catch(e){}
@@ -4464,13 +4516,14 @@ function wireViewButtons(root, list){
     const email = $('email');
     const phone = $('phone');
     const costCenter = $('costCenter');
-    const subBusinessUnitName = $('subBusinessUnitName');
+    const subBusinessVertical = $('subBusinessVertical');
+    const legalEntity = $('legalEntity');
     const costCenterLocation = $('costCenterLocation');
     const managerEmail = $('managerEmail');
     const employeeId = $('employeeId');
 
     // clear errors
-    ['fullName','email','phone','costCenter','subBusinessUnitName','costCenterLocation','managerEmail','employeeId'].forEach(id=>{
+    ['fullName','email','phone','costCenter','subBusinessVertical','legalEntity','costCenterLocation','managerEmail','employeeId'].forEach(id=>{
       const el = $(id);
       const err = $('err_'+id);
       if(el && err) setError(el, err, '');
@@ -4491,11 +4544,15 @@ function wireViewButtons(root, list){
       hasError = true;
     }
     if(!costCenter?.value?.trim()){
-      setError(costCenter, $('err_costCenter'), 'Business Unit Name is required');
+      setError(costCenter, $('err_costCenter'), 'Business Vertical Name is required');
       hasError = true;
     }
-    if(!subBusinessUnitName?.value?.trim()){
-      setError(subBusinessUnitName, $('err_subBusinessUnitName'), 'Sub Business Unit Name is required');
+    if(!subBusinessVertical?.value?.trim()){
+      setError(subBusinessVertical, $('err_subBusinessVertical'), 'Sub Business Vertical Name is required');
+      hasError = true;
+    }
+    if(!legalEntity?.value?.trim()){
+      setError(legalEntity, $('err_legalEntity'), 'Legal Entity Name is required');
       hasError = true;
     }
     if(!costCenterLocation?.value?.trim()){
@@ -4523,8 +4580,9 @@ function wireViewButtons(root, list){
       phone: phone.value.trim(),
       mobile: ( $('phoneCode')?.value ? ($('phoneCode').value + ' ' + phone.value.trim()) : phone.value.trim() ),
       costCenter: costCenter.value.trim(),
-      subBusinessUnitName: subBusinessUnitName.value.trim(),
-      costCenterLocation: costCenterLocation.value.trim(),
+      subBusinessVertical: subBusinessVertical ? subBusinessVertical.value.trim() : '',
+      legalEntity: legalEntity ? legalEntity.value.trim() : '',
+      costCenterLocation: costCenterLocation ? costCenterLocation.value.trim() : '',
       managerEmail: managerEmail.value.trim(),
       employeeId: employeeId.value.trim(),
       travelerType: $('travelerType')?.value || '',
@@ -5499,8 +5557,6 @@ function bindSegments(){
 
     // Organization
     setIfEmpty($('costCenter'), dept);
-    setIfEmpty($('subBusinessUnitName'), p.subBusinessUnitName || p.subBusinessUnit || '');
-    setIfEmpty($('costCenterLocation'), p.costCenterLocation || p.location || '');
     setIfEmpty($('employeeId'), empId);
     setIfEmpty($('managerEmail'), mgr);
   }
