@@ -4704,42 +4704,78 @@ $('btnBack1')?.addEventListener('click',()=>{
   $('btnSubmit')?.addEventListener('click',()=>{
     const visaLink = $('visaDocLink') ? $('visaDocLink').value.trim() : '';
 
-    let body = `New Travel Request%0D%0A%0D%0A`;
-    body += `🛫 Flight Details%0D%0A`;
-    body += `• Route: ${$('fromCity').value} → ${$('toCity').value}%0D%0A`;
-    body += `• Departure: ${$('departDate').value}%0D%0A`;
-    if($('tripType').value==='round'){
-      body += `• Return: ${$('returnDate').value}%0D%0A`;
-    }
-    body += `• Travel Type: ${$('travelType').value}%0D%0A`;
-
-    if(isInternationalTrip()){
-      body += `%0D%0A🛂 Passport & Visa%0D%0A`;
-      body += `• Passport No: ${$('passportNumber')?.value || ''}%0D%0A`;
-      body += `• Passport Expiry: ${$('passportExpiry')?.value || ''}%0D%0A`;
-      body += `• Nationality: ${$('passportNationality')?.value || ''}%0D%0A`;
-      body += `• Issuing Country: ${$('issuingCountry')?.value || ''}%0D%0A`;
-      body += `• Visa Type: ${$('visaStatus')?.value || ''}%0D%0A`;
-      body += `• Visa No: ${$('visaNumber')?.value || ''}%0D%0A`;
-      const v2 = $('visaDocLink2')?.value?.trim?.() || visaLink;
-      if(v2) body += `• Visa Document Link: ${v2}%0D%0A`;
-    }
-
-    // ✅ NEW: Visa Document link in email
-    if(visaLink){
-      body += `• Visa Document Link: ${visaLink}%0D%0A`;
-    }
-
-    const reqId = 'TR-' + Math.random().toString(36).slice(2,8).toUpperCase();
-    $('reqId').textContent = reqId;
-
-    // Save trip record (demo)
+    // Pull login context/profile so employee fields never appear blank in email
     const ctx = (window.getLoginContext ? window.getLoginContext() : {}) || {};
     const u = (window.getUserByEmail ? window.getUserByEmail(ctx.email || '') : null) || {};
     const fallbackName = (ctx.name || ctx.fullName || [u.firstName,u.lastName].filter(Boolean).join(' ') || u.name || '').trim();
     const fallbackEmail = (ctx.email || u.email || '').trim();
     const fallbackEmpId = (ctx.employeeId || ctx.empId || u.employeeId || u.empId || '').trim();
     const fallbackMgr = (ctx.managerEmail || ctx.reportingManagerEmail || ctx.rmEmail || u.managerEmail || u.reportingManagerEmail || '').trim();
+
+    const esc = (v)=>encodeURIComponent(String(v ?? ''));
+
+    // Employee / Org fields
+    const empName = (($('fullName')?.value || '').trim()) || fallbackName;
+    const empEmail = (($('email')?.value || '').trim()) || fallbackEmail;
+    const empIdVal = (($('employeeId')?.value || '').trim()) || fallbackEmpId;
+    const mgrEmail = (($('managerEmail')?.value || '').trim()) || fallbackMgr;
+
+    const businessVertical = ($('costCenter')?.value || '').trim();
+    const subBusinessVertical = ($('subBusinessVertical')?.value || '').trim();
+    const costCenterLocation = ($('costCenterLocation')?.value || '').trim();
+    const legalEntity = ($('legalEntity')?.value || '').trim();
+
+    let body = `New Travel Request%0D%0A%0D%0A` +
+      `👤 Employee Details%0D%0A` +
+      `• Employee Name: ${esc(empName)}%0D%0A` +
+      `• Employee ID: ${esc(empIdVal)}%0D%0A` +
+      `• Employee Email: ${esc(empEmail)}%0D%0A` +
+      `• Business Vertical: ${esc(businessVertical)}%0D%0A` +
+      `• Sub Business Vertical: ${esc(subBusinessVertical)}%0D%0A` +
+      `• Cost Center Location: ${esc(costCenterLocation)}%0D%0A` +
+      `• Legal Entity Name: ${esc(legalEntity)}%0D%0A` +
+      `• Reporting Manager Email: ${esc(mgrEmail)}%0D%0A%0D%0A`;
+
+    body += `🛫 Travel Details%0D%0A`;
+    body += `• Purpose: ${esc(($('purpose')?.value || '').trim())}%0D%0A`;
+    body += `• Route: ${esc(($('fromCity')?.value || '').trim())} → ${esc(($('toCity')?.value || '').trim())}%0D%0A`;
+    body += `• Departure: ${esc(($('departDate')?.value || '').trim())}%0D%0A`;
+    if(($('tripType')?.value || '')==='round'){
+      body += `• Return: ${esc(($('returnDate')?.value || '').trim())}%0D%0A`;
+    }
+    body += `• Travel Type: ${esc(($('travelType')?.value || '').trim())}%0D%0A`;
+
+    // Hotel summary (if present)
+    const hCity = ($('hotelCity')?.value || '').trim();
+    const hIn = ($('checkIn')?.value || '').trim();
+    const hOut = ($('checkOut')?.value || '').trim();
+    if(hCity || hIn || hOut){
+      body += `%0D%0A🏨 Hotel Details%0D%0A`;
+      if(hCity) body += `• City: ${esc(hCity)}%0D%0A`;
+      if(hIn) body += `• Check-in: ${esc(hIn)}%0D%0A`;
+      if(hOut) body += `• Check-out: ${esc(hOut)}%0D%0A`;
+    }
+
+    if(isInternationalTrip()){
+      body += `%0D%0A🛂 Passport & Visa%0D%0A`;
+      body += `• Passport No: ${esc($('passportNumber')?.value || '')}%0D%0A`;
+      body += `• Passport Expiry: ${esc($('passportExpiry')?.value || '')}%0D%0A`;
+      body += `• Nationality: ${esc($('passportNationality')?.value || '')}%0D%0A`;
+      body += `• Issuing Country: ${esc($('issuingCountry')?.value || '')}%0D%0A`;
+      body += `• Visa Type: ${esc($('visaStatus')?.value || '')}%0D%0A`;
+      body += `• Visa No: ${esc($('visaNumber')?.value || '')}%0D%0A`;
+      const v2 = ($('visaDocLink2')?.value || '').trim() || visaLink;
+      if(v2) body += `• Visa Document Link: ${esc(v2)}%0D%0A`;
+    }
+
+    if(visaLink && !isInternationalTrip()){
+      body += `%0D%0A• Visa Document Link: ${esc(visaLink)}%0D%0A`;
+    }
+
+    body += `%0D%0AIf you face any technical issues, have general questions, or encounter any blockers, please feel free to log a ticket through the Helpdesk Portal.%0D%0A`;
+
+    const reqId = 'TR-' + Math.random().toString(36).slice(2,8).toUpperCase();
+    $('reqId').textContent = reqId;
 
     // Save trip record (demo)
     const tripRecord = {
@@ -4753,6 +4789,10 @@ $('btnBack1')?.addEventListener('click',()=>{
       requesterEmail: ($('email')?.value?.trim?.() || '') || fallbackEmail,
       employeeId: ($('employeeId')?.value?.trim?.() || '') || fallbackEmpId,
       managerEmail: ($('managerEmail')?.value?.trim?.() || '') || fallbackMgr,
+      businessVertical: ($('costCenter')?.value?.trim?.() || ''),
+      subBusinessVertical: ($('subBusinessVertical')?.value?.trim?.() || ''),
+      costCenterLocation: ($('costCenterLocation')?.value?.trim?.() || ''),
+      legalEntity: ($('legalEntity')?.value?.trim?.() || ''),
       // Aliases used by later stages (Stage 8 prefill expects these)
       employeeCode: ($('employeeId')?.value?.trim?.() || '') || fallbackEmpId,
       purpose: ($('purpose')?.value?.trim?.() || ''),
@@ -4810,7 +4850,7 @@ $('btnBack1')?.addEventListener('click',()=>{
     // Mailto demo (opens user's email client)
     const toEmail = 'traveldesk2@etgworld.com';
     const subject = encodeURIComponent('New Travel Request - ' + reqId);
-    const mgr = ($('managerEmail')?.value || '').trim();
+    const mgr = (mgrEmail || '').trim();
     const cc = (mgr && isValidEmail(mgr)) ? `&cc=${encodeURIComponent(mgr)}` : '';
     const mailtoUrl = `mailto:${toEmail}?subject=${subject}${cc}&body=${body}`;
 
