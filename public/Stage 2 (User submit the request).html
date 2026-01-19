@@ -1220,11 +1220,155 @@
         <div class="subcard" style="margin-top:14px;">
           <div class="title">Organization</div>
           <div class="row">
-            <div class="col-6">
-              <label for="costCenter">Cost Center / Department *</label>
-              <input id="costCenter" placeholder="e.g., FIN / IT / CC-784"/>
+            <div class="col-4">
+              <label for="costCenter">Business Unit Name *</label>
+              <select id="costCenter" required>
+<option value="">Select Business Unit</option>
+<option value="AGRI INPUTS">AGRI INPUTS</option>
+<option value="AGRI INPUTS - CURECHEM">AGRI INPUTS - CURECHEM</option>
+<option value="AGRI INPUTS - POLYMER">AGRI INPUTS - POLYMER</option>
+<option value="AGRI INPUTS - NON EIHL">AGRI INPUTS - NON EIHL</option>
+<option value="PULSES">PULSES</option>
+<option value="NUTRISCO">NUTRISCO</option>
+<option value="EXCHANGE TRADED">EXCHANGE TRADED</option>
+<option value="VAMARA">VAMARA</option>
+<option value="WAREHOUSING &amp; LOGISTICS">WAREHOUSING &amp; LOGISTICS</option>
+<option value="PUREOIL">PUREOIL</option>
+<option value="PARROGATE">PARROGATE</option>
+<option value="DAVID WHITEHEAD">DAVID WHITEHEAD</option>
+<option value="NON TRADING BUSINESS">NON TRADING BUSINESS</option>
+<option value="PESA CAPITAL">PESA CAPITAL</option>
+<option value="NUFORTH">NUFORTH</option>
+<option value="KYOSK">KYOSK</option>
+<option value="GROUP FUNCTION">GROUP FUNCTION</option>
+</select>
               <div id="err_costCenter" class="field-error hidden"></div>
             </div>
+            <div class="col-4">
+              <label for="subBusinessUnitName">Sub Business Unit Name *</label>
+              <select id="subBusinessUnitName" required>
+<option value="">Select Sub Business Unit</option>
+<option value="AGRO CHEMICALS">AGRO CHEMICALS</option>
+<option value="PACSYS">PACSYS</option>
+<option value="FERTILIZER">FERTILIZER</option>
+<option value="ONE STOP SHOP">ONE STOP SHOP</option>
+<option value="SEEDS">SEEDS</option>
+<option value="SPECIALITY FERTILIZER">SPECIALITY FERTILIZER</option>
+<option value="INDUSTRIAL CHEMICALS">INDUSTRIAL CHEMICALS</option>
+<option value="MINING CHEMICALS">MINING CHEMICALS</option>
+<option value="POLYMER POLYOLEFIN">POLYMER POLYOLEFIN</option>
+<option value="AGRI INPUTS - NON EIHL (ACF)">AGRI INPUTS - NON EIHL (ACF)</option>
+<option value="AGRI INPUTS - NON EIHL (OTHERS)">AGRI INPUTS - NON EIHL (OTHERS)</option>
+<option value="PULSES OTHERS">PULSES OTHERS</option>
+<option value="PRODUCT BASKET EIGHT">PRODUCT BASKET EIGHT</option>
+<option value="PRODUCT BASKET FIVE">PRODUCT BASKET FIVE</option>
+<option value="PRODUCT BASKET FOUR">PRODUCT BASKET FOUR</option>
+<option value="PRODUCT BASKET NINE">PRODUCT BASKET NINE</option>
+<option value="PRODUCT BASKET ONE">PRODUCT BASKET ONE</option>
+<option value="PRODUCT BASKET SEVEN">PRODUCT BASKET SEVEN</option>
+<option value="PRODUCT BASKET SIX">PRODUCT BASKET SIX</option>
+<option value="PRODUCT BASKET TEN">PRODUCT BASKET TEN</option>
+<option value="PRODUCT BASKET THREE">PRODUCT BASKET THREE</option>
+<option value="PRODUCT BASKET TWO">PRODUCT BASKET TWO</option>
+<option value="COCOA">COCOA</option>
+<option value="EDIBLE NUTS - ALWAL">EDIBLE NUTS - ALWAL</option>
+<option value="EDIBLE NUTS - CKN">EDIBLE NUTS - CKN</option>
+<option value="PEANUTS">PEANUTS</option>
+<option value="RAW CASHEWNUT">RAW CASHEWNUT</option>
+<option value="RICE">RICE</option>
+<option value="SESAME SEEDS">SESAME SEEDS</option>
+<option value="OTHER NUTRI COMMODITIES">OTHER NUTRI COMMODITIES</option>
+<option value="ETCV - AFRICA ENERGY">ETCV - AFRICA ENERGY</option>
+<option value="ETCV - AFRICA FARMING">ETCV - AFRICA FARMING</option>
+<option value="ETCV - AFRICA GRAINS">ETCV - AFRICA GRAINS</option>
+<option value="ETCV - AFRICA OILSEEDS">ETCV - AFRICA OILSEEDS</option>
+<option value="ETCV - APAC AUSTRALIA">ETCV - APAC AUSTRALIA</option>
+<option value="ETCV - APAC INDIA">ETCV - APAC INDIA</option>
+<option value="ETCV - APAC SINGAPORE">ETCV - APAC SINGAPORE</option>
+<option value="ETCV - APAC VEGOIL">ETCV - APAC VEGOIL</option>
+<option value="ETCV - CORPORATE">ETCV - CORPORATE</option>
+<option value="ETCV - FINANCE">ETCV - FINANCE</option>
+<option value="ETCV - GROUP">ETCV - GROUP</option>
+<option value="ETCV - IBERICAFE">ETCV - IBERICAFE</option>
+<option value="ETCV - IFRS">ETCV - IFRS</option>
+<option value="ETCV - MECA KAZAKHSTAN">ETCV - MECA KAZAKHSTAN</option>
+<option value="ETCV - MECA RUSSIA">ETCV - MECA RUSSIA</option>
+<option value="ETCV - MECA UKRAINE">ETCV - MECA UKRAINE</option>
+<option value="ETCV - NORTH AMERICA USA">ETCV - NORTH AMERICA USA</option>
+<option value="ETCV - RAND AGRI">ETCV - RAND AGRI</option>
+<option value="ETCV - SOUTH AFRICA GRAIN">ETCV - SOUTH AFRICA GRAIN</option>
+<option value="ETCV - SOUTH AFRICA OILSEEDS">ETCV - SOUTH AFRICA OILSEEDS</option>
+<option value="ETCV - SPAIN">ETCV - SPAIN</option>
+<option value="ETCV - SUNSHINE SUGAR">ETCV - SUNSHINE SUGAR</option>
+<option value="ETCV CAM">ETCV CAM</option>
+<option value="PL CAM METALS">PL CAM METALS</option>
+<option value="PL CASHBOOK SPECIALITY PRODUCTS">PL CASHBOOK SPECIALITY PRODUCTS</option>
+<option value="PL CLIMATE DESK">PL CLIMATE DESK</option>
+<option value="PL COFFEE">PL COFFEE</option>
+<option value="PL COPPER">PL COPPER</option>
+<option value="PL COTTON">PL COTTON</option>
+<option value="PL DIRECTIONAL GRAINS">PL DIRECTIONAL GRAINS</option>
+<option value="PL FALCON">PL FALCON</option>
+<option value="PL FUND">PL FUND</option>
+<option value="PL GRAINS">PL GRAINS</option>
+<option value="PL MULTI PRODUCT SAF">PL MULTI PRODUCT SAF</option>
+<option value="PL OILSEEDS">PL OILSEEDS</option>
+<option value="PL PRICING SOLUTIONS">PL PRICING SOLUTIONS</option>
+<option value="PL RISK">PL RISK</option>
+<option value="PL ROCK">PL ROCK</option>
+<option value="PL SPECIALIZED DESKS">PL SPECIALIZED DESKS</option>
+<option value="PL STEEL">PL STEEL</option>
+<option value="PL SUGAR">PL SUGAR</option>
+<option value="PL SUGAR DIRECTIONAL">PL SUGAR DIRECTIONAL</option>
+<option value="PL VEGOIL">PL VEGOIL</option>
+<option value="ETCV- JVD">ETCV- JVD</option>
+<option value="FL360">FL360</option>
+<option value="PL BASE &amp; REFINED METALS">PL BASE &amp; REFINED METALS</option>
+<option value="PL FREIGHT PHYSICAL">PL FREIGHT PHYSICAL</option>
+<option value="PL FREIGHT SPECIALIZED">PL FREIGHT SPECIALIZED</option>
+<option value="PL MULTI PRODUCT GLOBAL">PL MULTI PRODUCT GLOBAL</option>
+<option value="RESTRUCTURING">RESTRUCTURING</option>
+<option value="ETCV - VAMARA">ETCV - VAMARA</option>
+<option value="SPECIALISED SEGMENT">SPECIALISED SEGMENT</option>
+<option value="VAMARA">VAMARA</option>
+<option value="DISTRIBUTION">DISTRIBUTION</option>
+<option value="ETGL CORPORATE">ETGL CORPORATE</option>
+<option value="FREIGHT FORWARDING">FREIGHT FORWARDING</option>
+<option value="ROAD TRANSPORT OR FLEET OPERATIONS">ROAD TRANSPORT OR FLEET OPERATIONS</option>
+<option value="WAREHOUSING">WAREHOUSING</option>
+<option value="PUREOIL">PUREOIL</option>
+<option value="PARROGATE - VAMARA">PARROGATE - VAMARA</option>
+<option value="PARROGATE - PARROGATE">PARROGATE - PARROGATE</option>
+<option value="DAVID WHITEHEAD">DAVID WHITEHEAD</option>
+<option value="INSURANCE &amp; RISK SOLUTIONS">INSURANCE &amp; RISK SOLUTIONS</option>
+<option value="PESA CAPITAL">PESA CAPITAL</option>
+<option value="NUFORTH">NUFORTH</option>
+<option value="KYOSK">KYOSK</option>
+<option value="GROUP CEO">GROUP CEO</option>
+<option value="GROUP CORPORATE FINANCE">GROUP CORPORATE FINANCE</option>
+<option value="GROUP CORPORATE GUARANTEE FEE">GROUP CORPORATE GUARANTEE FEE</option>
+<option value="GROUP CPD">GROUP CPD</option>
+<option value="GROUP DIRECTOR">GROUP DIRECTOR</option>
+<option value="GROUP HQ COST">GROUP HQ COST</option>
+<option value="GROUP HR &amp; ADMIN">GROUP HR &amp; ADMIN</option>
+<option value="GROUP INTERNAL AUDIT">GROUP INTERNAL AUDIT</option>
+<option value="GROUP IT &amp; ERP">GROUP IT &amp; ERP</option>
+<option value="GROUP LEGAL &amp; COMPLIANCE">GROUP LEGAL &amp; COMPLIANCE</option>
+<option value="GROUP MANAGEMENT TRAINEE">GROUP MANAGEMENT TRAINEE</option>
+<option value="GROUP RISK &amp; INSURANCE">GROUP RISK &amp; INSURANCE</option>
+<option value="GROUP SHARED SERVICE">GROUP SHARED SERVICE</option>
+<option value="GROUP SUSTAINABILITY">GROUP SUSTAINABILITY</option>
+<option value="GROUP OTHERS">GROUP OTHERS</option>
+<option value="GROUP TREASURY">GROUP TREASURY</option>
+</select>
+              <div id="err_subBusinessUnitName" class="field-error hidden"></div>
+            </div>
+            <div class="col-4">
+              <label for="costCenterLocation">Cost Center Location *</label>
+              <input id="costCenterLocation" placeholder="e.g., Bangalore / Chennai / Dubai"/>
+              <div id="err_costCenterLocation" class="field-error hidden"></div>
+            </div>
+
             <div class="col-6">
               <label for="employeeId">Employee ID *</label>
               <input id="employeeId" placeholder="e.g., ETG-10293" />
@@ -1235,6 +1379,7 @@
               <input id="managerEmail" type="email" placeholder="manager@something.com" autocomplete="email"/>
               <div id="err_managerEmail" class="field-error hidden"></div>
             </div>
+
           </div>
 
         <div class="actions">
@@ -1800,7 +1945,7 @@ const profileModal = document.getElementById('profileModal');
 
   // Shared keys across all stages
   const TRIPS_KEY = 'etg-user-trips';
-  var GLOBAL_TRIPS_KEY = window.GLOBAL_TRIPS_KEY || 'etg-trips'; window.GLOBAL_TRIPS_KEY = GLOBAL_TRIPS_KEY; // ✅ global trips by Trip ID for cross-role access       // ✅ used by Stage 3/4/5/6/7/8
+  var GLOBAL_TRIPS_KEY = window.GLOBAL_TRIPS_KEY || 'etg-trips-global'; window.GLOBAL_TRIPS_KEY = GLOBAL_TRIPS_KEY; // ✅ global trips by Trip ID for cross-role access       // ✅ used by Stage 3/4/5/6/7/8
   const USERS_KEY = 'etg-users';       // ✅ created/maintained in Stage 1
   const LOGIN_KEY = 'etg-login';       // ✅ created in Stage 1
 
@@ -2137,14 +2282,20 @@ try{
 
       // Organization
       const costCenterEl = document.getElementById('costCenter');
+      const subBusinessUnitNameEl = document.getElementById('subBusinessUnitName');
+      const costCenterLocationEl = document.getElementById('costCenterLocation');
       const employeeIdEl = document.getElementById('employeeId');
       const managerEmailEl = document.getElementById('managerEmail');
 
-      const cc = user.costCenter || user.department || user.dept || ctx.costCenter;
+      const cc = user.businessUnitName || user.costCenter || user.department || user.dept || ctx.businessUnitName || ctx.costCenter;
       const emp = user.employeeId || user.empId || ctx.employeeId;
       const mgr = user.managerEmail || user.approverEmail || ctx.managerEmail;
 
       if(costCenterEl && cc) costCenterEl.value = String(cc);
+      const subBu = user.subBusinessUnitName || user.subBusinessUnit || user.subDepartment || ctx.subBusinessUnitName;
+      if(subBusinessUnitNameEl && subBu) subBusinessUnitNameEl.value = String(subBu);
+      const ccLoc = user.costCenterLocation || user.ccLocation || user.location || ctx.costCenterLocation;
+      if(costCenterLocationEl && ccLoc) costCenterLocationEl.value = String(ccLoc);
       if(employeeIdEl && emp) employeeIdEl.value = String(emp);
       if(managerEmailEl && mgr) managerEmailEl.value = String(mgr);
     }catch(e){}
@@ -2214,6 +2365,19 @@ function _readGlobalStore(){
   let raw = {};
   try{ raw = JSON.parse(localStorage.getItem(GLOBAL_TRIPS_KEY) || '{}'); }catch(e){ raw = {}; }
   if(!raw || typeof raw !== 'object' || Array.isArray(raw)) raw = {};
+
+  // If current global key is empty but legacy key has data, migrate once (keeps dashboards in sync)
+  try{
+    const legacyKey = 'etg-trips-global';
+    if(Object.keys(raw).length === 0){
+      const legacy = JSON.parse(localStorage.getItem(legacyKey) || '{}');
+      if(legacy && typeof legacy === 'object' && !Array.isArray(legacy) && Object.keys(legacy).length){
+        raw = legacy;
+        try{ localStorage.setItem(GLOBAL_TRIPS_KEY, JSON.stringify(raw)); }catch(e){}
+      }
+    }
+  }catch(e){}
+
 
   const byId = {};
   const pending = Array.isArray(raw.pending) ? raw.pending.slice() : [];
@@ -2405,7 +2569,48 @@ window.findTripById = findTripById;
     }
   }
 
-    function normalizeTripForView(trip){
+    
+  // --- Status normalization for cross-stage syncing ---
+  const STATUS_CODE_LABELS = {
+    'DRAFT': 'Draft',
+    'SUBMITTED': 'Submitted',
+    'PENDING_TRAVEL_DESK': 'Pending with Travel Desk',
+    'TRAVEL_DESK_PENDING': 'Pending with Travel Desk',
+    'OPTIONS_SHARED': 'Options shared by Travel Desk',
+    'VOUCHER_SENT': 'Pending with User (Voucher sent)',
+    'PENDING_USER': 'Pending with User',
+    'USER_CONFIRMED': 'Pending Manager Approval',
+    'PENDING_MANAGER': 'Pending Manager Approval',
+    'MANAGER_APPROVED': 'Approved',
+    'APPROVED': 'Approved',
+    'TICKETED': 'Ticketed',
+    'BOOKED': 'Booked',
+    'COMPLETED': 'COMPLETED',
+    'CLOSED': 'Closed'
+  };
+  function _deriveStatusFromTrip(t){
+    if(!t || typeof t !== 'object') return '';
+    const rawStatus = String(t.status || '').trim();
+    const code = String(t.statusCode || t.workflowStatus || t.workflowCode || '').trim().toUpperCase();
+    // Prefer explicit status text when meaningful
+    let out = rawStatus;
+    if(!out && code && STATUS_CODE_LABELS[code]) out = STATUS_CODE_LABELS[code];
+
+    // Heuristics: if TravelDesk shared options but status wasn't updated, reflect it
+    const hasOptions = Array.isArray(t.options) ? t.options.length>0
+      : Array.isArray(t.travelDeskOptions) ? t.travelDeskOptions.length>0
+      : Array.isArray(t.proposedOptions) ? t.proposedOptions.length>0
+      : false;
+    if(hasOptions){
+      const s = (out || rawStatus || '').toLowerCase();
+      if(!s || s.includes('pending with travel desk') || s.includes('travel desk pending')){
+        out = 'Options shared by Travel Desk';
+      }
+    }
+    return out;
+  }
+
+function normalizeTripForView(trip){
       const t = Object.assign({}, trip || {});
       // normalize id
       t.id = t.id || t.requestId || t.rid || t.tripId || '';
@@ -2465,6 +2670,13 @@ window.findTripById = findTripById;
           ].map(x=> Number(x)).filter(x=> !isNaN(x));
           if(nums.length) t.totalCost = nums.reduce((a,b)=>a+b,0);
         }
+      }catch(e){}
+
+
+      // Status: normalize so Dashboard reflects TravelDesk / Manager workflow updates
+      try{
+        const derived = (typeof _deriveStatusFromTrip === 'function') ? _deriveStatusFromTrip(t) : '';
+        if(derived) t.status = derived;
       }catch(e){}
 
       return t;
@@ -3879,6 +4091,34 @@ function wireViewButtons(root, list){
       renderAnalyticsSafe();
     }
   });
+
+  // ✅ Extra sync layer: storage events don't fire in the same tab.
+  // This lightweight watcher keeps the dashboard/report/analytics in sync even if TravelDesk updates happen
+  // via scripts in the same window or storage events are blocked (some file:// setups).
+  let __lastGlobalRaw = null;
+  let __lastLegacyRaw = null;
+
+  function _syncUiFromStorage(){
+    let gRaw = null, lRaw = null;
+    try{ gRaw = localStorage.getItem(GLOBAL_TRIPS_KEY) || ''; }catch(e){ gRaw = null; }
+    try{ lRaw = localStorage.getItem(TRIPS_KEY) || ''; }catch(e){ lRaw = null; }
+
+    if(gRaw === __lastGlobalRaw && lRaw === __lastLegacyRaw) return;
+    __lastGlobalRaw = gRaw;
+    __lastLegacyRaw = lRaw;
+
+    // Only re-render what's visible
+    if(!myTripsSection.classList.contains('hidden') && typeof renderTrips === 'function') renderTrips();
+    if(!reportSection.classList.contains('hidden') && typeof renderReportSafe === 'function') renderReportSafe();
+    if(!analyticsSection.classList.contains('hidden') && typeof renderAnalyticsSafe === 'function') renderAnalyticsSafe();
+  }
+
+  // Poll + on focus/visibility
+  setInterval(_syncUiFromStorage, 900);
+  window.addEventListener('focus', _syncUiFromStorage);
+  document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) _syncUiFromStorage(); });
+
+
 })();
 
 ;
@@ -4224,11 +4464,13 @@ function wireViewButtons(root, list){
     const email = $('email');
     const phone = $('phone');
     const costCenter = $('costCenter');
+    const subBusinessUnitName = $('subBusinessUnitName');
+    const costCenterLocation = $('costCenterLocation');
     const managerEmail = $('managerEmail');
     const employeeId = $('employeeId');
 
     // clear errors
-    ['fullName','email','phone','costCenter','managerEmail','employeeId'].forEach(id=>{
+    ['fullName','email','phone','costCenter','subBusinessUnitName','costCenterLocation','managerEmail','employeeId'].forEach(id=>{
       const el = $(id);
       const err = $('err_'+id);
       if(el && err) setError(el, err, '');
@@ -4249,7 +4491,15 @@ function wireViewButtons(root, list){
       hasError = true;
     }
     if(!costCenter?.value?.trim()){
-      setError(costCenter, $('err_costCenter'), 'Cost center / department is required');
+      setError(costCenter, $('err_costCenter'), 'Business Unit Name is required');
+      hasError = true;
+    }
+    if(!subBusinessUnitName?.value?.trim()){
+      setError(subBusinessUnitName, $('err_subBusinessUnitName'), 'Sub Business Unit Name is required');
+      hasError = true;
+    }
+    if(!costCenterLocation?.value?.trim()){
+      setError(costCenterLocation, $('err_costCenterLocation'), 'Cost Center Location is required');
       hasError = true;
     }
     if(!employeeId?.value?.trim()){
@@ -4273,6 +4523,8 @@ function wireViewButtons(root, list){
       phone: phone.value.trim(),
       mobile: ( $('phoneCode')?.value ? ($('phoneCode').value + ' ' + phone.value.trim()) : phone.value.trim() ),
       costCenter: costCenter.value.trim(),
+      subBusinessUnitName: subBusinessUnitName.value.trim(),
+      costCenterLocation: costCenterLocation.value.trim(),
       managerEmail: managerEmail.value.trim(),
       employeeId: employeeId.value.trim(),
       travelerType: $('travelerType')?.value || '',
@@ -4443,6 +4695,21 @@ $('btnBack1')?.addEventListener('click',()=>{
       requesterEmail: ($('email')?.value?.trim?.() || '') || fallbackEmail,
       employeeId: ($('employeeId')?.value?.trim?.() || '') || fallbackEmpId,
       managerEmail: ($('managerEmail')?.value?.trim?.() || '') || fallbackMgr,
+      // Aliases used by later stages (Stage 8 prefill expects these)
+      employeeCode: ($('employeeId')?.value?.trim?.() || '') || fallbackEmpId,
+      purpose: ($('purpose')?.value?.trim?.() || ''),
+
+      requester: {
+        name: ($('fullName')?.value?.trim?.() || '') || fallbackName,
+        fullName: ($('fullName')?.value?.trim?.() || '') || fallbackName,
+        email: ($('email')?.value?.trim?.() || '') || fallbackEmail,
+        employeeId: ($('employeeId')?.value?.trim?.() || '') || fallbackEmpId
+      },
+
+      itinerary: {
+        purpose: ($('purpose')?.value?.trim?.() || '')
+      },
+
 
       fromCity: $('fromCity').value,
       toCity: $('toCity').value,
@@ -5232,6 +5499,8 @@ function bindSegments(){
 
     // Organization
     setIfEmpty($('costCenter'), dept);
+    setIfEmpty($('subBusinessUnitName'), p.subBusinessUnitName || p.subBusinessUnit || '');
+    setIfEmpty($('costCenterLocation'), p.costCenterLocation || p.location || '');
     setIfEmpty($('employeeId'), empId);
     setIfEmpty($('managerEmail'), mgr);
   }
