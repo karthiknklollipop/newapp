@@ -1222,20 +1222,55 @@ function getLoginContext(){
 // ---- Global trip store (preferred) ----
 const GLOBAL_TRIPS_KEY = 'etg-trips-global';
 
+// ✅ Robust global store reader (Stage 2 writes a structured store: {byId, pending, completed})
+function _readGlobalStoreRaw(){
+  try{ return JSON.parse(localStorage.getItem(GLOBAL_TRIPS_KEY) || '{}') || {}; }catch(e){ return {}; }
+}
+
+// Return a plain byId map regardless of stored schema
 function loadGlobalTrips(){
-  try{
-    return JSON.parse(localStorage.getItem(GLOBAL_TRIPS_KEY) || '{}') || {};
-  }catch(e){
-    return {};
+  var raw = _readGlobalStoreRaw();
+  if(!raw || typeof raw !== 'object' || Array.isArray(raw)) raw = {};
+
+  // Stage 2 schema: { byId:{...}, pending:[...], completed:[...] }
+  if(raw.byId && typeof raw.byId === 'object' && !Array.isArray(raw.byId)){
+    return raw.byId;
   }
+
+  // If only buckets exist, build byId from them
+  if(Array.isArray(raw.pending) || Array.isArray(raw.completed)){
+    var byId = {};
+    (raw.pending||[]).concat(raw.completed||[]).forEach(function(t){
+      if(t && (t.id || t.reqId)){
+        var id = String(t.id || t.reqId);
+        byId[id] = Object.assign({}, t, { id: id });
+      }
+    });
+    return byId;
+  }
+
+  // Backward compat: raw might itself be a byId map (tripId keys)
+  return raw;
 }
+
+// Persist: keep the Stage 2 schema if it exists, otherwise store as byId
 function saveGlobalTrips(map){
-  try{ localStorage.setItem(GLOBAL_TRIPS_KEY, JSON.stringify(map||{})); }catch(e){}
+  try{
+    var raw = _readGlobalStoreRaw();
+    if(raw && typeof raw === 'object' && !Array.isArray(raw) && (raw.byId || raw.pending || raw.completed)){
+      raw.byId = map || {};
+      localStorage.setItem(GLOBAL_TRIPS_KEY, JSON.stringify(raw));
+    }else{
+      localStorage.setItem(GLOBAL_TRIPS_KEY, JSON.stringify(map||{}));
+    }
+  }catch(e){}
 }
+
 function getGlobalTripById(rid){
   const map = loadGlobalTrips();
   return map && map[String(rid)] ? map[String(rid)] : null;
 }
+
 function upsertGlobalTripById(rid, patch){
   if(!rid) return null;
   const map = loadGlobalTrips();
