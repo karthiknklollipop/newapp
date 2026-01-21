@@ -582,21 +582,7 @@ function buildItineraryHtml(){
   }
 
   // Hydrate from trip store first (when opened from My Trips / View Travel Itinerary)
-  // IMPORTANT: align `reqId` variable to the *actual* trip id if we can resolve it.
-  // If `reqId` stays as TR-XXXXXX/random, the realtime/server fetch will request the wrong trip.
-  const __hydratedTrip = (function(){
-    try{ return hydrateFromTripStoreForUserPage(); }catch(e){ return null; }
-  })();
-
-  try{
-    const resolvedId = __hydratedTrip && (__hydratedTrip.id || __hydratedTrip.reqId || __hydratedTrip.requestId || __hydratedTrip.rid || __hydratedTrip.tripId);
-    if(resolvedId){
-      reqId = String(resolvedId);
-      // persist a hint so this page can load options even when opened without URL params
-      try{ localStorage.setItem('etg-selected-trip-id', String(resolvedId)); }catch(e){}
-      try{ localStorage.setItem('etg-last-quotation-trip-id', String(resolvedId)); }catch(e){}
-    }
-  }catch(e){}
+  hydrateFromTripStoreForUserPage();
 
   paintSummary();
   $('itinerary').innerHTML = buildItineraryHtml();
@@ -1669,20 +1655,11 @@ t.lastUpdated = new Date().toISOString();
   async function fetchTripFromServerAndHydrate(){
     try{
       if(!window.ETG || typeof window.ETG.api !== 'function') return;
-      // Use best-guess trip id (URL → stored hints → current reqId)
-      let tripIdGuess = '';
-      try{ tripIdGuess = qp.get('rid') || qp.get('tripId') || ''; }catch(e){}
-      if(!tripIdGuess){
-        try{ tripIdGuess = localStorage.getItem('etg-selected-trip-id') || localStorage.getItem('etg-last-quotation-trip-id') || ''; }catch(e){}
-      }
-      if(!tripIdGuess) tripIdGuess = reqId;
-
-      const t = await window.ETG.api('/api/trips/' + encodeURIComponent(tripIdGuess), { method: 'GET' });
+      const t = await window.ETG.api('/api/trips/' + encodeURIComponent(reqId), { method: 'GET' });
       if(t && (t.id || t.reqId || t.requestId)){
         // merge into all local stores so existing UI continues to work
-        const id = String(t.id || tripIdGuess || reqId);
+        const id = String(t.id || reqId);
         updateTripEverywhere(id, (tr)=>{ Object.assign(tr, t); });
-        try{ reqId = id; }catch(e){}
         hydrateOptionsFromQuotation();
       }
     }catch(e){ /* ignore */ }
