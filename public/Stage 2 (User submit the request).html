@@ -4725,7 +4725,12 @@ $('btnBack1')?.addEventListener('click',()=>{
     const costCenterLocation = ($('costCenterLocation')?.value || '').trim();
     const legalEntity = ($('legalEntity')?.value || '').trim();
 
-    let body = `New Travel Request%0D%0A%0D%0A` +
+    let body = `Dear Travel Desk Team,%0D%0A%0D%0A` +
+      `A new travel request has been submitted in the Travel Management System. Kindly review the details below and proceed with itinerary planning as per company travel policy.%0D%0A%0D%0A` +
+      `Please share the proposed travel options (flight, hotel, and ground transportation, if applicable) at the earliest to ensure timely approval and confirmation.%0D%0A%0D%0A` +
+      `-----------------------------------------%0D%0A` +
+      `New Travel Request Details%0D%0A` +
+      `-----------------------------------------%0D%0A%0D%0A` +
       `👤 Employee Details%0D%0A` +
       `• Employee Name: ${esc(empName)}%0D%0A` +
       `• Employee ID: ${esc(empIdVal)}%0D%0A` +
@@ -4846,6 +4851,15 @@ $('btnBack1')?.addEventListener('click',()=>{
     $('step4').classList.remove('hidden');
     updateStepper(4);
     try{ $('step4').scrollIntoView({behavior:'smooth', block:'start'}); }catch(e){}
+
+
+    // Add professional footer
+    body += `%0D%0A-----------------------------------------%0D%0A` +
+            `This is a system-generated email from the Travel Management System.%0D%0A` +
+            `Please do not reply directly to this email.%0D%0A%0D%0A` +
+            `Regards,%0D%0A` +
+            `Travel Management System%0D%0A` +
+            `ETG Group%0D%0A`;
 
     // Mailto demo (opens user's email client)
     const toEmail = 'traveldesk2@etgworld.com';

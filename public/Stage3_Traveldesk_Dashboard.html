@@ -1222,65 +1222,110 @@ function getLoginContext(){
 // ---- Global trip store (preferred) ----
 const GLOBAL_TRIPS_KEY = 'etg-trips-global';
 
-// ✅ Robust global store reader (Stage 2 writes a structured store: {byId, pending, completed})
-function _readGlobalStoreRaw(){
-  try{ return JSON.parse(localStorage.getItem(GLOBAL_TRIPS_KEY) || '{}') || {}; }catch(e){ return {}; }
-}
-
-// Return a plain byId map regardless of stored schema
-function loadGlobalTrips(){
-  var raw = _readGlobalStoreRaw();
+/**
+ * ✅ Stage 3 must read the SAME global schema written by Stage 2:
+ * localStorage[GLOBAL_TRIPS_KEY] = { byId:{}, pending:[], completed:[] }
+ * (Older builds may also have a plain map of { "<id>": {trip} }).
+ */
+function _readGlobalStore(){
+  var raw = {};
+  try{ raw = JSON.parse(localStorage.getItem(GLOBAL_TRIPS_KEY) || '{}'); }catch(e){ raw = {}; }
   if(!raw || typeof raw !== 'object' || Array.isArray(raw)) raw = {};
 
-  // Stage 2 schema: { byId:{...}, pending:[...], completed:[...] }
+  var byId = {};
+  var pending = Array.isArray(raw.pending) ? raw.pending.slice() : [];
+  var completed = Array.isArray(raw.completed) ? raw.completed.slice() : [];
+
+  // 1) harvest from buckets
+  pending.concat(completed).forEach(function(t){
+    if(t && t.id) byId[String(t.id)] = t;
+  });
+
+  // 2) merge from raw.byId
   if(raw.byId && typeof raw.byId === 'object' && !Array.isArray(raw.byId)){
-    return raw.byId;
-  }
-
-  // If only buckets exist, build byId from them
-  if(Array.isArray(raw.pending) || Array.isArray(raw.completed)){
-    var byId = {};
-    (raw.pending||[]).concat(raw.completed||[]).forEach(function(t){
-      if(t && (t.id || t.reqId)){
-        var id = String(t.id || t.reqId);
-        byId[id] = Object.assign({}, t, { id: id });
-      }
+    Object.keys(raw.byId).forEach(function(k){
+      var t = raw.byId[k];
+      if(t && (t.id || k)) byId[String(t.id || k)] = t;
     });
-    return byId;
   }
 
-  // Backward compat: raw might itself be a byId map (tripId keys)
-  return raw;
+  // 3) backward-compat: if raw is a plain byId map (trip ids as keys)
+  Object.keys(raw).forEach(function(k){
+    if(k === 'pending' || k === 'completed' || k === 'byId') return;
+    var v = raw[k];
+    if(v && typeof v === 'object' && !Array.isArray(v)){
+      var id = String(v.id || k);
+      byId[id] = Object.assign({}, byId[id] || {}, v, { id:id });
+    }
+  });
+
+  // Rebuild buckets from byId (status-driven) to avoid drift
+  var p = [];
+  var c = [];
+  Object.keys(byId).forEach(function(id){
+    var t = byId[id];
+    var st = String((t && t.status) || '').toLowerCase();
+    var isDone = (st.indexOf('completed') !== -1) || (st.indexOf('booked') !== -1) || (st.indexOf('ticket') !== -1) || (st.indexOf('closed') !== -1);
+    (isDone ? c : p).push(t);
+  });
+
+  // Sort newest first
+  function score(t){
+    var d = (t && (t.updatedAt || t.createdAt)) || '';
+    var ms = Date.parse(d);
+    return isNaN(ms) ? 0 : ms;
+  }
+  p.sort(function(a,b){ return score(b) - score(a); });
+  c.sort(function(a,b){ return score(b) - score(a); });
+
+  return { byId: byId, pending: p, completed: c };
 }
 
-// Persist: keep the Stage 2 schema if it exists, otherwise store as byId
-function saveGlobalTrips(map){
+function _writeGlobalStore(store){
+  var safe = (store && typeof store === 'object') ? store : { byId:{}, pending:[], completed:[] };
   try{
-    var raw = _readGlobalStoreRaw();
-    if(raw && typeof raw === 'object' && !Array.isArray(raw) && (raw.byId || raw.pending || raw.completed)){
-      raw.byId = map || {};
-      localStorage.setItem(GLOBAL_TRIPS_KEY, JSON.stringify(raw));
-    }else{
-      localStorage.setItem(GLOBAL_TRIPS_KEY, JSON.stringify(map||{}));
-    }
+    localStorage.setItem(GLOBAL_TRIPS_KEY, JSON.stringify({
+      byId: safe.byId || {},
+      pending: Array.isArray(safe.pending) ? safe.pending : [],
+      completed: Array.isArray(safe.completed) ? safe.completed : []
+    }));
   }catch(e){}
 }
 
-function getGlobalTripById(rid){
-  const map = loadGlobalTrips();
-  return map && map[String(rid)] ? map[String(rid)] : null;
+// TravelDesk callers expect a byId map
+function loadGlobalTrips(){
+  return _readGlobalStore().byId || {};
 }
-
+// Sometimes we need buckets too
+function loadGlobalTripStore(){
+  return _readGlobalStore();
+}
+function saveGlobalTrips(mapOrStore){
+  // Accept either a byId map or a full store
+  if(mapOrStore && mapOrStore.byId){
+    _writeGlobalStore(mapOrStore);
+  }else{
+    _writeGlobalStore({ byId: mapOrStore || {}, pending: [], completed: [] });
+  }
+}
+function getGlobalTripById(rid){
+  var store = _readGlobalStore();
+  return store && store.byId && store.byId[String(rid)] ? store.byId[String(rid)] : null;
+}
 function upsertGlobalTripById(rid, patch){
   if(!rid) return null;
-  const map = loadGlobalTrips();
-  const current = map[String(rid)] || {};
-  const merged = Object.assign({}, current, patch||{});
-  map[String(rid)] = merged;
-  saveGlobalTrips(map);
+  var store = _readGlobalStore();
+  var key = String(rid);
+  var current = (store.byId && store.byId[key]) ? store.byId[key] : {};
+  var merged = Object.assign({}, current, patch||{}, {
+    id: key,
+    updatedAt: new Date().toISOString(),
+    createdAt: current.createdAt || (patch && patch.createdAt) || new Date().toISOString()
+  });
+  store.byId[key] = merged;
+  _writeGlobalStore(store);
   return merged;
 }
-
 function loadTripStoreForDesk(){
   // localStorage is blocked for file:// in some browsers (opaque origin).
   // We fallback to an in-memory store populated from URL hash payload.

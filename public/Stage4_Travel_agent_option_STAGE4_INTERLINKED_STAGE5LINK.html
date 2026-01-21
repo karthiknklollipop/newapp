@@ -1319,6 +1319,37 @@ if (trip) {
       })() : null
     };
 
+    // === Realtime / cross-device fix ===
+    // Travel desk and traveller often use different browsers/devices. localStorage won't sync.
+    // If the host app provides window.ETG.api (see etg-realtime.js), push quotation/options to the server
+    // so the traveller's Stage 6 can fetch them via /api/trips/:id.
+    (function pushQuotationToServer(){
+      try{
+        if(!(trip && trip.id)) return;
+        if(!(payload && payload.options)) return;
+        if(!window.ETG || typeof window.ETG.api !== 'function') return;
+
+        const tripId = String(trip.id);
+        const body = {
+          id: tripId,
+          quotationHtml: payload.emailHtml,
+          quotationSentAt: new Date().toISOString(),
+          status: 'Pending with User',
+          quotationOptions: payload.options,
+          // compatibility aliases (Stage 6 checks multiple keys)
+          optionsShared: payload.options,
+          quotation: payload.options,
+          lastUpdated: new Date().toISOString()
+        };
+        // Fire-and-forget; even if it fails, local flow still works for same-browser demos.
+        window.ETG.api('/api/trips/' + encodeURIComponent(tripId), {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        }).catch(function(){});
+      }catch(e){}
+    })();
+
     // Host app can implement this to actually send email + in-app notification
     if (typeof window.etgSendQuotation === 'function') {
       try {
