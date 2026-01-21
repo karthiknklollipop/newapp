@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>ETG Travel — Pending Requests (Travel Desk)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <style>
   *{box-sizing:border-box;}
   body{
@@ -546,346 +547,325 @@
 </head>
 <body>
 <div class="page">
-  <div class="header-shell">
-    <div class="header">
-      <div class="logo-pill">ET</div>
-      <div>
-        <div class="header-text-main">ETG TRAVEL — PENDING REQUESTS</div>
-        <div class="header-text-sub">Travel desk console | Confirmed options from employees</div>
-      </div>
-      <div class="header-meta">
-        <div>Travel Desk View</div>
-        <div>Stage: Post-confirmation</div>
-      </div>
-      
-      <div class="export-wrap">
-        <button class="export-chip" id="exportTrigger" type="button">Export ▾</button>
-        <div class="export-menu hidden" id="exportMenu" aria-hidden="true">
-          <div class="export-menu-section">Export</div>
-          <button type="button" class="export-item" id="exportExpensesBtn">Export Expenses</button>
-          <button type="button" class="export-item" id="exportSharedBtn">Export Shared Details</button>
-          <div class="export-menu-section" style="margin-top:6px;">History</div>
-          <button type="button" class="export-item" id="viewExportHistoryBtn">View Export History</button>
-          <button type="button" class="export-item" id="viewBulkHistoryBtn">View Bulk History</button>
-        </div>
-      </div>
+<div class="header-shell">
+<div class="header">
+<div class="logo-pill">ET</div>
+<div>
+<div class="header-text-main">ETG TRAVEL — PENDING REQUESTS</div>
+<div class="header-text-sub">Travel desk console | Confirmed options from employees</div>
+</div>
+<div class="header-meta">
+<div>Travel Desk View</div>
+<div>Stage: Post-confirmation</div>
+</div>
+<div class="export-wrap">
+<button class="export-chip" id="exportTrigger" type="button">Export ▾</button>
+<div aria-hidden="true" class="export-menu hidden" id="exportMenu">
+<div class="export-menu-section">Export</div>
+<button class="export-item" id="exportExpensesBtn" type="button">Export Expenses</button>
+<button class="export-item" id="exportSharedBtn" type="button">Export Shared Details</button>
+<div class="export-menu-section" style="margin-top:6px;">History</div>
+<button class="export-item" id="viewExportHistoryBtn" type="button">View Export History</button>
+<button class="export-item" id="viewBulkHistoryBtn" type="button">View Bulk History</button>
+</div>
+</div>
 <div class="header-profile">
-        <button class="profile-chip" id="deskProfileTrigger" type="button">
-          <div class="profile-avatar" id="deskProfileAvatar">TD</div>
-          <div class="profile-text">
-            <div class="profile-name" id="deskProfileName">Travel Desk User</div>
-            <div class="profile-role" id="deskProfileRole">Travel Desk</div>
-          </div>
-        </button>
-        <div class="profile-menu hidden" id="deskProfileMenu" aria-hidden="true">
-          <div class="profile-menu-header">
-            <div class="profile-avatar large" id="deskProfileAvatarBig">TD</div>
-            <div>
-              <div class="profile-name" id="deskProfileNameBig">Travel Desk User</div>
-              <div class="profile-email" id="deskProfileEmail">traveldesk@example.com</div>
-            </div>
-          </div>
-          <div class="profile-menu-body">
-            <button type="button" class="profile-menu-item" id="deskProfileMyProfile">My Profile</button>
-            <button type="button" class="profile-menu-item danger" id="deskProfileSignOut">Sign Out</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card-stack">
-
-      <!-- MAIN TAB BAR -->
-      <div class="main-tab-bar">
-        <button class="main-tab active" data-main="trip" onclick="setMainTab('trip')">
-          <span>Trip Details</span>
-        </button>
-        <button class="main-tab" data-main="report" onclick="setMainTab('report')">
-          <span>Report Section</span>
-        </button>
-      </div>
-
-      <!-- MAIN TAB: TRIP DETAILS -->
-      <div id="main-tab-trip" class="main-tab-pane active">
-        <div class="card">
-          <h2>Trip Details</h2>
-
-          <!-- Sub tabs: Pending / Completed / All -->
-          <div class="subtab-bar">
-            <button type="button" class="subtab active" data-subtab="pending" onclick="setSubTab('pending')">
-              <span>Pending Request</span>
-              <span class="badge badge-pending" id="pending-count-badge">0</span>
-            </button>
-            <button type="button" class="subtab" data-subtab="completed" onclick="setSubTab('completed')">
-              <span>Completed</span>
-              <span class="badge badge-pending" id="completed-count-badge">0</span>
-            </button>
-            <button type="button" class="subtab" data-subtab="all" onclick="setSubTab('all')">
-              <span>All Request</span>
-              <span class="badge badge-pending" id="all-count-badge">0</span>
-            </button>
-          </div>
-
-          <!-- Pending Request tab -->
-          <div class="subtab-pane active" id="subtab-pending">
-            <div class="table-shell">
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width:90px;">Req ID</th>
-                    <th style="width:150px;">Employee</th>
-                    <th style="width:160px;">Route</th>
-                    <th style="width:130px;">Travel Dates</th>
-                    <th style="width:120px;">Modes Confirmed</th>
-                    <th style="width:130px;">Last Action</th>
-                    <th style="width:120px;">Status</th>
-                    <th style="width:120px;text-align:right;">Action</th>
-                  </tr>
-                </thead>
-                <tbody id="pending-requests-body">
-                </tbody>              </table>
-            </div>
-            <div class="actions">
-              <button class="btn-ghost btn-small" type="button">Refresh</button>
-              <button class="btn-secondary btn-small" type="button">Export Pending List</button>
-            </div>
-          </div>
-
-          <!-- Completed tab -->
-          <div class="subtab-pane" id="subtab-completed">
-            <div class="table-shell">
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width:90px;">Req ID</th>
-                    <th style="width:150px;">Employee</th>
-                    <th style="width:160px;">Route</th>
-                    <th style="width:130px;">Travel Dates</th>
-                    <th style="width:120px;">Modes Confirmed</th>
-                    <th style="width:100px;">Status</th>
-                    <th style="width:120px;">Completed On</th>
-                    <th style="width:120px;text-align:right;">Action</th>
-                  </tr>
-                </thead>
-                                <tbody id="completed-requests-body">
-                </tbody>              </table>
-            </div>
-            <div class="actions">
-              <button class="btn-ghost btn-small" type="button">Refresh</button>
-              <button class="btn-secondary btn-small" type="button">Export Completed</button>
-            </div>
-          </div>
-
-          <!-- All Request tab -->
-          <div class="subtab-pane" id="subtab-all">
-            <div class="table-shell">
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width:90px;">Req ID</th>
-                    <th style="width:150px;">Employee</th>
-                    <th style="width:160px;">Route</th>
-                    <th style="width:130px;">Travel Dates</th>
-                    <th style="width:120px;">Modes Confirmed</th>
-                    <th style="width:100px;">Status</th>
-                    <th style="width:120px;">Last Updated</th>
-                    <th style="width:120px;text-align:right;">Action</th>
-                  </tr>
-                </thead>
-                                <tbody id="all-requests-body">
-                </tbody>              </table>
-            </div>
-            <div class="actions">
-              <button class="btn-ghost btn-small" type="button">Refresh</button>
-              <button class="btn-secondary btn-small" type="button">Export All Request</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <div id="selected-trip-card" class="card selected-trip-card hidden">
-        <h2>Selected Trip – User Travel Information</h2>
-        <div class="selected-trip-grid">
-          <div class="selected-trip-block">
-            <div class="selected-trip-label">Req ID</div>
-            <div class="selected-trip-value" id="st-req-id">—</div>
-          </div>
-          <div class="selected-trip-block">
-            <div class="selected-trip-label">Status</div>
-            <div class="selected-trip-value" id="st-status">—</div>
-          </div>
-          <div class="selected-trip-block">
-            <div class="selected-trip-label">Employee</div>
-            <div class="selected-trip-value" id="st-employee">—</div>
-          </div>
-          <div class="selected-trip-block">
-            <div class="selected-trip-label">Email</div>
-            <div class="selected-trip-value" id="st-email">—</div>
-          </div>
-          <div class="selected-trip-block">
-            <div class="selected-trip-label">Route</div>
-            <div class="selected-trip-value" id="st-route">—</div>
-          </div>
-          <div class="selected-trip-block">
-            <div class="selected-trip-label">Travel Dates</div>
-            <div class="selected-trip-value" id="st-dates">—</div>
-          </div>
-          <div class="selected-trip-block">
-            <div class="selected-trip-label">Mode(s) Requested</div>
-            <div class="selected-trip-value" id="st-modes">—</div>
-          </div>
-          <div class="selected-trip-block">
-            <div class="selected-trip-label">Last Action</div>
-            <div class="selected-trip-value" id="st-last-action">—</div>
-          </div>
-          <div class="selected-trip-block">
-            <div class="selected-trip-label">Created On</div>
-            <div class="selected-trip-value" id="st-created">—</div>
-          </div>
-          <div class="selected-trip-block">
-            <div class="selected-trip-label">Last Updated</div>
-            <div class="selected-trip-value" id="st-updated">—</div>
-          </div>
-        </div>
-        <div class="selected-trip-actions">
-
-        <div id="st-extra" style="margin-top:14px;border-top:1px solid rgba(55,65,81,.9);padding-top:12px;">
-          <div style="font-size:11px;color:#9ca3af;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">
+<button class="profile-chip" id="deskProfileTrigger" type="button">
+<div class="profile-avatar" id="deskProfileAvatar">TD</div>
+<div class="profile-text">
+<div class="profile-name" id="deskProfileName">Travel Desk User</div>
+<div class="profile-role" id="deskProfileRole">Travel Desk</div>
+</div>
+</button>
+<div aria-hidden="true" class="profile-menu hidden" id="deskProfileMenu">
+<div class="profile-menu-header">
+<div class="profile-avatar large" id="deskProfileAvatarBig">TD</div>
+<div>
+<div class="profile-name" id="deskProfileNameBig">Travel Desk User</div>
+<div class="profile-email" id="deskProfileEmail">traveldesk@example.com</div>
+</div>
+</div>
+<div class="profile-menu-body">
+<button class="profile-menu-item" id="deskProfileMyProfile" type="button">My Profile</button>
+<button class="profile-menu-item danger" id="deskProfileSignOut" type="button">Sign Out</button>
+</div>
+</div>
+</div>
+</div>
+<div class="card-stack">
+<!-- MAIN TAB BAR -->
+<div class="main-tab-bar">
+<button class="main-tab active" data-main="trip" onclick="setMainTab('trip')">
+<span>Trip Details</span>
+</button>
+<button class="main-tab" data-main="report" onclick="setMainTab('report')">
+<span>Report Section</span>
+</button>
+</div>
+<!-- MAIN TAB: TRIP DETAILS -->
+<div class="main-tab-pane active" id="main-tab-trip">
+<div class="card">
+<h2>Trip Details</h2>
+<!-- Sub tabs: Pending / Completed / All -->
+<div class="subtab-bar">
+<button class="subtab active" data-subtab="pending" onclick="setSubTab('pending')" type="button">
+<span>Pending Request</span>
+<span class="badge badge-pending" id="pending-count-badge">0</span>
+</button>
+<button class="subtab" data-subtab="completed" onclick="setSubTab('completed')" type="button">
+<span>Completed</span>
+<span class="badge badge-pending" id="completed-count-badge">0</span>
+</button>
+<button class="subtab" data-subtab="all" onclick="setSubTab('all')" type="button">
+<span>All Request</span>
+<span class="badge badge-pending" id="all-count-badge">0</span>
+</button>
+</div>
+<!-- Pending Request tab -->
+<div class="subtab-pane active" id="subtab-pending">
+<div class="table-shell">
+<table>
+<thead>
+<tr>
+<th style="width:90px;">Req ID</th>
+<th style="width:150px;">Employee</th>
+<th style="width:160px;">Route</th>
+<th style="width:130px;">Travel Dates</th>
+<th style="width:120px;">Modes Confirmed</th>
+<th style="width:130px;">Last Action</th>
+<th style="width:120px;">Status</th>
+<th style="width:120px;text-align:right;">Action</th>
+</tr>
+</thead>
+<tbody id="pending-requests-body">
+</tbody> </table>
+</div>
+<div class="actions">
+<button class="btn-ghost btn-small" type="button">Refresh</button>
+<button class="btn-secondary btn-small" type="button">Export Pending List</button>
+</div>
+</div>
+<!-- Completed tab -->
+<div class="subtab-pane" id="subtab-completed">
+<div class="table-shell">
+<table>
+<thead>
+<tr>
+<th style="width:90px;">Req ID</th>
+<th style="width:150px;">Employee</th>
+<th style="width:160px;">Route</th>
+<th style="width:130px;">Travel Dates</th>
+<th style="width:120px;">Modes Confirmed</th>
+<th style="width:100px;">Status</th>
+<th style="width:120px;">Completed On</th>
+<th style="width:120px;text-align:right;">Action</th>
+</tr>
+</thead>
+<tbody id="completed-requests-body">
+</tbody> </table>
+</div>
+<div class="actions">
+<button class="btn-ghost btn-small" type="button">Refresh</button>
+<button class="btn-secondary btn-small" type="button">Export Completed</button>
+</div>
+</div>
+<!-- All Request tab -->
+<div class="subtab-pane" id="subtab-all">
+<div class="table-shell">
+<table>
+<thead>
+<tr>
+<th style="width:90px;">Req ID</th>
+<th style="width:150px;">Employee</th>
+<th style="width:160px;">Route</th>
+<th style="width:130px;">Travel Dates</th>
+<th style="width:120px;">Modes Confirmed</th>
+<th style="width:100px;">Status</th>
+<th style="width:120px;">Last Updated</th>
+<th style="width:120px;text-align:right;">Action</th>
+</tr>
+</thead>
+<tbody id="all-requests-body">
+</tbody> </table>
+</div>
+<div class="actions">
+<button class="btn-ghost btn-small" type="button">Refresh</button>
+<button class="btn-secondary btn-small" type="button">Export All Request</button>
+</div>
+</div>
+</div>
+</div>
+<div class="card selected-trip-card hidden" id="selected-trip-card">
+<h2>Selected Trip – User Travel Information</h2>
+<div class="selected-trip-grid">
+<div class="selected-trip-block">
+<div class="selected-trip-label">Req ID</div>
+<div class="selected-trip-value" id="st-req-id">—</div>
+</div>
+<div class="selected-trip-block">
+<div class="selected-trip-label">Status</div>
+<div class="selected-trip-value" id="st-status">—</div>
+</div>
+<div class="selected-trip-block">
+<div class="selected-trip-label">Employee</div>
+<div class="selected-trip-value" id="st-employee">—</div>
+</div>
+<div class="selected-trip-block">
+<div class="selected-trip-label">Email</div>
+<div class="selected-trip-value" id="st-email">—</div>
+</div>
+<div class="selected-trip-block">
+<div class="selected-trip-label">Route</div>
+<div class="selected-trip-value" id="st-route">—</div>
+</div>
+<div class="selected-trip-block">
+<div class="selected-trip-label">Travel Dates</div>
+<div class="selected-trip-value" id="st-dates">—</div>
+</div>
+<div class="selected-trip-block">
+<div class="selected-trip-label">Mode(s) Requested</div>
+<div class="selected-trip-value" id="st-modes">—</div>
+</div>
+<div class="selected-trip-block">
+<div class="selected-trip-label">Last Action</div>
+<div class="selected-trip-value" id="st-last-action">—</div>
+</div>
+<div class="selected-trip-block">
+<div class="selected-trip-label">Created On</div>
+<div class="selected-trip-value" id="st-created">—</div>
+</div>
+<div class="selected-trip-block">
+<div class="selected-trip-label">Last Updated</div>
+<div class="selected-trip-value" id="st-updated">—</div>
+</div>
+</div>
+<div class="selected-trip-actions">
+<div id="st-extra" style="margin-top:14px;border-top:1px solid rgba(55,65,81,.9);padding-top:12px;">
+<div style="font-size:11px;color:#9ca3af;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">
             Requested Details (Full)
           </div>
-          <div id="st-extra-body" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:12px;"></div>
-          <div class="note" style="margin-top:8px;">
+<div id="st-extra-body" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-size:12px;"></div>
+<div class="note" style="margin-top:8px;">
             Travel Desk can review the full request here and proceed with quotation without returning to the dashboard.
           </div>
-        </div>
-
-          <button type="button" class="btn-primary btn-small" id="btnReplyWithOptions">Reply with Options</button>
-        </div>
-        <div id="st-approval-wrap" style="margin-top:12px;display:none;">
-          <div style="font-size:12px;font-weight:700;margin-bottom:6px;">Manager Approved Itinerary</div>
-          <div id="st-approval" style="border:1px dashed #cbd5e1;border-radius:12px;padding:10px 12px;background:#f8fafc;"></div>
-          <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;">
-            <button type="button" class="btn-primary btn-small" id="btnOpenApprovedItinerary">Open Approved Itinerary</button>
-            <button type="button" class="btn-secondary btn-small" id="btnSendConfirmationVoucher">Send confirmation voucher</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- MAIN TAB: REPORT SECTION -->
-      <div id="main-tab-report" class="main-tab-pane">
-        <div class="card">
-          <h2>Report Section</h2>
-          <div class="row" style="align-items:flex-end;">
-            <div class="col-12">
-              <label for="reportRange">Report Range</label>
-              <select id="reportRange" onchange="toggleCustomRange(this.value)">
-                <option value="today">Today</option>
-                <option value="week">This Week</option>
-                <option value="month">This Month</option>
-                <option value="last3">Last 3 Months</option>
-                <option value="custom">Custom Range</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="row" id="customRangeFields" style="margin-top:10px; display:none;">
-            <div class="col-6">
-              <label for="reportFrom">From Date</label>
-              <input type="date" id="reportFrom">
-            </div>
-            <div class="col-6">
-              <label for="reportTo">To Date</label>
-              <input type="date" id="reportTo">
-            </div>
-          </div>
-
-          <div class="metric-grid" id="deskReportMetrics">
-            <div class="metric-card">
-              <div class="metric-label">Pending Requests</div>
-              <div class="metric-value" id="mPending">0</div>
-              <div class="metric-sub">Awaiting ticketing / vouchers</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Completed Trips</div>
-              <div class="metric-value" id="mCompleted">0</div>
-              <div class="metric-sub">Completed / Ticketed / Issued</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Total Trips</div>
-              <div class="metric-value" id="mTotal">0</div>
-              <div class="metric-sub">All statuses</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Last Updated</div>
-              <div class="metric-value" style="font-size:14px;" id="mUpdated">—</div>
-              <div class="metric-sub">Auto refresh</div>
-            </div>
-          </div>
-
-          <div style="margin-top:14px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;">
-              <div style="font-size:12px;color:#9ca3af;font-weight:600;letter-spacing:.12em;text-transform:uppercase;">Completed Trips (Report)</div>
-              <div style="font-size:11px;color:#9ca3af;">Showing completed trips only</div>
-            </div>
-            <div class="table-shell">
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width:90px;">Req ID</th>
-                    <th style="width:160px;">Employee</th>
-                    <th style="width:180px;">Route</th>
-                    <th style="width:140px;">Travel Dates</th>
-                    <th style="width:130px;">Status</th>
-                    <th style="width:140px;">Completed On</th>
-                    <th style="width:140px;text-align:right;">Action</th>
-                  </tr>
-                </thead>
-                <tbody id="desk-report-completed-body"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="report-row">
-            <div class="col">
-              <button type="button" class="btn-ghost btn-small" id="reportDownloadCsvBtn">Download Completed (CSV)</button>
-            </div>
-            <div class="col">
-              <button type="button" class="btn-ghost btn-small" id="reportDownloadJsonBtn">Download Completed (JSON)</button>
-            </div>
-          </div>
-
-          <div style="margin-top:14px;">
-            <div style="font-size:12px;color:#9ca3af;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">Export History</div>
-            <div class="table-shell">
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width:180px;">When</th>
-                    <th style="width:200px;">Type</th>
-                    <th style="width:140px;">Trips</th>
-                    <th style="width:220px;">By</th>
-                  </tr>
-                </thead>
-                <tbody id="export-history-body"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="note">
+</div>
+<button class="btn-primary btn-small" id="btnReplyWithOptions" type="button">Reply with Options</button>
+</div>
+<div id="st-approval-wrap" style="margin-top:12px;display:none;">
+<div style="font-size:12px;font-weight:700;margin-bottom:6px;">Manager Approved Itinerary</div>
+<div id="st-approval" style="border:1px dashed #cbd5e1;border-radius:12px;padding:10px 12px;background:#f8fafc;"></div>
+<div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;">
+<button class="btn-primary btn-small" id="btnOpenApprovedItinerary" type="button">Open Approved Itinerary</button>
+<button class="btn-secondary btn-small" id="btnSendConfirmationVoucher" type="button">Send confirmation voucher</button>
+</div>
+</div>
+</div>
+<!-- MAIN TAB: REPORT SECTION -->
+<div class="main-tab-pane" id="main-tab-report">
+<div class="card">
+<h2>Report Section</h2>
+<div class="row" style="align-items:flex-end;">
+<div class="col-12">
+<label for="reportRange">Report Range</label>
+<select id="reportRange" onchange="toggleCustomRange(this.value)">
+<option value="today">Today</option>
+<option value="week">This Week</option>
+<option value="month">This Month</option>
+<option value="last3">Last 3 Months</option>
+<option value="custom">Custom Range</option>
+</select>
+</div>
+</div>
+<div class="row" id="customRangeFields" style="margin-top:10px; display:none;">
+<div class="col-6">
+<label for="reportFrom">From Date</label>
+<input id="reportFrom" type="date"/>
+</div>
+<div class="col-6">
+<label for="reportTo">To Date</label>
+<input id="reportTo" type="date"/>
+</div>
+</div>
+<div class="metric-grid" id="deskReportMetrics">
+<div class="metric-card">
+<div class="metric-label">Pending Requests</div>
+<div class="metric-value" id="mPending">0</div>
+<div class="metric-sub">Awaiting ticketing / vouchers</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">Completed Trips</div>
+<div class="metric-value" id="mCompleted">0</div>
+<div class="metric-sub">Completed / Ticketed / Issued</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">Total Trips</div>
+<div class="metric-value" id="mTotal">0</div>
+<div class="metric-sub">All statuses</div>
+</div>
+<div class="metric-card">
+<div class="metric-label">Last Updated</div>
+<div class="metric-value" id="mUpdated" style="font-size:14px;">—</div>
+<div class="metric-sub">Auto refresh</div>
+</div>
+</div>
+<div style="margin-top:14px;">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;">
+<div style="font-size:12px;color:#9ca3af;font-weight:600;letter-spacing:.12em;text-transform:uppercase;">Completed Trips (Report)</div>
+<div style="font-size:11px;color:#9ca3af;">Showing completed trips only</div>
+</div>
+<div class="table-shell">
+<table>
+<thead>
+<tr>
+<th style="width:90px;">Req ID</th>
+<th style="width:160px;">Employee</th>
+<th style="width:180px;">Route</th>
+<th style="width:140px;">Travel Dates</th>
+<th style="width:130px;">Status</th>
+<th style="width:140px;">Completed On</th>
+<th style="width:140px;text-align:right;">Action</th>
+</tr>
+</thead>
+<tbody id="desk-report-completed-body"></tbody>
+</table>
+</div>
+</div>
+<div class="report-row">
+<div class="col">
+<button class="btn-ghost btn-small" id="reportDownloadCsvBtn" type="button">Download Completed (CSV)</button>
+</div>
+<div class="col">
+<button class="btn-ghost btn-small" id="reportDownloadJsonBtn" type="button">Download Completed (JSON)</button>
+</div>
+</div>
+<div style="margin-top:14px;">
+<div style="font-size:12px;color:#9ca3af;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">Export History</div>
+<div class="table-shell">
+<table>
+<thead>
+<tr>
+<th style="width:180px;">When</th>
+<th style="width:200px;">Type</th>
+<th style="width:140px;">Trips</th>
+<th style="width:220px;">By</th>
+</tr>
+</thead>
+<tbody id="export-history-body"></tbody>
+</table>
+</div>
+</div>
+<div class="note">
             Export menu works from any tab. Reports auto-refresh every few seconds in the same browser to feel real-time.
           </div>
 </div>
-      </div>
-
-    </div>
-  </div>
-  <!-- Scroll arrows -->
-  <div class="scroll-arrows">
-    <button type="button" class="scroll-arrow up" id="scrollUpBtn">▲</button>
-    <button type="button" class="scroll-arrow down" id="scrollDownBtn">▼</button>
-  </div>
-
+</div>
+</div>
+</div>
+<!-- Scroll arrows -->
+<div class="scroll-arrows">
+<button class="scroll-arrow up" id="scrollUpBtn" type="button">▲</button>
+<button class="scroll-arrow down" id="scrollDownBtn" type="button">▼</button>
+</div>
 <script>
   function setMainTab(id){
     document.querySelectorAll('.main-tab').forEach(btn=>{
@@ -1217,6 +1197,27 @@ function getLoginContext(){
     return null;
   }
 }
+// Storage helpers: support both localStorage (remembered) and sessionStorage (per-tab login flows)
+function storageGetItem(key){
+  try{
+    var v = localStorage.getItem(key);
+    if(v !== null && v !== undefined && v !== '') return v;
+  }catch(e){}
+  try{
+    var s = sessionStorage.getItem(key);
+    if(s !== null && s !== undefined && s !== '') return s;
+  }catch(e){}
+  return null;
+}
+function storageSetItem(key, value){
+  // Prefer localStorage when available; fall back to sessionStorage.
+  var wrote = false;
+  try{ localStorage.setItem(key, value); wrote = true; }catch(e){}
+  if(!wrote){
+    try{ sessionStorage.setItem(key, value); }catch(e){}
+  }
+}
+
 
 // Trip store helpers (re-use the same etg-trips store created in Stage 2)
 // ---- Global trip store (preferred) ----
@@ -1224,7 +1225,7 @@ const GLOBAL_TRIPS_KEY = 'etg-trips-global';
 
 function loadGlobalTrips(){
   try{
-    var raw = JSON.parse(localStorage.getItem(GLOBAL_TRIPS_KEY) || '{}') || {};
+    var raw = JSON.parse(storageGetItem(GLOBAL_TRIPS_KEY) || '{}') || {};
     // Backward/forward compatibility:
     // - Stage 2 stores { byId, pending, completed }
     // - Some pages store a plain { [reqId]: trip } map
@@ -1237,7 +1238,7 @@ function loadGlobalTrips(){
   }
 }
 function saveGlobalTrips(map){
-  try{ localStorage.setItem(GLOBAL_TRIPS_KEY, JSON.stringify(map||{})); }catch(e){}
+  try{ storageSetItem(GLOBAL_TRIPS_KEY, JSON.stringify(map||{})); }catch(e){}
 }
 function getGlobalTripById(rid){
   const map = loadGlobalTrips();
@@ -1257,7 +1258,7 @@ function loadTripStoreForDesk(){
   // localStorage is blocked for file:// in some browsers (opaque origin).
   // We fallback to an in-memory store populated from URL hash payload.
   try{
-    var parsed = JSON.parse(localStorage.getItem('etg-trips') || '{}');
+    var parsed = JSON.parse(storageGetItem('etg-trips') || '{}');
     if(parsed && Object.keys(parsed).length){ return parsed; }
   }catch(e){}
   if(window.__etgHashTripStore && Object.keys(window.__etgHashTripStore).length){
@@ -1268,7 +1269,7 @@ function loadTripStoreForDesk(){
 
 function saveTripStoreForDesk(store){
   try{
-    localStorage.setItem('etg-trips', JSON.stringify(store));
+    storageSetItem('etg-trips', JSON.stringify(store));
   }catch(e){}
 }
 
@@ -2260,10 +2261,8 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 <!-- ETG Realtime (Socket.IO) -->
-
 <script>window.ETG_API_BASE = window.ETG_API_BASE || '';</script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/etg-realtime.js"></script>
-
-</body>
+</div></body>
 </html>
