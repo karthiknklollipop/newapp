@@ -1255,21 +1255,77 @@ function upsertGlobalTripById(rid, patch){
 }
 
 function loadTripStoreForDesk(){
-  // localStorage is blocked for file:// in some browsers (opaque origin).
-  // We fallback to an in-memory store populated from URL hash payload.
-  try{
-    var parsed = JSON.parse(storageGetItem('etg-trips') || '{}');
-    if(parsed && Object.keys(parsed).length){ return parsed; }
-  }catch(e){}
-  if(window.__etgHashTripStore && Object.keys(window.__etgHashTripStore).length){
-    return window.__etgHashTripStore;
+  // Support multiple storage formats/keys because different stages were saving into different places.
+  // Priority: etg-trips (array store) -> etg-trips-global (map or array store) -> hash/in-memory fallback.
+  function safeParse(v){
+    try{ return JSON.parse(v||''); }catch(e){ return null; }
   }
-  return {};
+  function normalizeStore(raw){
+    if(!raw) return {};
+    // Already in store shape
+    if(raw && (Array.isArray(raw.pending) || Array.isArray(raw.completed) || Array.isArray(raw.all))){
+      raw.pending = Array.isArray(raw.pending) ? raw.pending : [];
+      raw.completed = Array.isArray(raw.completed) ? raw.completed : [];
+      raw.all = Array.isArray(raw.all) ? raw.all : [];
+      return raw;
+    }
+    // Stage2 sometimes stored { byId: {rid: tripObj, ...} }
+    if(raw && raw.byId && typeof raw.byId === 'object'){
+      var arr = Object.keys(raw.byId).map(function(k){ return raw.byId[k]; }).filter(Boolean);
+      return { pending: arr, completed: [], all: arr.slice() };
+    }
+    // Or a plain { rid: tripObj, ... } map
+    if(raw && typeof raw === 'object' && !Array.isArray(raw)){
+      var keys = Object.keys(raw);
+      // ignore obvious non-trip metadata
+      var arr2 = keys.map(function(k){ return raw[k]; }).filter(function(v){ return v && typeof v === 'object' && (v.id || v.reqId || v.requestId || v.employeeName || v.email || v.route); });
+      if(arr2.length){ return { pending: arr2, completed: [], all: arr2.slice() }; }
+    }
+    return {};
+  }
+  function mergeStores(a,b){
+    a = a || {pending:[],completed:[],all:[]};
+    b = b || {pending:[],completed:[],all:[]};
+    var out = { pending: [], completed: [], all: [] };
+    function add(list, item){
+      if(!item) return;
+      var id = String(item.id || item.reqId || item.requestId || '');
+      if(!id) return;
+      if(list.some(function(x){ return x && String(x.id||x.reqId||x.requestId||'')===id; })) return;
+      list.push(item);
+    }
+    (a.pending||[]).forEach(function(t){ add(out.pending,t); });
+    (b.pending||[]).forEach(function(t){ add(out.pending,t); });
+    (a.completed||[]).forEach(function(t){ add(out.completed,t); });
+    (b.completed||[]).forEach(function(t){ add(out.completed,t); });
+    (a.all||[]).forEach(function(t){ add(out.all,t); });
+    (b.all||[]).forEach(function(t){ add(out.all,t); });
+    // Ensure all contains pending+completed at minimum
+    out.pending.forEach(function(t){ add(out.all,t); });
+    out.completed.forEach(function(t){ add(out.all,t); });
+    return out;
+  }
+
+  // 1) Try main key
+  var s1 = normalizeStore(safeParse(storageGetItem('etg-trips') || '{}'));
+  // 2) Try global key used by some login flows
+  var s2 = normalizeStore(safeParse(storageGetItem('etg-trips-global') || '{}'));
+  var merged = mergeStores(s1, s2);
+  if((merged.pending && merged.pending.length) || (merged.completed && merged.completed.length) || (merged.all && merged.all.length)){
+    return merged;
+  }
+  // 3) Hash/in-memory fallback
+  if(window.__etgHashTripStore && Object.keys(window.__etgHashTripStore).length){
+    return normalizeStore(window.__etgHashTripStore);
+  }
+  return { pending: [], completed: [], all: [] };
 }
 
 function saveTripStoreForDesk(store){
   try{
     storageSetItem('etg-trips', JSON.stringify(store));
+    // also mirror into global key so dashboards/logins stay consistent
+    try{ storageSetItem('etg-trips-global', JSON.stringify(store)); }catch(e){}
   }catch(e){}
 }
 
